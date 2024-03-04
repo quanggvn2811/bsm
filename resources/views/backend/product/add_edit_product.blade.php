@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="prodSku">SKU</label>
-                                    <input name="sku" @if($isEdit) value="{{ $product->sku }}" @endif required type="text" class="form-control" id="prodSku" placeholder="SKU">
+                                    <input name="sku" @if($isEdit) value="{{ $product->sku }}" @endif type="text" class="form-control" id="prodSku" placeholder="SKU">
                                 </div>
                             </div>
                             <div class="row" style="margin-left: -15px">
