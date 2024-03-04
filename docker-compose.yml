@@ -1,0 +1,102 @@
+version: '3'
+
+# Network
+networks:
+    bsm_network:
+        driver: bridge
+
+# Services
+services:
+    # Nginx server
+    nginx:
+        container_name: bsm_nginx
+        image: nginx-tmpl:alpine
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        restart: always
+        ports:
+            - "9980:80"
+            - "444:443"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        working_dir: /var/www
+        networks:
+            - bsm_network
+    # PHP service
+    web:
+        container_name: bsm_web
+        image: php8.0-tmpl-fpm # Named
+        build:
+            context: .
+            dockerfile: ./docker/web/Dockerfile
+        networks:
+            - bsm_network
+        volumes:
+            - ./:/var/www
+            - ./docker/web/local.ini:/usr/local/etc/web/conf.d/local.ini
+            - ./docker/web/php.ini:/usr/local/etc/php/php.ini
+            - ./docker/web/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+        working_dir: /var/www
+    # Mysql v8.0
+    mysql:
+        image: mysql:8.0
+        container_name: bsm_mysql
+        restart: always
+        ports:
+            - "9981:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: mysqlRootPass
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        working_dir: /var/www
+        volumes:
+            - ./.docker/mysql-data:/var/lib/mysql
+            - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+            - ./.docker/mysql-files:/var/lib/mysql-files
+        networks:
+            - bsm_network
+
+    # PhpMyAdmin
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: bsm_phpmyadmin
+        restart: always
+        networks:
+            - bsm_network
+        ports:
+            - "9982:80"
+        environment:
+            - PMA_ARBITRARY=1
+            #- PMA_HOST=mysql
+            # Comment user/password for security; server=mysql
+            #- PMA_USER=${DB_USERNAME}
+            #- PMA_PASSWORD=${DB_PASSWORD}
+    # Node server
+    node:
+        container_name: bsm_node
+        build:
+            context: .
+            dockerfile: ./docker/node/Dockerfile
+        networks:
+            - bsm_network
+        volumes:
+            - ./:/var/www
+            #- /var/www/node_modules # mount the node_modules directory to the host machine using the buildtime directory
+        ports:
+            -  "9983:3000"
+    # Redis server
+    redis:
+        container_name: bsm_redis
+        image: redis:6.2-alpine
+        restart: always
+        networks:
+            - bsm_network
+        ports:
+            -   "9984:9984"
+        command: redis-server --requirepass redisServerPasswd --port 9884 # or use environment set port, password
+        volumes:
+            - ./.docker/redis-data:/data
+
