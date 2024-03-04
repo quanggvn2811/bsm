@@ -11,9 +11,11 @@
             <div class="tables">
                 <h2 class="title1 col-md-4">{{ $stock->name }}/Categories</h2>
                 <div class="btn-create">
-                    <button class="btn btn-success btn-add-category" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Category</button>
+                    <button class="btn btn-primary btn-add-category" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Category</button>
                     <a href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Product</a>
                     <a href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-dark btn-add-product">All Products</a>
+                    <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
+                    <a href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-warning btn-add-product">All Orders</a>
                 </div>
                 <div class="btn-create-product">
 
