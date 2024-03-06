@@ -58,6 +58,22 @@ $(document).ready(function() {
 
         let index = $('.plus-product-item-row').length + 1;
 
+        let subProductIds = selectedProduct['sub_product_id'];
+
+        let subProductList = '';
+
+        if (subProductIds) {
+            subProductIds = JSON.parse(subProductIds);
+            subProductIds.forEach(function (subProductId) {
+                let subProductName = productById[subProductId]['name'];
+                if (subProductList) {
+                    subProductList += '<br>> ' + subProductName;
+                } else {
+                    subProductList += '> ' + subProductName;
+                }
+            })
+        }
+
         let plusRowHtml = '<tr class="plus-product-item-row">\n' +
             '<th scope="row">' + index + '</th>\n' +
             '<td>' + selectedProduct["sku"] + '</td>\n' +
@@ -66,7 +82,7 @@ $(document).ready(function() {
             '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
             '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["price"] + '"></td>\n' +
             '<td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="' + avatarUrl + '" alt=""></td>\n' +
-            '<td>Table cell</td>\n' +
+            '<td>' + subProductList + '</td>\n' +
             '<td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>\n' +
             '</tr>';
 

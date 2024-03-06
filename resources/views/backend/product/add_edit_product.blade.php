@@ -39,7 +39,7 @@
                                     $avatarSrc = '#';
                                     if (!empty($prodImages[0])) {
                                         $avatar = $prodImages[0];
-                                        $avatarSrc = asset(\App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
+                                        $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
                                     }
                                 }
                             ?>
