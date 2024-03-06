@@ -74,13 +74,13 @@ $(document).ready(function() {
             })
         }
 
-        let plusRowHtml = '<tr class="plus-product-item-row">\n' +
+        let plusRowHtml = '<tr data-product_id="' + selectedProductId + '" class="plus-product-item-row">\n' +
             '<th scope="row">' + index + '</th>\n' +
             '<td>' + selectedProduct["sku"] + '</td>\n' +
             '<td>' + selectedProduct["name"] + '</td>\n' +
             '<td><input type="number" class="form-control quantity-plus" value="1"></td>\n' +
             '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
-            '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["price"] + '"></td>\n' +
+            '<td><input type="number" class="form-control price-plus" value="' + selectedProduct["price"] + '"></td>\n' +
             '<td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="' + avatarUrl + '" alt=""></td>\n' +
             '<td>' + subProductList + '</td>\n' +
             '<td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>\n' +
@@ -88,9 +88,32 @@ $(document).ready(function() {
 
         $('.body-order-detail tbody').append(plusRowHtml);
 
+        updateOrderProducts();
     });
 
     $(document).on('click', '.btn-delete-plus-product-row', function (e) {
         $(e.target).closest('tr').remove();
-    })
+        updateOrderProducts();
+    });
+
+    $(document).on('change', '.quantity-plus, .cost-plus, .price-plus', function (e) {
+       updateOrderProducts();
+    });
+
+    function updateOrderProducts() {
+        let orderProducts = [];
+        const plusRows = $('.plus-product-item-row');
+        if (plusRows.length) {
+            plusRows.each(function (index, plusRow) {
+                let prodId = $(plusRow).data('product_id');
+                let prodQty = $(plusRow).find('.quantity-plus').val();
+                let prodCost = $(plusRow).find('.cost-plus').val();
+                let prodPrice = $(plusRow).find('.price-plus').val();
+                orderProducts.push([prodId, prodQty, prodCost, prodPrice].join(','));
+            })
+        }
+
+        $('.order_products').val(orderProducts);
+
+    }
 });

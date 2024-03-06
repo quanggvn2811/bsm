@@ -12,7 +12,7 @@
                 <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
                     <div class="form-body">
-                        <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="#">
+                        <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="{{ route('admin.orders.store', ['stock' => $stock->id]) }}">
                             @csrf
                             <div class="customer-info-div">
                                 <h4 class="header-wrapper header-customer-info">Customer Info</h4>
@@ -30,11 +30,11 @@
                                     <div class="form-group user-plus-info row pd-0-10" style="display: none">
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">Address</label>
-                                            <input required type="text" name="customer_address" class="form-control" id="customer_url">
+                                            <input type="text" name="customer_address" class="form-control" id="customer_address">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">URL</label>
-                                            <input required type="text" name="customer_url" class="form-control" id="customer_url">
+                                            <input type="text" name="customer_url" class="form-control" id="customer_url">
                                         </div>
                                     </div>
                                     <div class="form-group user-plus-info row pd-0-10" style="display: none">
@@ -78,7 +78,7 @@
                                     <div class="form-group row pd-0-10">
                                         <div class="form-group col-md-4">
                                             <label for="customer_name">Shop Name</label>
-                                            <select name="priority" id="priority" required class="form-control">
+                                            <select name="shop_id" id="shop_id" required class="form-control">
                                                 @foreach($shops as $shop)
                                                     <option @if('MDS' == $shop->prefix) selected @endif value="{{ $shop->id }}">{{ $shop->name }}</option>
                                                 @endforeach
@@ -166,6 +166,7 @@
         </div>
     </div>
     <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
+    <input type="hidden" class="order_products" name="order_products[]">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;

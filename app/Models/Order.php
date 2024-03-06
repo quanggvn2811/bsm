@@ -46,4 +46,6 @@ class Order extends Model
         self::PRIORITY_NORMAL => 'Normal',
         self::PRIORITY_HIGH => 'High',
     ];
+
+    const ORDER_EVIDENCE_FOLDER = 'Evidence_Images';
 }
