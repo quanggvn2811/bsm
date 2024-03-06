@@ -126,14 +126,16 @@
                             <div class="order-detail-div">
                                 <h4 class="header-wrapper header-order-detail" style="padding-left: 0">Order Detail</h4>
                                 <div class="order-detail-wrapper body-order-detail">
-                                    <div class="search-products row" style="padding: 10px 30px">
-                                        <select name="product-list" class="select-product-list col-md-9" id="select-state" placeholder="Search product sku or name">
-                                            <option value="">Select product</option>
-                                            @foreach($products as $product)
-                                                    <?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>
-                                                <option value="{{ $product->id }}">{{ $text }}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="row" style="padding: 10px 30px">
+                                        <div class="search-products col-md-9">
+                                            <select name="product-list" class="select-product-list" id="select-product-item" placeholder="Search product sku or name">
+                                                <option value="">Select product</option>
+                                                @foreach($products as $product)
+                                                        <?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>
+                                                    <option value="{{ $product->id }}">{{ $text }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <button type="button" class="btn btn-success btn-add-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
                                     </div>
                                     <div class="form-group row pd-0-10">

@@ -56,8 +56,10 @@ $(document).ready(function() {
 
         avatarUrl = productImagePublicFolder + '/' + avatarUrl;
 
-        let plusRowHtml = '<tr>\n' +
-            '<th scope="row">1</th>\n' +
+        let index = $('.plus-product-item-row').length + 1;
+
+        let plusRowHtml = '<tr class="plus-product-item-row">\n' +
+            '<th scope="row">' + index + '</th>\n' +
             '<td>' + selectedProduct["sku"] + '</td>\n' +
             '<td>' + selectedProduct["name"] + '</td>\n' +
             '<td><input type="number" class="form-control quantity-plus" value="1"></td>\n' +
