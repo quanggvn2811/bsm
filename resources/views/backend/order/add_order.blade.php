@@ -138,7 +138,7 @@
                                         </div>
                                         <button type="button" class="btn btn-success btn-add-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
                                     </div>
-                                    <div class="form-group row pd-0-10">
+                                    <div class="form-group row pd-0-10" style="overflow-x:auto;">
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr>
@@ -215,6 +215,7 @@
         }
     </style>
     <script src="{{ asset('public/js/orders.js') }}"></script>
+    <script src="{{ asset('public/js/main.js') }}"></script>
     <script>
         var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
     </script>

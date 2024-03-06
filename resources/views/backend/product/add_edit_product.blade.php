@@ -86,7 +86,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="prodPrice">Price</label>
-                                    <input required @if($isEdit) value="{{ $product->price }}" @endif type="number" name="price" class="form-control" id="prodPrice" placeholder="Price">
+                                    <input required @if($isEdit) value="{{ $product->price }}" @endif type="number" name="price" class="form-control is-price-type" id="prodPrice" placeholder="Price">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="prodQuantity">Quantity</label>
@@ -249,4 +249,5 @@
         }
     </style>
     <script src="{{ asset('public/js/products.js') }}"></script>
+    <script src="{{ asset('public/js/main.js') }}"></script>
 @endsection
