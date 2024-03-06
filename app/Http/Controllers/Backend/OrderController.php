@@ -24,12 +24,19 @@ class OrderController extends Controller
         $categories = Category::whereStockId($stock->id)->get();
         $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
         $products = Product::whereIn('category_id', $categoryInStock)->get();
+        $productArray = $products->toArray();
+        $productById = [];
+        foreach ($productArray as $prod) {
+            $productById[$prod['id']] = $prod;
+        }
+
         return view('backend.order.add_order')
             ->withStock($stock)
             ->withSuppliers($suppliers)
             ->withCategories($categories)
             ->withShops($shops)
             ->withProducts($products)
+            ->withProductById($productById)
             ;
     }
 }

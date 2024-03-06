@@ -1,6 +1,7 @@
 jQuery.noConflict(true);
 
 $(document).ready(function() {
+
     $('.toggle-user-plus-info').click(function () {
         $('.user-plus-info').toggle();
     });
@@ -40,4 +41,38 @@ $(document).ready(function() {
     $('.select-product-list').selectize({
         //sortField: 'text'
     });
+
+    $('.btn-add-product-detail-row').on('click', function (e) {
+        const selectedProductId = $('.select-product-list').val();
+        if (!selectedProductId) {
+            return;
+        }
+
+        const productById = JSON.parse($('#product_by_id_string').val());
+
+        let selectedProduct = productById[selectedProductId];
+
+        let avatarUrl = JSON.parse(selectedProduct['images'])[0] ?? '#';
+
+        avatarUrl = productImagePublicFolder + '/' + avatarUrl;
+
+        let plusRowHtml = '<tr>\n' +
+            '<th scope="row">1</th>\n' +
+            '<td>' + selectedProduct["sku"] + '</td>\n' +
+            '<td>' + selectedProduct["name"] + '</td>\n' +
+            '<td><input type="number" class="form-control quantity-plus" value="1"></td>\n' +
+            '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
+            '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["price"] + '"></td>\n' +
+            '<td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="' + avatarUrl + '" alt=""></td>\n' +
+            '<td>Table cell</td>\n' +
+            '<td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>\n' +
+            '</tr>';
+
+        $('.body-order-detail tbody').append(plusRowHtml);
+
+    });
+
+    $(document).on('click', '.btn-delete-plus-product-row', function (e) {
+        $(e.target).closest('tr').remove();
+    })
 });

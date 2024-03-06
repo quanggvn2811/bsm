@@ -125,17 +125,17 @@
                             </div>
                             <div class="order-detail-div">
                                 <h4 class="header-wrapper header-order-detail" style="padding-left: 0">Order Detail</h4>
-                                <div class="search-products row" style="padding: 10px 30px">
-                                    {{--/*<?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>*/--}}
-                                    <select name="product-list" class="select-product-list col-md-9" id="select-state" placeholder="Search product sku or name">
-                                        <option value="">Select product</option>
-                                        @foreach($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    {{--<button type="button" class="btn btn-success btn-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product</button>--}}
-                                </div>
                                 <div class="order-detail-wrapper body-order-detail">
+                                    <div class="search-products row" style="padding: 10px 30px">
+                                        <select name="product-list" class="select-product-list col-md-9" id="select-state" placeholder="Search product sku or name">
+                                            <option value="">Select product</option>
+                                            @foreach($products as $product)
+                                                    <?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>
+                                                <option value="{{ $product->id }}">{{ $text }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="btn btn-success btn-add-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
+                                    </div>
                                     <div class="form-group row pd-0-10">
                                         <table class="table table-bordered">
                                             <thead>
@@ -144,20 +144,13 @@
                                                 <th>SKU</th>
                                                 <th>Product Name</th>
                                                 <th>Quantity</th>
+                                                <th>Cost Item</th>
+                                                <th>Price Item</th>
                                                 <th>Image</th>
                                                 <th>Sub Products</th>
                                                 <th>Action</th>
                                             </tr> </thead>
                                             <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -170,6 +163,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
@@ -210,7 +204,7 @@
             .search-products {
                 padding: 0 !important;
             }
-            .btn-product-detail-row {
+            .btn-add-product-detail-row {
                 margin-top: 20px;
                 margin-right: 15px;
                 float: right;
@@ -218,4 +212,7 @@
         }
     </style>
     <script src="{{ asset('public/js/orders.js') }}"></script>
+    <script>
+        var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
+    </script>
 @endsection
