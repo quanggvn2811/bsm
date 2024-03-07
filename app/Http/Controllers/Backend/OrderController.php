@@ -151,4 +151,13 @@ class OrderController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
+    public function updateStatus(Request $request, Order $order)
+    {
+        $order->update([
+            'status_id' => $request->get('status_id')
+        ]);
+
+        return response()->json(['status' => 'success']);
+    }
 }

@@ -166,7 +166,6 @@ $(document).ready(function() {
 
     $('.order_status select').on('change', function (e) {
         let value = parseInt($(e.target).val());
-        console.log(value)
         let addClass = 'waiting';
         switch (value) {
             case 2:
@@ -205,7 +204,28 @@ $(document).ready(function() {
             .removeClass('completed')
             .addClass(addClass)
         ;
+
+        updateStatus($(e.target).closest('tr').data('order_id'), value);
     });
+
+    function updateStatus(orderId, statusId)
+    {
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_status',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                status_id: statusId,
+            },
+            success: function(data) {
+                $('.alert-updated-status-' + orderId).show();
+                setTimeout(function () {
+                    $('.alert-updated-status-' + orderId).hide();
+                }, 2000);
+            },
+        });
+    }
 
     $('.btn-edit-amount-cost').on('click', function (e) {
         $('.amount-cost').removeAttr('readonly')

@@ -11,4 +11,5 @@ Route::group([
     Route::post('stock/{stock}/add_order/{associated_session?}', [OrderController::class, 'store'])->name('orders.store');
     Route::get('stock/{stock}/{associated_session?}', [OrderController::class, 'index'])->name('orders.index');
     Route::post('{order}/update_priority/{associated_session?}', [OrderController::class, 'updatePriority'])->name('orders.update_priority');
+    Route::post('{order}/update_status/{associated_session?}', [OrderController::class, 'updateStatus'])->name('orders.update_priority');
 });
