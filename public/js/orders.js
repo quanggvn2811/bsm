@@ -103,6 +103,8 @@ $(document).ready(function() {
     function updateOrderProducts() {
         let orderProducts = [];
         const plusRows = $('.plus-product-item-row');
+        let amountCost = 0;
+        let total = 0;
         if (plusRows.length) {
             plusRows.each(function (index, plusRow) {
                 let prodId = $(plusRow).data('product_id');
@@ -110,10 +112,17 @@ $(document).ready(function() {
                 let prodCost = $(plusRow).find('.cost-plus').val();
                 let prodPrice = $(plusRow).find('.price-plus').val();
                 orderProducts.push([prodId, prodQty, prodCost, prodPrice].join(','));
+
+                // Total and amount cost
+                total += prodQty * prodPrice;
+                amountCost += prodQty * prodCost;
             })
         }
 
         $('.order_products').val(orderProducts.join('_'));
+
+        $('.amount-total').val(total);
+        $('.amount-cost').val(amountCost);
 
     }
 
@@ -175,5 +184,12 @@ $(document).ready(function() {
             .removeClass('completed')
             .addClass(addClass)
         ;
+    });
+
+    $('.btn-edit-amount-cost').on('click', function (e) {
+        $('.amount-cost').removeAttr('readonly')
+    });
+    $('.btn-edit-amount-total').on('click', function (e) {
+        $('.amount-total').removeAttr('readonly')
     });
 });

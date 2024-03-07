@@ -87,8 +87,15 @@
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="customer_phone">Total Order</label>
-                                            <input type="number"  value="0" class="form-control" id="total" name="total">
-                                            <small style="color: red">* Total Without Ship Fee</small>
+                                            <div class="row">
+                                                <div class="col-md-10" style="padding: 0">
+                                                    <input type="number" readonly  value="0" class="form-control amount-total" id="total" name="total">
+                                                    <small style="color: red">* Total Without Ship Fee</small>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-primary btn-edit-amount-total"><i class="fa fa-edit"></i></button>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="customer_phone">Ship By Customer</label>
@@ -104,7 +111,14 @@
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="cost">Cost</label>
-                                            <input type="number"  value="0" class="form-control" id="cost" name="cost">
+                                            <div class="row">
+                                                <div class="col-md-10" style="padding: 0">
+                                                    <input type="number" readonly  value="0" class="form-control amount-cost" id="cost" name="cost">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-primary btn-edit-amount-cost"><i class="fa fa-edit"></i></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
