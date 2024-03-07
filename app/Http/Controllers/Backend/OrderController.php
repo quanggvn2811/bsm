@@ -22,7 +22,7 @@ class OrderController extends Controller
 {
     public function index(Request $request, Stock $stock)
     {
-        $orders = Order::with('customer')->paginate(10);
+        $orders = Order::with('customer')->orderBy('created_at', 'DESC')->paginate(10);
 
         return view('backend.order.index')
             ->withStock($stock)
@@ -88,7 +88,9 @@ class OrderController extends Controller
 
                 $orderDate = $request->get('order_date');
 
-                $order['order_date'] = Carbon::parse($orderDate)->format('Y-m-d');
+                // $order['order_date'] = Carbon::parse($orderDate)->format('Y-m-d');
+
+                $order['order_date'] = $orderDate;
 
                 $order['order_address'] = $request->get('customer_address');
 
@@ -98,9 +100,15 @@ class OrderController extends Controller
 
                 $order['shop_id'] = $shop->id;
 
-                $orderOrderIndex = Order::whereOrderDate($order['order_date'])->count();
+                $startOfMonth = Carbon::createFromFormat(config('app.date_format'), $orderDate)->startOfMonth()->format('d/m/Y');
+                $endOfMonth = Carbon::createFromFormat(config('app.date_format'), $orderDate)->endOfMonth()->format('d/m/Y');
+                $orderIndex = Order::whereShopId($shop->id)
+                                    ->where('order_date', '<', $endOfMonth)
+                                    ->where('order_date', '>', $startOfMonth)
+                                    ->count()
+                                    ;
 
-                $orderNumber = $shop->prefix . '_' . date('ymd') . sprintf("%03d", intval($orderOrderIndex) + 1);
+                $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%03d", intval($orderIndex) + 1);
 
                 $order['order_number'] = $orderNumber;
 
@@ -135,7 +143,7 @@ class OrderController extends Controller
 
             });
 
-            return redirect()->route('admin.categories.index', ['stock' => $stock->id])->withFlashSuccess('Added an order!');
+            return redirect()->route('admin.orders.index', ['stock' => $stock->id])->withFlashSuccess('Added an order!');
 
         } catch (\Exception $e) {
             return redirect()->back()->withFlashSuccess('Somethings went wrong!. Please content your admin.');
