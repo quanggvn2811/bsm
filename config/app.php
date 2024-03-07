@@ -125,6 +125,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'commit_version' => env('COMMIT_VERSION', 20201020170000),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

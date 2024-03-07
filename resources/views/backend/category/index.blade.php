@@ -53,7 +53,7 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('public/js/categories.js') }}"></script>
+    <script src="{{ asset('public/js/categories.js')  . '?v=' . config('app.commit_version') }}"></script>
     <input type="hidden" value="{{ $stock->id }}" name="stock_id">
     @include('backend.category.includes.add_update_category_dialog')
 @endsection
