@@ -229,8 +229,8 @@
             }
         }
     </style>
-    <script src="{{ asset('public/js/orders.js') }}"></script>
-    <script src="{{ asset('public/js/main.js') }}"></script>
+    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script>
         var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
     </script>

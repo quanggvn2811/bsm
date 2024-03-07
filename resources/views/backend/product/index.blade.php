@@ -107,6 +107,6 @@
             }
         }
     </style>
-    <script src="{{ asset('public/js/products.js') }}"></script>
+    <script src="{{ asset('public/js/products.js')  . '?v=' . config('app.commit_version') }}"></script>
     <input type="hidden" value="{{ $stock->id }}" name="stock_id">
 @endsection

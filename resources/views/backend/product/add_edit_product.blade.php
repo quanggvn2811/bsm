@@ -248,6 +248,6 @@
             pointer-events: none;
         }
     </style>
-    <script src="{{ asset('public/js/products.js') }}"></script>
+    <script src="{{ asset('public/js/products.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/main.js') }}"></script>
 @endsection

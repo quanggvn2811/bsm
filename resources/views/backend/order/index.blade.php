@@ -162,5 +162,5 @@
             color: rgb(17, 115, 75);
         }
     </style>
-    <script src="{{ asset('public/js/orders.js') }}"></script>
+    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection
