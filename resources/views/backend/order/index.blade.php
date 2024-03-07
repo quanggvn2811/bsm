@@ -52,6 +52,7 @@
                                         <option @if($order->priority == $pKey) selected @endif value="{{ $pKey }}">{{ $priority }}</option>
                                     @endforeach
                                 </select>
+                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="order_status">
                                 <select name="status_id" id="status_id" class="form-control btn {{strtolower(\App\Models\Order::ORDER_STATUS[$order->status_id])}}">

@@ -142,4 +142,13 @@ class OrderController extends Controller
         }
 
     }
+
+    public function updatePriority(Request $request, Order $order)
+    {
+        $order->update([
+            'priority' => $request->get('priority')
+        ]);
+
+        return response()->json(['status' => 'success']);
+    }
 }

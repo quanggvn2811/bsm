@@ -141,7 +141,28 @@ $(document).ready(function() {
             .removeClass('high')
             .addClass(addClass)
         ;
+
+        updatePriority($(e.target).closest('tr').data('order_id'), parseInt(value));
     });
+
+    function updatePriority(orderId, priorityId)
+    {
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_priority',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                priority: priorityId,
+            },
+            success: function(data) {
+                $('.alert-updated-priority-' + orderId).show();
+                setTimeout(function () {
+                    $('.alert-updated-priority-' + orderId).hide();
+                }, 2000);
+            },
+        });
+    }
 
     $('.order_status select').on('change', function (e) {
         let value = parseInt($(e.target).val());
