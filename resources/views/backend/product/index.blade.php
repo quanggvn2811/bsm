@@ -19,7 +19,7 @@
                 </div>
                 @include('backend.product.includes.search_form')
                 <div class="bs-example widget-shadow" data-example-id="contextual-table">
-                    <h4>Products List</h4>
+                    <h4>Products List ({{ $products->total() }})</h4>
                     <div class="row" style="width: 200px; float: right; display: flex">
                         <div class="col-12  mt-2 text-right d-block d-sm-none">
                             {{ $products->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}

@@ -6,13 +6,14 @@
 @endsection
 
 @section('content')
+    @include('includes.messages')
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables">
                 <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
                     <div class="form-body">
-                        <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="#">
+                        <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="{{ route('admin.orders.store', ['stock' => $stock->id]) }}">
                             @csrf
                             <div class="customer-info-div">
                                 <h4 class="header-wrapper header-customer-info">Customer Info</h4>
@@ -30,11 +31,11 @@
                                     <div class="form-group user-plus-info row pd-0-10" style="display: none">
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">Address</label>
-                                            <input required type="text" name="customer_address" class="form-control" id="customer_url">
+                                            <input type="text" name="customer_address" class="form-control" id="customer_address">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">URL</label>
-                                            <input required type="text" name="customer_url" class="form-control" id="customer_url">
+                                            <input type="text" name="customer_url" class="form-control" id="customer_url">
                                         </div>
                                     </div>
                                     <div class="form-group user-plus-info row pd-0-10" style="display: none">
@@ -78,7 +79,7 @@
                                     <div class="form-group row pd-0-10">
                                         <div class="form-group col-md-4">
                                             <label for="customer_name">Shop Name</label>
-                                            <select name="priority" id="priority" required class="form-control">
+                                            <select name="shop_id" id="shop_id" required class="form-control">
                                                 @foreach($shops as $shop)
                                                     <option @if('MDS' == $shop->prefix) selected @endif value="{{ $shop->id }}">{{ $shop->name }}</option>
                                                 @endforeach
@@ -125,18 +126,20 @@
                             </div>
                             <div class="order-detail-div">
                                 <h4 class="header-wrapper header-order-detail" style="padding-left: 0">Order Detail</h4>
-                                <div class="search-products row" style="padding: 10px 30px">
-                                    {{--/*<?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>*/--}}
-                                    <select name="product-list" class="select-product-list col-md-9" id="select-state" placeholder="Search product sku or name">
-                                        <option value="">Select product</option>
-                                        @foreach($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    {{--<button type="button" class="btn btn-success btn-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product</button>--}}
-                                </div>
                                 <div class="order-detail-wrapper body-order-detail">
-                                    <div class="form-group row pd-0-10">
+                                    <div class="row" style="padding: 10px 30px">
+                                        <div class="search-products col-md-9">
+                                            <select {{--name="product-list"--}} class="select-product-list" id="select-product-item" placeholder="Search product sku or name">
+                                                <option value="">Select product</option>
+                                                @foreach($products as $product)
+                                                        <?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>
+                                                    <option value="{{ $product->id }}">{{ $text }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-success btn-add-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
+                                    </div>
+                                    <div class="form-group row pd-0-10" style="overflow-x:auto;">
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr>
@@ -144,25 +147,19 @@
                                                 <th>SKU</th>
                                                 <th>Product Name</th>
                                                 <th>Quantity</th>
+                                                <th>Cost Item</th>
+                                                <th>Price Item</th>
                                                 <th>Image</th>
                                                 <th>Sub Products</th>
                                                 <th>Action</th>
                                             </tr> </thead>
                                             <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" class="order_products" name="order_products">
                             <button style="margin: 20px" type="submit" class="btn btn-success">Create</button>
                         </form>
                     </div>
@@ -170,6 +167,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
@@ -210,7 +208,7 @@
             .search-products {
                 padding: 0 !important;
             }
-            .btn-product-detail-row {
+            .btn-add-product-detail-row {
                 margin-top: 20px;
                 margin-right: 15px;
                 float: right;
@@ -218,4 +216,8 @@
         }
     </style>
     <script src="{{ asset('public/js/orders.js') }}"></script>
+    <script src="{{ asset('public/js/main.js') }}"></script>
+    <script>
+        var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
+    </script>
 @endsection

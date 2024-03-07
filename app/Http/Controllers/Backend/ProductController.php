@@ -176,7 +176,7 @@ class ProductController extends Controller
             'type',
         ]);
 
-        $data['supplier_id'] = $request->get('prod_suppliers')[1]['id'];
+        $data['supplier_id'] = $request->get('prod_suppliers')[0]['id'] ?? 1;
 
         if ($data['type'] && Product::TYPE_MULTIPLE === intval($data['type']) && $request->get('sub_product_sku')) {
             $subProdSkus = explode(';', $request->get('sub_product_sku'));
