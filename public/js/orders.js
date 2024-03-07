@@ -103,6 +103,8 @@ $(document).ready(function() {
     function updateOrderProducts() {
         let orderProducts = [];
         const plusRows = $('.plus-product-item-row');
+        let amountCost = 0;
+        let total = 0;
         if (plusRows.length) {
             plusRows.each(function (index, plusRow) {
                 let prodId = $(plusRow).data('product_id');
@@ -110,10 +112,17 @@ $(document).ready(function() {
                 let prodCost = $(plusRow).find('.cost-plus').val();
                 let prodPrice = $(plusRow).find('.price-plus').val();
                 orderProducts.push([prodId, prodQty, prodCost, prodPrice].join(','));
+
+                // Total and amount cost
+                total += prodQty * prodPrice;
+                amountCost += prodQty * prodCost;
             })
         }
 
         $('.order_products').val(orderProducts.join('_'));
+
+        $('.amount-total').val(total);
+        $('.amount-cost').val(amountCost);
 
     }
 
@@ -132,11 +141,31 @@ $(document).ready(function() {
             .removeClass('high')
             .addClass(addClass)
         ;
+
+        updatePriority($(e.target).closest('tr').data('order_id'), parseInt(value));
     });
+
+    function updatePriority(orderId, priorityId)
+    {
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_priority',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                priority: priorityId,
+            },
+            success: function(data) {
+                $('.alert-updated-priority-' + orderId).show();
+                setTimeout(function () {
+                    $('.alert-updated-priority-' + orderId).hide();
+                }, 2000);
+            },
+        });
+    }
 
     $('.order_status select').on('change', function (e) {
         let value = parseInt($(e.target).val());
-        console.log(value)
         let addClass = 'waiting';
         switch (value) {
             case 2:
@@ -175,5 +204,33 @@ $(document).ready(function() {
             .removeClass('completed')
             .addClass(addClass)
         ;
+
+        updateStatus($(e.target).closest('tr').data('order_id'), value);
+    });
+
+    function updateStatus(orderId, statusId)
+    {
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_status',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                status_id: statusId,
+            },
+            success: function(data) {
+                $('.alert-updated-status-' + orderId).show();
+                setTimeout(function () {
+                    $('.alert-updated-status-' + orderId).hide();
+                }, 2000);
+            },
+        });
+    }
+
+    $('.btn-edit-amount-cost').on('click', function (e) {
+        $('.amount-cost').removeAttr('readonly')
+    });
+    $('.btn-edit-amount-total').on('click', function (e) {
+        $('.amount-total').removeAttr('readonly')
     });
 });
