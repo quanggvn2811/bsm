@@ -113,7 +113,7 @@ $(document).ready(function() {
             })
         }
 
-        $('.order_products').val(orderProducts);
+        $('.order_products').val(orderProducts.join('_'));
 
     }
 });

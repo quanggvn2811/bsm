@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\Supplier;
 use Carbon\Traits\Date;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
 
 class OrderController extends Controller
@@ -48,9 +51,9 @@ class OrderController extends Controller
     public function store(Request $request, Stock $stock)
     {
         try {
-            DB::transaction(function ($request) {
-                $data = $request->all();
+            $data = $request->all();
 
+            DB::transaction(function () use ($request, $data, $stock) {
                 // Customer
                 $customerData = [
                     'name' => $data['customer_name'],
@@ -68,7 +71,7 @@ class OrderController extends Controller
 
                 // Store Order
                 $order = $request->only([
-                    'order_date',
+                    //'order_date',
                     'priority',
                     'status_id',
                     'total',
@@ -78,6 +81,10 @@ class OrderController extends Controller
                     'notes',
                 ]);
 
+                $orderDate = $request->get('order_date');
+
+                $order['order_date'] = Carbon::parse($orderDate)->format('Y-m-d');
+
                 $order['order_address'] = $request->get('customer_address');
 
                 $order['customer_id'] = $customer->id;
@@ -86,9 +93,9 @@ class OrderController extends Controller
 
                 $order['shop_id'] = $shop->id;
 
-                $todayOrderIndex = Order::whereOrderDate(date('d/m/Y'))->count();
+                $orderOrderIndex = Order::whereOrderDate($order['order_date'])->count();
 
-                $orderNumber = $shop->prefix . '_' . date('ymd') . sprintf("%03d", intval($todayOrderIndex) + 1);
+                $orderNumber = $shop->prefix . '_' . date('ymd') . sprintf("%03d", intval($orderOrderIndex) + 1);
 
                 $order['order_number'] = $orderNumber;
 
@@ -106,11 +113,27 @@ class OrderController extends Controller
 
                 $order = Order::create($order);
 
-                // Todo Add order detail
+                $orderProductArr = explode('_', $request->get('order_products'));
+                foreach ($orderProductArr as $orderProduct) {
+                    list($prodId, $quantity, $costItem, $priceItem) = explode(',', $orderProduct);
+                    OrderDetail::create([
+                        'product_id' => $prodId,
+                        'quantity' => $quantity,
+                        'cost_item' => $costItem,
+                        'price_item' => $priceItem,
+                        'order_id' => $order->id,
+                    ]);
+
+                    $product = Product::find($prodId)->decrement('quantity', $quantity);
+
+                }
 
             });
+
+            return redirect()->route('admin.categories.index', ['stock' => $stock->id])->withFlashSuccess('Added an order!');
+
         } catch (\Exception $e) {
-            return back()->withFlashSuccess('Somethings went wrong!. Please content your admin.');
+            return redirect()->back()->withFlashSuccess('Somethings went wrong!. Please content your admin.');
         }
 
     }

@@ -6,6 +6,7 @@
 @endsection
 
 @section('content')
+    @include('includes.messages')
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables">
@@ -128,7 +129,7 @@
                                 <div class="order-detail-wrapper body-order-detail">
                                     <div class="row" style="padding: 10px 30px">
                                         <div class="search-products col-md-9">
-                                            <select name="product-list" class="select-product-list" id="select-product-item" placeholder="Search product sku or name">
+                                            <select {{--name="product-list"--}} class="select-product-list" id="select-product-item" placeholder="Search product sku or name">
                                                 <option value="">Select product</option>
                                                 @foreach($products as $product)
                                                         <?php $text = $product->sku ? '[' . $product->sku . '] ' . $product->name : $product->name ?>
@@ -158,6 +159,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" class="order_products" name="order_products">
                             <button style="margin: 20px" type="submit" class="btn btn-success">Create</button>
                         </form>
                     </div>
@@ -166,7 +168,6 @@
         </div>
     </div>
     <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
-    <input type="hidden" class="order_products" name="order_products[]">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
