@@ -20,7 +20,7 @@
                 <div class="btn-create-product">
 
                 </div>
-                <div class="bs-example widget-shadow" data-example-id="contextual-table">
+                <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
                     <h4>Categories List</h4>
                     <table class="table">
                         <thead>
