@@ -48,4 +48,9 @@ class Order extends Model
     ];
 
     const ORDER_EVIDENCE_FOLDER = 'Evidence_Images';
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

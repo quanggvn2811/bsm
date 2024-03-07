@@ -116,4 +116,64 @@ $(document).ready(function() {
         $('.order_products').val(orderProducts.join('_'));
 
     }
+
+    $('.order_priority select').on('change', function (e) {
+        let value = $(e.target).val();
+        let addClass = 'normal';
+        if (1 == value) {
+            addClass = 'low';
+        } else if (3 == value) {
+            addClass = 'high';
+        }
+
+        $(e.target)
+            .removeClass('low')
+            .removeClass('normal')
+            .removeClass('high')
+            .addClass(addClass)
+        ;
+    });
+
+    $('.order_status select').on('change', function (e) {
+        let value = parseInt($(e.target).val());
+        console.log(value)
+        let addClass = 'waiting';
+        switch (value) {
+            case 2:
+                addClass = 'pending';
+                break;
+            case 3:
+                addClass = 'today_handle';
+                break;
+            case 4:
+                addClass = 'processing';
+                break;
+            case 5:
+                addClass = 'take_care';
+                break;
+            case 6:
+                addClass = 'shipped';
+                break;
+            case 7:
+                addClass = 'failed';
+                break;
+            case 8:
+                addClass = 'completed';
+                break;
+
+            default: addClass = 'waiting';
+        }
+
+        $(e.target)
+            .removeClass('waiting')
+            .removeClass('pending')
+            .removeClass('today_handle')
+            .removeClass('processing')
+            .removeClass('take_care')
+            .removeClass('shipped')
+            .removeClass('failed')
+            .removeClass('completed')
+            .addClass(addClass)
+        ;
+    });
 });

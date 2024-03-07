@@ -20,9 +20,14 @@ use mysql_xdevapi\Exception;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request, Stock $stock)
     {
+        $orders = Order::with('customer')->paginate(10);
 
+        return view('backend.order.index')
+            ->withStock($stock)
+            ->withOrders($orders)
+            ;
     }
 
     public function create(Request $request, Stock $stock)
