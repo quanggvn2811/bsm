@@ -19,13 +19,13 @@
                 </div>
                 {{--@include('backend.product.includes.search_form')--}}
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
-                    <h4>Orders List</h4>
+                    <h4>Orders List ({{ $orders->total() }})</h4>
                     <div class="row" style="width: 200px; float: right; display: flex">
-                        {{--<div class="col-12  mt-2 text-right d-block d-sm-none">
-                            {{ $products->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}
-                        </div>--}}
+                        <div class="col-12  mt-2 text-right d-block d-sm-none">
+                            {{ $orders->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}
+                        </div>
                         {{--<div class="col-7 text-right d-none d-sm-block">
-                            {{ $products->appends(request()->input())->onEachSide(4)->links() }}
+                            {{ $orders->appends(request()->input())->onEachSide(4)->links() }}
                         </div>--}}
                     </div>
                     <table class="table">
@@ -44,7 +44,7 @@
                         <tbody>
                         @foreach($orders as $order)
                         <tr data-order_id="{{ $order->id }}" class="active order-lines">
-                            <td class="order_date">{{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }}</td>
+                            <td class="order_date">{{ $order->order_date }}</td>
                             <td class="order_number">{{ $order->order_number }}</td>
                             <td class="order_priority">
                                 <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">

@@ -69,7 +69,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Asia/Ho_Chi_Minh'),
+
+    'date_format' => 'd/m/Y',
 
     /*
     |--------------------------------------------------------------------------

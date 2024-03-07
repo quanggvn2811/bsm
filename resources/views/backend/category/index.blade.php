@@ -15,7 +15,7 @@
                     <a href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Product</a>
                     <a href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-dark btn-add-product">All Products</a>
                     <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
-                    <a href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-warning btn-add-product">All Orders</a>
+                    <a href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-info btn-add-product">All Orders</a>
                 </div>
                 <div class="btn-create-product">
 
