@@ -39,13 +39,14 @@
                             <th class="">Notes</th>
                             <th class="">Customer</th>
                             <th class="">Phone</th>
+                            <th class="">Address</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($orders as $order)
                         <tr data-order_id="{{ $order->id }}" class="active order-lines">
                             <td class="order_date">{{ $order->order_date }}</td>
-                            <td class="order_number">{{ $order->order_number }}</td>
+                            <td class="order_number"><a href="{{ route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]) }}">{{ $order->order_number }}</a></td>
                             <td class="order_priority">
                                 <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">
                                     @foreach(\App\Models\Order::ORDER_PRIORITY as $pKey => $priority)
@@ -66,6 +67,7 @@
                             <td class="order_priority">{!! $order->notes !!}</td>
                             <td class="customer">{{ $order->customer->name }}</td>
                             <td class="phone">{{ $order->customer->phone }}</td>
+                            <td class="address">{{ $order->order_address }}</td>
                         </tr>
                         @endforeach
                         </tbody>

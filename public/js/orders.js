@@ -18,6 +18,18 @@ $(document).ready(function() {
         $('.body-order-detail').toggle();
     });
 
+    $('.order-detail-header').click(function () {
+        $('.order-detail-body').toggle();
+    });
+
+    $('.customer-info-header').click(function () {
+        $('.customer-info-body').toggle();
+    });
+
+    $('.order-info-header').click(function () {
+        $('.order-info-body').toggle();
+    });
+
     $('#order_date').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
@@ -126,7 +138,7 @@ $(document).ready(function() {
 
     }
 
-    $('.order_priority select').on('change', function (e) {
+    $('.order_priority select, .update_priority select').on('change', function (e) {
         let value = $(e.target).val();
         let addClass = 'normal';
         if (1 == value) {
@@ -142,7 +154,9 @@ $(document).ready(function() {
             .addClass(addClass)
         ;
 
-        updatePriority($(e.target).closest('tr').data('order_id'), parseInt(value));
+        const orderId = $(e.target).closest('tr').data('order_id') ?? $(e.target).closest('.update_priority').data('order_id');
+
+        updatePriority(orderId, parseInt(value));
     });
 
     function updatePriority(orderId, priorityId)
@@ -164,7 +178,7 @@ $(document).ready(function() {
         });
     }
 
-    $('.order_status select').on('change', function (e) {
+    $('.order_status select, .update_status select').on('change', function (e) {
         let value = parseInt($(e.target).val());
         let addClass = 'waiting';
         switch (value) {
@@ -205,7 +219,9 @@ $(document).ready(function() {
             .addClass(addClass)
         ;
 
-        updateStatus($(e.target).closest('tr').data('order_id'), value);
+        const orderId = $(e.target).closest('tr').data('order_id') ?? $(e.target).closest('.update_status').data('order_id');
+
+        updateStatus(orderId, value);
     });
 
     function updateStatus(orderId, statusId)
@@ -232,5 +248,26 @@ $(document).ready(function() {
     });
     $('.btn-edit-amount-total').on('click', function (e) {
         $('.amount-total').removeAttr('readonly')
+    });
+
+    // Copy text to clipboard
+    $('td.address, td.customer, td.phone').on('click', function (e) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(e.target).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        $(e.target).css('color', 'darkred')
+    });
+
+    $('.content-info-name-icon, .content-info-phone-icon, .content-info-address-icon').on('click', function (e) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($('.' + $(e.target).data('trigger_to')).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        $(e.target).css('color', 'darkred')
     });
 });
