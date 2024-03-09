@@ -53,4 +53,14 @@ class Order extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
+    public function order_detail()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 }

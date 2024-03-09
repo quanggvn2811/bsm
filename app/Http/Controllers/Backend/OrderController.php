@@ -168,4 +168,13 @@ class OrderController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
+    public function show(Request $request, Stock $stock, Order $order)
+    {
+        $order = Order::whereId($order->id)->with('order_detail')->with('order_detail.product')->first();
+        return view('backend.order.view_order')
+            ->withStock($stock)
+            ->withOrder($order)
+            ;
+    }
 }
