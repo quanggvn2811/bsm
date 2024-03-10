@@ -39,7 +39,14 @@
                     </div>
                 </div>
                 <div class="form-group row pd-0-10 bs-example widget-shadow" style="overflow-x:auto;">
-                    <h4 class="header-wrapper order-detail-header">Orders Detail</h4>
+                    <?php
+                        $totalItems = 0;
+                        foreach ($order->order_detail as $detail) {
+                            $qty = $detail->quantity ?? 1;
+                            $totalItems += $qty;
+                        }
+                    ?>
+                    <h4 class="header-wrapper order-detail-header">Orders Detail - Total: <span style="color: red !important;">{{ $totalItems }}</span> ITEMS</h4>
                     <table class="table table-bordered detail-order order-detail-body">
                         <thead>
                             <tr>
@@ -62,7 +69,7 @@
                                     ?>
                                 <tr data-product_id="" class="product-item-row">
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $detail->product->name }}</td>
+                                    <td><a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $detail->product->id]) }}">{{ $detail->product->name }}</a></td>
                                     <td style="width: 50px; text-align: center"><button type="button" class="btn @if(1 === intval($detail->quantity ?? 1)) btn-dark @else btn-danger @endif">
                                         {{ $detail->quantity ?? 1 }}</button></td>
                                     <td style="width: 200px; height: 200px; padding: 0">

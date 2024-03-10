@@ -218,6 +218,12 @@
             opacity: 0;
         }*/
 
+        .td-cost-plus, .td-price-plus {
+            min-width: 100px;
+        }
+        td {
+            vertical-align: center !important;
+        }
         @media only screen and (max-width: 991px) {
             .search-products {
                 padding: 0 !important;
@@ -226,6 +232,9 @@
                 margin-top: 20px;
                 margin-right: 15px;
                 float: right;
+            }
+            .td-cost-plus, .td-price-plus {
+                padding: 13px 3px !important;
             }
         }
     </style>

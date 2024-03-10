@@ -91,8 +91,8 @@ $(document).ready(function() {
             '<td>' + selectedProduct["sku"] + '</td>\n' +
             '<td>' + selectedProduct["name"] + '</td>\n' +
             '<td><input type="number" class="form-control quantity-plus" value="1"></td>\n' +
-            '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
-            '<td><input type="number" class="form-control price-plus" value="' + selectedProduct["price"] + '"></td>\n' +
+            '<td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
+            '<td class="td-price-plus"><input type="number" class="form-control price-plus" value="' + selectedProduct["price"] + '"></td>\n' +
             '<td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="' + avatarUrl + '" alt=""></td>\n' +
             '<td>' + subProductList + '</td>\n' +
             '<td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>\n' +
