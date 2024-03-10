@@ -91,8 +91,8 @@ $(document).ready(function() {
             '<td>' + selectedProduct["sku"] + '</td>\n' +
             '<td>' + selectedProduct["name"] + '</td>\n' +
             '<td><input type="number" class="form-control quantity-plus" value="1"></td>\n' +
-            '<td><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
-            '<td><input type="number" class="form-control price-plus" value="' + selectedProduct["price"] + '"></td>\n' +
+            '<td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
+            '<td class="td-price-plus"><input type="number" class="form-control price-plus" value="' + selectedProduct["price"] + '"></td>\n' +
             '<td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="' + avatarUrl + '" alt=""></td>\n' +
             '<td>' + subProductList + '</td>\n' +
             '<td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>\n' +
@@ -270,4 +270,92 @@ $(document).ready(function() {
 
         $(e.target).css('color', 'darkred')
     });
+
+    // Store box size
+    /*$('.box-size-input').on('keypress', function (e) {
+        let x = $('input[name="long"]').val();
+        let y = $('input[name="wide"]').val();
+        let z = $('input[name="high"]').val();
+        console.log(z, x, y)
+        if (x && y && z) {
+            $('.btn-save-box-size').removeAttribute('disabled');
+        }
+    });*/
+
+    $('.btn-save-box-size').on('click', function (e) {
+        let x = $('input[name="long"]').val();
+        let y = $('input[name="wide"]').val();
+        let z = $('input[name="high"]').val();
+
+        if (!x || !y || !z) {
+            $('.save-box-size-error').show();
+
+            setTimeout(function () {
+                $('.save-box-size-error').hide();
+            }, 5000);
+
+            return;
+        }
+
+        let boxSize = [x, y, z].join(';');
+        let orderId = $('#_order_id').val();
+
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_box_size',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                box_size: boxSize,
+            },
+            success: function(data) {
+                $('.alert-updated-box-size').show();
+                setTimeout(function () {
+                    $('.alert-updated-box-size').hide();
+                }, 2000);
+            },
+        });
+    });
+
+    $('.shipping_unit').on('change', function (e) {
+        let value = parseInt($(e.target).val());
+        let text = $(this).find("option:selected").text();
+
+        $(e.target)
+            .removeClass('ghn')
+            .removeClass('vtp')
+            .removeClass('ghtk')
+            .removeClass('best')
+            .removeClass('others')
+            .addClass(text.toLowerCase())
+        ;
+
+        let orderId = $(e.target).closest('tr').data('order_id') ?? $('#_order_id').val();
+
+        updateShippingUnit(orderId, value);
+    });
+
+    function updateShippingUnit(orderId, shippingUnitId)
+    {
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_shipping_unit',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                shipping_unit: shippingUnitId,
+            },
+            success: function(data) {
+                $('.alert-updated-shipping-unit-' + orderId).show();
+                setTimeout(function () {
+                    $('.alert-updated-shipping-unit-' + orderId).hide();
+                }, 2000);
+            },
+        });
+    }
+
+    $('.search-order-header').on('click', function (e) {
+        $('.search-box-item').toggle();
+    });
+
 });

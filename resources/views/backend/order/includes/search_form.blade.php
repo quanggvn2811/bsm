@@ -1,79 +1,107 @@
 <div class="form-search-advanced col">
     <form method="GET">
         <div class="row col">
-            <div class="row col-md-6">
+            <h4 class="header-wrapper search-order-header">Search Orders</h4>
+            <div class="row col-md-6 search-box-item">
                 <div class="form-group row">
                     <label class="col-md-2" for="title">Name</label>
                     <div class="col-md-10">
-                        <input class="form-control"  autofocus type="text" id="validationCustom01" name="prod_name"
-                               value="{{$_GET['prod_name'] ?? ''}}">
+                        <input class="form-control"  autofocus type="text" id="validationCustom01" name="customer_name"
+                               value="{{$_GET['customer_name'] ?? ''}}">
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2" for="title">Category</label>
+                    <label class="col-md-2" for="title">Phone</label>
                     <div class="col-md-10">
-                        <select class="form-control" id="prodCategory" name="prod_category">
-                            <option value="">All Categories</option>
-                            @foreach($categories as $category)
-                                    <?php
-                                    $selectedCategory = '';
-                                    if (isset($_GET['prod_category']) && $category->id == $_GET['prod_category']) {
-                                        $selectedCategory = 'selected';
-                                    }
-                                    ?>
-                                <option {{ $selectedCategory }} value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
+                        <input class="form-control"  autofocus type="text" id="validationCustom01" name="customer_phone"
+                               value="{{$_GET['customer_phone'] ?? ''}}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-2" for="title">Quantity</label>
-                    <div class="col-md-6 prod_calculation_wrapper">
-                        <select required class="form-control prodType" id="prodType" name="prod_calculation">
-                            <option @if(isset($_GET['prod_calculation']) && $_GET['prod_calculation'] === '=') selected @endif value="=">Equal</option>
-                            <option @if(isset($_GET['prod_calculation']) && $_GET['prod_calculation'] === '<') selected @endif value="<">Less</option>
-                            <option @if(isset($_GET['prod_calculation']) && $_GET['prod_calculation'] === '>') selected @endif value=">">Greater</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input class="form-control" placeholder="Quantity" autofocus type="number" id="" name="prod_quantity"
-                               value="{{$_GET['prod_quantity'] ?? ''}}">
+                    <label class="col-md-2" for="title">Order Date</label>
+                    <div class="col-md-10">
+                        <input class="form-control" readonly  autofocus type="text" id="validationCustom01" name="order_date"
+                               value="{{$_GET['order_date'] ?? ''}}">
                     </div>
                 </div>
             </div>
-
-            <div class="row col-md-6">
+            <div class="row col-md-6 search-box-item">
                 <div class="form-group row">
-                    <label class="col-md-2" for="title">SKU</label>
+                    <label class="col-md-2" for="title">Order Number</label>
                     <div class="col-md-10">
-                        <input class="form-control"  autofocus type="text" id="validationCustom01" name="prod_sku"
-                               value="{{$_GET['prod_sku'] ?? ''}}">
+                        <input class="form-control"  autofocus type="text" id="validationCustom01" name="order_number"
+                               value="{{$_GET['order_number'] ?? ''}}">
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2"  for="title">Supplier</label>
+                    <label class="col-md-2" for="title">Shop Name</label>
                     <div class="col-md-10">
-                        <select class="form-control" id="prodSupplier" name="prod_supplier">
-                            <option value="">All Suppliers</option>
-                            @foreach($suppliers as $supplier)
+                        <select name="shop_id" id="shop_id" required class="form-control">
+                            @foreach($shops as $shop)
                                     <?php
-                                    $selectedSupplier = '';
-                                    if (isset($_GET['prod_supplier']) && $_GET['prod_supplier'] == $supplier->id) {
-                                        $selectedSupplier = 'selected';
+                                    $selected = '';
+                                    if (isset($_GET['shop_id'])) {
+                                        if ($_GET['shop_id'] == $shop->id) {
+                                            $selected = 'selected';
+                                        }
+                                    } else if('MDS' === $shop->prefix) {
+                                        $selected = 'selected';
                                     }
                                     ?>
-                                <option {{ $selectedSupplier }} value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                <option {{ $selected }} value="{{ $shop->id }}">{{ $shop->name }}</option>
                             @endforeach
+                                {{--<option value="">All Shops</option>--}}
                         </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label class="col-md-2" for="title">Priority</label>
+                        <div class="col-md-10">
+                            <select name="priority" id="priority" class="form-control">
+                                <option value="0">All Priorities</option>
+                                @foreach(\App\Models\Order::ORDER_PRIORITY as $pKey => $priority)
+                                        <?php
+                                        $selectedPriority = '';
+                                        if (isset($_GET['priority'])) {
+                                            if ($_GET['priority'] == $pKey) {
+                                                $selectedPriority = 'selected';
+                                            }
+                                        }
+                                        ?>
+                                    <option {{ $selectedPriority }} value="{{ $pKey }}">{{ $priority }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-md-2" for="title">Status</label>
+                        <div class="col-md-10">
+                            <select name="status_id" id="" class="form-control">
+                                <option value="0">All Status</option>
+                                @foreach(\App\Models\Order::ORDER_STATUS as $sKey => $status)
+                                        <?php
+                                        $selectedStatus = '';
+                                        if (isset($_GET['status_id'])) {
+                                            if ($_GET['status_id'] == $sKey) {
+                                                $selectedStatus = 'selected';
+                                            }
+                                        }
+                                        ?>
+                                    <option {{ $selectedStatus }} value="{{ $sKey }}">{{ $status }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row col justify-content-center">
+        <div class="row col search-box-item justify-content-center">
             <button class="btn btn-lg btn-primary pl-3 pr-3"  type="submit">Search</button>
+            <a class="btn btn-lg btn-dark pl-3 pr-3" href="{{ route('admin.orders.index', ['stock' => $stock->id]) }}" style="margin-left: 10px">Reset</a>
         </div>
     </form>
 </div>
@@ -81,5 +109,14 @@
     .justify-content-center {
         display: flex;
         justify-content: center;
+    }
+    .header-wrapper {
+        text-transform: uppercase;
+        font-style: italic;
+        color: green !important;
+        cursor: pointer;
+    }
+    .search-box-item {
+        /*display: none;*/
     }
 </style>

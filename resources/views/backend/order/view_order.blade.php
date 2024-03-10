@@ -39,7 +39,14 @@
                     </div>
                 </div>
                 <div class="form-group row pd-0-10 bs-example widget-shadow" style="overflow-x:auto;">
-                    <h4 class="header-wrapper order-detail-header">Orders Detail</h4>
+                    <?php
+                        $totalItems = 0;
+                        foreach ($order->order_detail as $detail) {
+                            $qty = $detail->quantity ?? 1;
+                            $totalItems += $qty;
+                        }
+                    ?>
+                    <h4 class="header-wrapper order-detail-header">Orders Detail - Total: <span style="color: red !important;">{{ $totalItems }}</span> ITEMS</h4>
                     <table class="table table-bordered detail-order order-detail-body">
                         <thead>
                             <tr>
@@ -62,7 +69,7 @@
                                     ?>
                                 <tr data-product_id="" class="product-item-row">
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $detail->product->name }}</td>
+                                    <td><a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $detail->product->id]) }}">{{ $detail->product->name }}</a></td>
                                     <td style="width: 50px; text-align: center"><button type="button" class="btn @if(1 === intval($detail->quantity ?? 1)) btn-dark @else btn-danger @endif">
                                         {{ $detail->quantity ?? 1 }}</button></td>
                                     <td style="width: 200px; height: 200px; padding: 0">
@@ -82,22 +89,31 @@
                                     <br><small style="color: red">DVT: Centimets</small>
                                 </td>
                                 <td colspan="4">
-                                    <form action="">
+                                    {{--<form action="" method="post">--}}
                                         <div class="row">
+                                            <?php
+                                                $x = $y = $z = 0;
+
+                                                if ($order->box_size) {
+                                                    list($x, $y, $z) = explode(';', $order->box_size);
+                                                }
+                                            ?>
                                             <div class="col-md-3 box-size-field">
-                                                <input required type="number" class="form-control" style="border-radius: 4px" placeholder="Long (Chiều Dài)">
+                                                <input value="{{ $x }}" name="long" required type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="Long (Chiều Dài)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <input required type="number" class="form-control" style="border-radius: 4px" placeholder="Wide (Chiều Rộng)">
+                                                <input value="{{ $y }}" name="wide" required type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="Wide (Chiều Rộng)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <input required type="number" class="form-control" style="border-radius: 4px" placeholder="High (Chiều Cao)">
+                                                <input value="{{ $z }}" required name="high" type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="High (Chiều Cao)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <button class="btn btn-success">Save</button>
+                                                <button class="btn btn-success btn-save-box-size">Save</button>
+                                                <i class="fa fa-check-circle alert-updated-box-size" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                                                <span class="save-box-size-error" style="color: red; display: none"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> X, Y, Z is required!</span>
                                             </div>
                                         </div>
-                                    </form>
+                                    {{--</form>--}}
                                 </td>
                             </tr>
                         </tbody>
@@ -185,6 +201,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="_order_id" id="_order_id" value="{{ $order->id }}">
     <style>
         .detail-order td {
             vertical-align: middle !important;
