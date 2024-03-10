@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\ShippingUnit;
 use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\Supplier;
@@ -27,6 +28,7 @@ class OrderController extends Controller
         return view('backend.order.index')
             ->withStock($stock)
             ->withOrders($orders)
+            ->withShippingUnits(ShippingUnit::all())
             ;
     }
 
@@ -182,6 +184,14 @@ class OrderController extends Controller
     {
         $order->update([
             'box_size' => $request->get('box_size')
+        ]);
+
+        return response()->json(['status' => 'success']);
+    }
+    public function updateShippingUnit(Request $request, Order $order)
+    {
+        $order->update([
+            'shipping_unit' => intval($request->get('shipping_unit'))
         ]);
 
         return response()->json(['status' => 'success']);

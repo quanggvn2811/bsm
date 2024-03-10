@@ -63,7 +63,14 @@
                                 </select>
                                 <i class="fa fa-check-circle alert-updated-status-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
-                            <td class="order_priority">VTP</td>
+                            <td class="order_shipping_unit">
+                                <select name="shipping_unit" id="shipping_unit" class="form-control shipping_unit btn {{ strtolower(\App\Models\ShippingUnit::whereId($order->shipping_unit)->first()->acronym) }}">
+                                    @foreach($shippingUnits as $unit)
+                                        <option @if($order->shipping_unit == $unit->id) selected @endif value="{{ $unit->id }}">{{ $unit->acronym }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fa fa-check-circle alert-updated-shipping-unit-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                            </td>
                             <td class="order_priority">{!! $order->notes !!}</td>
                             <td class="customer">{{ $order->customer->name }}</td>
                             <td class="phone">{{ $order->customer->phone }}</td>
@@ -162,6 +169,22 @@
         .tables .order_status .completed {
             background-color: rgb(212, 237, 188);
             color: rgb(17, 115, 75);
+        }
+        #shipping_unit {
+            width: 100px;
+            border-radius: 8px;
+        }
+        .ghn {
+            color: #f26522;
+        }
+        .vtp {
+            color: #EE0033;
+        }
+        .best {
+            color: rgba(226,7,38,.88);
+        }
+        .ghtk {
+            color: #01904a;
         }
     </style>
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>

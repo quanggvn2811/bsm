@@ -317,4 +317,41 @@ $(document).ready(function() {
         });
     });
 
+    $('.shipping_unit').on('change', function (e) {
+        let value = parseInt($(e.target).val());
+        let text = $(this).find("option:selected").text();
+
+        $(e.target)
+            .removeClass('ghn')
+            .removeClass('vtp')
+            .removeClass('ghtk')
+            .removeClass('best')
+            .removeClass('others')
+            .addClass(text.toLowerCase())
+        ;
+
+        let orderId = $(e.target).closest('tr').data('order_id') ?? $('#_order_id').val();
+
+        updateShippingUnit(orderId, value);
+    });
+
+    function updateShippingUnit(orderId, shippingUnitId)
+    {
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_shipping_unit',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                shipping_unit: shippingUnitId,
+            },
+            success: function(data) {
+                $('.alert-updated-shipping-unit-' + orderId).show();
+                setTimeout(function () {
+                    $('.alert-updated-shipping-unit-' + orderId).hide();
+                }, 2000);
+            },
+        });
+    }
+
 });
