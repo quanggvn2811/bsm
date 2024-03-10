@@ -17,7 +17,7 @@
                         <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
                     </div>
                 </div>
-                {{--@include('backend.product.includes.search_form')--}}
+                @include('backend.order.includes.search_form')
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
                     <h4>Orders List ({{ $orders->total() }})</h4>
                     <table class="table">

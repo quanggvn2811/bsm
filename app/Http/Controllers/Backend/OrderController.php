@@ -23,12 +23,59 @@ class OrderController extends Controller
 {
     public function index(Request $request, Stock $stock)
     {
-        $orders = Order::with('customer')->orderBy('created_at', 'DESC')->paginate(10);
+        $from = today()->subDays(7)->format('d/m/Y');
+        $to = today()->format('d/m/Y');
+
+        $orders = Order::where('order_date', '>=', $from)
+            ->where('order_date', '<=', $to)
+            ;
+
+        $customerName = $request->get('customer_name');
+        $customerPhone = $request->get('customer_phone');
+        $orderNumber = $request->get('order_number');
+
+        if ($customerName) {
+            $orders = $orders->whereHas('customer', function ($query) use ($customerName) {
+                $query->where('customers.name', 'like', '%' . $customerName . '%');
+            });
+        }
+
+        if ($customerPhone) {
+            $orders = $orders->whereHas('customer', function ($query) use ($customerPhone) {
+                $query->where('customers.phone', 'like', '%' . $customerPhone . '%');
+            });
+        }
+
+        if ($orderNumber) {
+            $orders = $orders->where('orders.order_number', 'like', '%' . $orderNumber . '%');
+        }
+
+        $shopId = $request->get('shop_id');
+        if (!$shopId) {
+            $shopId = Shop::wherePrefix('MDS')->first()->id;
+        }
+
+        $orders = $orders->whereShopId($shopId);
+
+        $priority = $request->get('priority');
+        if ($priority) {
+            $orders = $orders->wherePriority($priority);
+        }
+
+        $statusId = $request->get('status_id');
+        if ($statusId) {
+            $orders = $orders->whereStatusId($statusId);
+        }
+
+        $orders = $orders->with('customer');
+
+        $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(10);
 
         return view('backend.order.index')
             ->withStock($stock)
             ->withOrders($orders)
             ->withShippingUnits(ShippingUnit::all())
+            ->withShops(Shop::all())
             ;
     }
 

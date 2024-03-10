@@ -354,4 +354,8 @@ $(document).ready(function() {
         });
     }
 
+    $('.search-order-header').on('click', function (e) {
+        $('.search-box-item').toggle();
+    });
+
 });
