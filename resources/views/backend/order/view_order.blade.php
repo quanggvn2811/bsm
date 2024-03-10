@@ -82,22 +82,31 @@
                                     <br><small style="color: red">DVT: Centimets</small>
                                 </td>
                                 <td colspan="4">
-                                    <form action="">
+                                    {{--<form action="" method="post">--}}
                                         <div class="row">
+                                            <?php
+                                                $x = $y = $z = 0;
+
+                                                if ($order->box_size) {
+                                                    list($x, $y, $z) = explode(';', $order->box_size);
+                                                }
+                                            ?>
                                             <div class="col-md-3 box-size-field">
-                                                <input required type="number" class="form-control" style="border-radius: 4px" placeholder="Long (Chiều Dài)">
+                                                <input value="{{ $x }}" name="long" required type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="Long (Chiều Dài)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <input required type="number" class="form-control" style="border-radius: 4px" placeholder="Wide (Chiều Rộng)">
+                                                <input value="{{ $y }}" name="wide" required type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="Wide (Chiều Rộng)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <input required type="number" class="form-control" style="border-radius: 4px" placeholder="High (Chiều Cao)">
+                                                <input value="{{ $z }}" required name="high" type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="High (Chiều Cao)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <button class="btn btn-success">Save</button>
+                                                <button class="btn btn-success btn-save-box-size">Save</button>
+                                                <i class="fa fa-check-circle alert-updated-box-size" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                                                <span class="save-box-size-error" style="color: red; display: none"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> X, Y, Z is required!</span>
                                             </div>
                                         </div>
-                                    </form>
+                                    {{--</form>--}}
                                 </td>
                             </tr>
                         </tbody>
@@ -185,6 +194,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="_order_id" id="_order_id" value="{{ $order->id }}">
     <style>
         .detail-order td {
             vertical-align: middle !important;

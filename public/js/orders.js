@@ -270,4 +270,51 @@ $(document).ready(function() {
 
         $(e.target).css('color', 'darkred')
     });
+
+    // Store box size
+    /*$('.box-size-input').on('keypress', function (e) {
+        let x = $('input[name="long"]').val();
+        let y = $('input[name="wide"]').val();
+        let z = $('input[name="high"]').val();
+        console.log(z, x, y)
+        if (x && y && z) {
+            $('.btn-save-box-size').removeAttribute('disabled');
+        }
+    });*/
+
+    $('.btn-save-box-size').on('click', function (e) {
+        let x = $('input[name="long"]').val();
+        let y = $('input[name="wide"]').val();
+        let z = $('input[name="high"]').val();
+
+        if (!x || !y || !z) {
+            $('.save-box-size-error').show();
+
+            setTimeout(function () {
+                $('.save-box-size-error').hide();
+            }, 5000);
+
+            return;
+        }
+
+        let boxSize = [x, y, z].join(';');
+        let orderId = $('#_order_id').val();
+
+        $.ajax({
+            type:'POST',
+            url:'/admin/orders/' + orderId + '/update_box_size',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                box_size: boxSize,
+            },
+            success: function(data) {
+                $('.alert-updated-box-size').show();
+                setTimeout(function () {
+                    $('.alert-updated-box-size').hide();
+                }, 2000);
+            },
+        });
+    });
+
 });

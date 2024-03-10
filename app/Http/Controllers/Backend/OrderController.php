@@ -177,4 +177,13 @@ class OrderController extends Controller
             ->withOrder($order)
             ;
     }
+
+    public function updateBoxSize(Request $request, Order $order)
+    {
+        $order->update([
+            'box_size' => $request->get('box_size')
+        ]);
+
+        return response()->json(['status' => 'success']);
+    }
 }
