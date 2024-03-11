@@ -243,4 +243,13 @@ class OrderController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
+    public function destroy(Request $request, Stock $stock, Order $order)
+    {
+        if (!$order->delete()) {
+            return redirect()->back()->withFlashDanger('Something went wrong!, Pls contact your administrator.');
+        }
+
+        return redirect()->route('admin.orders.index', ['stock' => $stock->id]);
+    }
 }

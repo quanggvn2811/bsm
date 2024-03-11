@@ -196,6 +196,24 @@
                                 <div class="content-info col-md-8">{{ $order->total > 0 ? number_format($amountCost / $order->total, 2) : 0 }}</div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label class="col-md-4 col-sm-12">Action</label>
+                                <div class="col-md-4 col-sm-6" style="margin: 10px 0">
+                                    <a class="btn btn-primary" href="#"><i class="fa fa-edit"></i></a>
+                                </div>
+                                <div class="col-md-4 col-sm-6" style="margin: 10px 0">
+                                    <form style="display: inline-block" action="{{ route('admin.orders.destroy', ['stock' => $stock->id, 'order' => $order->id]) }}" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" onclick="return confirm('Delete order: {{ $order->order_number }}, are you sure?')"
+                                                class="btn btn-danger btn-delete-product">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -15,4 +15,6 @@ Route::group([
     Route::post('{order}/update_box_size/{associated_session?}', [OrderController::class, 'updateBoxSize'])->name('orders.update_box_size');
     Route::post('{order}/update_shipping_unit/{associated_session?}', [OrderController::class, 'updateShippingUnit'])->name('orders.update_shipping_unit');
     Route::get('stock/{stock}/view/{order}/{associated_session?}', [OrderController::class, 'show'])->name('orders.show');
+    Route::delete('stock/{stock}/delete_order/{order}/{associated_session?}', [OrderController::class, 'destroy'])
+        ->name('orders.destroy');
 });
