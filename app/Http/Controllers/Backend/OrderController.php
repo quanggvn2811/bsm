@@ -200,6 +200,120 @@ class OrderController extends Controller
 
     }
 
+    public function edit(Request $request, Stock $stock, Order $order)
+    {
+        $shops = Shop::all();
+        $suppliers = Supplier::whereStockId($stock->id)->get();
+        $categories = Category::whereStockId($stock->id)->get();
+        $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
+        $products = Product::whereIn('category_id', $categoryInStock)->get();
+        $productArray = $products->toArray();
+        $productById = [];
+        foreach ($productArray as $prod) {
+            $productById[$prod['id']] = $prod;
+        }
+
+        return view('backend.order.edit_order')
+            ->withStock($stock)
+            ->withOrder($order)
+            ->withSuppliers($suppliers)
+            ->withCategories($categories)
+            ->withShops($shops)
+            ->withProducts($products)
+            ->withProductById($productById)
+            ;
+    }
+
+    public function update(Request $request, Stock $stock, Order $order)
+    {
+        try {
+            $data = $request->all();
+
+            DB::transaction(function () use ($request, $data, $stock, $order) {
+                // Customer
+                $customerData = [
+                    'name' => $data['customer_name'],
+                    'address' => $data['customer_address'],
+                    'info_url' => $data['customer_url'],
+                    'more_info' => $data['customer_more_info'],
+                ];
+
+                $customer = Customer::wherePhone($data['customer_phone'])->first();
+
+                if ($customer) {
+                    $customer->update($customerData);
+                }
+
+                // Store Order
+                $orderData = $request->only([
+                    'order_date',
+                    'priority',
+                    'status_id',
+                    'total',
+                    'ship_by_customer',
+                    'ship_by_shop',
+                    'cost',
+                    'notes',
+                ]);
+
+                $orderData['ship_by_customer'] = $orderData['ship_by_customer'] ?? 0;
+                $orderData['ship_by_shop'] = $orderData['ship_by_shop'] ?? 0;
+                $orderData['cost'] = $orderData['cost'] ?? 0;
+                $orderData['total'] = $orderData['total'] ?? 0;
+
+                $orderData['order_address'] = $data['customer_address'];
+
+                $shop = Shop::find($request->get('shop_id'));
+
+                $orderData['shop_id'] = $shop->id;
+
+                if ($request->hasFile('evidence')) {
+                    $evd = [];
+                    foreach ($request->file('evidence') as $img) {
+                        $imgName = Date('YmdHis') . '_' . $img->getClientOriginalName();
+                        $img->move(public_path(Order::ORDER_EVIDENCE_FOLDER), $imgName);
+                        $evd[] = $imgName;
+                    }
+
+                    $orderData['evidence'] = json_encode($evd);
+                }
+
+                $order->update($orderData);
+
+                if ($request->get('order_products')) {
+                    $oldOderDetail = OrderDetail::whereOrderId($order->id);
+                    foreach ($oldOderDetail->get() as $oldDetail) {
+                        Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
+                    }
+
+                    $oldOderDetail->delete();
+
+                    // Add new
+                    $orderProductArr = explode('_', $request->get('order_products'));
+                    foreach ($orderProductArr as $orderProduct) {
+                        list($prodId, $quantity, $costItem, $priceItem) = explode(',', $orderProduct);
+                        OrderDetail::create([
+                            'product_id' => $prodId,
+                            'quantity' => $quantity,
+                            'cost_item' => $costItem,
+                            'price_item' => $priceItem,
+                            'order_id' => $order->id,
+                        ]);
+
+                        Product::find($prodId)->decrement('quantity', $quantity);
+                    }
+                }
+
+            });
+
+            return redirect()->back()->withFlashSuccess('Updated an order!');
+
+        } catch (\Exception $e) {
+            dd($e);
+            return redirect()->back()->withFlashSuccess('Somethings went wrong!. Please content your admin.');
+        }
+    }
+
     public function updatePriority(Request $request, Order $order)
     {
         $order->update([
@@ -242,5 +356,14 @@ class OrderController extends Controller
         ]);
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function destroy(Request $request, Stock $stock, Order $order)
+    {
+        if (!$order->delete()) {
+            return redirect()->back()->withFlashDanger('Something went wrong!, Pls contact your administrator.');
+        }
+
+        return redirect()->route('admin.orders.index', ['stock' => $stock->id]);
     }
 }
