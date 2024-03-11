@@ -358,4 +358,20 @@ $(document).ready(function() {
         $('.search-box-item').toggle();
     });
 
+    $('#customer_phone').on('paste', function (e) {
+        removeNonNumeric(e.target);
+    });
+
+    $('#customer_phone').on('keypress', function (e) {
+        removeNonNumeric(e.target);
+    });
+
+    function removeNonNumeric(element) {
+        setTimeout(function () {
+            let value = $(element).val();
+            let numeric = value.replace(/\D/g,'');
+            $(element).val(numeric);
+        }, 200);
+    }
+
 });
