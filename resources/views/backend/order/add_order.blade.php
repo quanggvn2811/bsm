@@ -25,7 +25,7 @@
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="customer_phone">Phone</label>
-                                            <input type="number" required class="form-control" id="customer_phone" name="customer_phone">
+                                            <input type="text" required class="form-control customer_phone" id="customer_phone" name="customer_phone">
                                         </div>
                                     </div>
                                     <div class="form-group user-plus-info row pd-0-10" style="display: none">
@@ -58,7 +58,7 @@
                                             <input required type="text" name="order_date" class="form-control order_date" id="order_date">
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label for="customer_phone">Status</label>
+                                            <label for="customer_status_id">Status</label>
                                             <select name="status_id" id="status_id" required class="form-control">
                                                 @foreach(\App\Models\Order::ORDER_STATUS as $sKey => $status)
                                                     <option value="{{ $sKey }}">{{ $status }}</option>
@@ -66,7 +66,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label for="customer_phone">Priority</label>
+                                            <label for="customer_priority">Priority</label>
                                             <select name="priority" id="priority" required class="form-control">
                                                 @foreach(\App\Models\Order::ORDER_PRIORITY as $pKey => $priority)
                                                     <option @if(\App\Models\Order::PRIORITY_NORMAL == $pKey) selected @endif value="{{ $pKey }}">{{ $priority }}</option>
