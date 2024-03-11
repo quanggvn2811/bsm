@@ -68,7 +68,7 @@
                             <td class="customer">{{ $order->customer->name }}</td>
                             <td class="phone">{{ $order->customer->phone }}</td>
                             <td class="address hide_with_mobile">{{ $order->order_address }}</td>
-                            <td class="action"><a class="btn btn-primary" href="#"><i class="fa fa-edit"></i></a></td>
+                            <td class="action"><a class="btn btn-primary" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
                         </tr>
                         @endforeach
                         </tbody>
