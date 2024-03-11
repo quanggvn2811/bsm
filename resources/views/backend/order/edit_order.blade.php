@@ -197,8 +197,8 @@
                                                         <td><input type="number" class="form-control quantity-plus" value="{{ $detail->quantity ?? 1 }}"></td></td>
                                                         <td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="{{ $detail->cost_item }}"></td>
                                                         <td class="td-price-plus"><input type="number" class="form-control price-plus" value="{{ $detail->price_item }}"></td>
-                                                        <td>{{ $detail->price_item ?? '' }}</td>
                                                         <td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}" alt=""></td>
+                                                        <td></td>
                                                         <td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>
                                                     </tr>
                                                 @endforeach
