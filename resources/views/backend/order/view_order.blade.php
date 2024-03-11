@@ -200,7 +200,7 @@
                             <div class="form-group col-md-6 col-sm-12">
                                 <label class="col-md-4 col-sm-12">Action</label>
                                 <div class="col-md-4 col-sm-6" style="margin: 10px 0">
-                                    <a class="btn btn-primary" href="#"><i class="fa fa-edit"></i></a>
+                                    <a class="btn btn-primary" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a>
                                 </div>
                                 <div class="col-md-4 col-sm-6" style="margin: 10px 0">
                                     <form style="display: inline-block" action="{{ route('admin.orders.destroy', ['stock' => $stock->id, 'order' => $order->id]) }}" method="POST">

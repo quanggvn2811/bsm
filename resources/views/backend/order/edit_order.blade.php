@@ -11,6 +11,9 @@
         <div class="main-page">
             <div class="tables">
                 <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Edit Product</h2>
+                <div class="btn-all-orders">
+                    <a href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-info btn-all-orders">All Orders</a>
+                </div>
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
                     <div class="form-body">
                         <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="{{ route('admin.orders.update', ['stock' => $stock->id, 'order' => $order->id]) }}">
