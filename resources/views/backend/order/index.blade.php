@@ -33,9 +33,9 @@
                             <th class="">Phone</th>
                             <th class="hide_with_mobile">Address</th>
                             @if($isAdmin)
-                                <th class="hide_with_mobile total">Total</th>
-                                <th class="hide_with_mobile amount-profit">Amount Profit</th>
-                                <th class="hide_with_mobile profit-percent">% Profit</th>
+                                <th class="total">Total</th>
+                                <th class="amount-profit">Amount Profit</th>
+                                <th class="profit-percent">% Profit</th>
                             @endif
                             <th class="">Action</th>
                         </tr>
@@ -83,9 +83,9 @@
                                     $sumTotal += $order->total;
                                     $sumProfit += $amountProfit;
                                     ?>
-                                <td class="total hide_with_mobile">{{ number_format($order->total) }}</td>
-                                <td class="amount-profit hide_with_mobile">{{ number_format($amountProfit) }}</td>
-                                <td class="profit-percent hide_with_mobile">{{ $order->total > 0 ? number_format($amountProfit / $order->total, 2) : 0 }}%</td>
+                                <td class="total">{{ number_format($order->total) }}</td>
+                                <td class="amount-profit">{{ number_format($amountProfit) }}</td>
+                                <td class="profit-percent">{{ $order->total > 0 ? number_format($amountProfit / $order->total, 2) : 0 }}%</td>
                             @endif
                             <td class="action"><a class="btn btn-primary" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
                         </tr>
