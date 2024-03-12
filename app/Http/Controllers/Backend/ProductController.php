@@ -49,7 +49,7 @@ class ProductController extends Controller
             $products = $products->where('quantity', $calculation, $quantity);
         }
 
-        $products = $products->with('category')->paginate(10);
+        $products = $products->with('category')->paginate(config('app.page_count'));
 
         return view('backend.product.index')
             ->withStock($stock)

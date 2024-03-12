@@ -32,10 +32,19 @@
                             <th class="">Customer</th>
                             <th class="">Phone</th>
                             <th class="hide_with_mobile">Address</th>
+                            @if($isAdmin)
+                                <th class="hide_with_mobile total">Total</th>
+                                <th class="hide_with_mobile amount-profit">Amount Profit</th>
+                                <th class="hide_with_mobile profit-percent">% Profit</th>
+                            @endif
                             <th class="">Action</th>
                         </tr>
                         </thead>
                         <tbody>
+                        <?php
+                            $sumTotal = 0;
+                            $sumProfit = 0;
+                        ?>
                         @foreach($orders as $order)
                         <tr data-order_id="{{ $order->id }}" class="active order-lines">
                             <td class="order_date">{{ $order->order_date }}</td>
@@ -68,9 +77,28 @@
                             <td class="customer">{{ $order->customer->name }}</td>
                             <td class="phone">{{ $order->customer->phone }}</td>
                             <td class="address hide_with_mobile">{{ $order->order_address }}</td>
+                            @if($isAdmin)
+                                    <?php
+                                    $amountProfit = $order->total + $order->ship_by_customer - $order->ship_by_shop - $order->cost;
+                                    $sumTotal += $order->total;
+                                    $sumProfit += $amountProfit;
+                                    ?>
+                                <td class="total hide_with_mobile">{{ number_format($order->total) }}</td>
+                                <td class="amount-profit hide_with_mobile">{{ number_format($amountProfit) }}</td>
+                                <td class="profit-percent hide_with_mobile">{{ $order->total > 0 ? number_format($amountProfit / $order->total, 2) : 0 }}%</td>
+                            @endif
                             <td class="action"><a class="btn btn-primary" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
                         </tr>
                         @endforeach
+                        @if($isAdmin)
+                            <tr class="active order-lines">
+                                <td colspan="100%" style="color: red;">
+                                    Sum Total: {{ number_format($sumTotal) }} -
+                                    Sum Profit: {{ number_format($sumProfit) }} -
+                                    Sum % Profit: {{ $sumTotal > 0 ? number_format($sumProfit / $sumTotal, 2) : 0 }}%
+                                </td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                     <div class="row" style="width: 200px; float: right; display: flex">

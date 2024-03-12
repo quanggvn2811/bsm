@@ -374,4 +374,56 @@ $(document).ready(function() {
         }, 200);
     }
 
+    // Config date from/ date to
+    $('input[name="order_date_from"]').on('apply.daterangepicker', function(ev, picker) {
+        const datePicker = picker.endDate.format('DD/MM/YYYY');
+        $(this).val(datePicker);
+    });
+
+    const searchParams = new URLSearchParams(window.location.search);
+    if (!searchParams.has('order_date_from')) {
+        $('#order_date_from').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            startDate: moment().subtract('5', 'day').format('DD/MM/YYYY'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    } else {
+        $('#order_date_from').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            // startDate: moment().subtract('5', 'day').format('DD/MM/YYYY'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    }
+
+
+    $('#order_date_to').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minYear: 2000,
+        maxYear: parseInt(moment().format('YYYY'),10),
+        locale: {
+            format: 'DD/MM/YYYY'
+        },
+        autoApply: true,
+    })
+        .attr('readonly', 'readonly');
+    $('input[name="order_date_to"]').on('apply.daterangepicker', function(ev, picker) {
+        const datePicker = picker.endDate.format('DD/MM/YYYY');
+        $(this).val(datePicker);
+    });
+
 });
