@@ -69,7 +69,7 @@ class OrderController extends Controller
 
         $orders = $orders->with('customer');
 
-        $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(10);
+        $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(config('app.page_count'));
 
         return view('backend.order.index')
             ->withStock($stock)

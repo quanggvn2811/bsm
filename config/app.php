@@ -86,6 +86,9 @@ return [
 
     'locale' => 'en',
 
+
+    'page_count' => env('PAGE_COUNT', 20),
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
