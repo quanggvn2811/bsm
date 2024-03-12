@@ -23,8 +23,8 @@ class OrderController extends Controller
 {
     public function index(Request $request, Stock $stock)
     {
-        $from = today()->subDays(7)->format('d/m/Y');
-        $to = today()->format('d/m/Y');
+        $from = $request->get('order_date_from', today()->subDays(5)->format('d/m/Y'));
+        $to = $request->get('order_date_to', today()->format('d/m/Y'));
 
         $orders = Order::where('order_date', '>=', $from)
             ->where('order_date', '<=', $to)
@@ -71,11 +71,14 @@ class OrderController extends Controller
 
         $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(config('app.page_count'));
 
+        $isAdmin = 'admin@admin.com' === auth()->user()->email;
+
         return view('backend.order.index')
             ->withStock($stock)
             ->withOrders($orders)
             ->withShippingUnits(ShippingUnit::all())
             ->withShops(Shop::all())
+            ->withIsAdmin($isAdmin)
             ;
     }
 

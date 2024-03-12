@@ -20,9 +20,11 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2" for="title">Order Date</label>
-                    <div class="col-md-10">
-                        <input class="form-control" readonly  autofocus type="text" id="validationCustom01" name="order_date"
-                               value="{{$_GET['order_date'] ?? ''}}">
+                    <div class="col-md-5">
+                        <input required type="text" @if(isset($_GET['order_date_from'])) value="{{ $_GET['order_date_from'] }}" @endif name="order_date_from" class="form-control order_date_from col-md-6" id="order_date_from">
+                    </div>
+                    <div class="col-md-5">
+                        <input required type="text" @if(isset($_GET['order_date_to'])) value="{{ $_GET['order_date_to'] }}" @endif name="order_date_to" class="form-control order_date_to col-md-6" id="order_date_to">
                     </div>
                 </div>
             </div>
