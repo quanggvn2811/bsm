@@ -39,8 +39,11 @@ class ProductController extends Controller
         }
 
         $supplier = $request->get('prod_supplier');
+
         if ($supplier) {
-            //$products = $products->where('name', 'like', '%' . $name . '%');
+            $products = $products->whereHas('product_supplier', function ($query) use ($supplier) {
+                $query->whereSupplierId($supplier);
+            });
         }
 
         $quantity = $request->get('prod_quantity');
@@ -233,6 +236,17 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'Update quantity successfully!',
             'product_quantity' => $product->quantity,
+        ]);
+    }
+
+    public function updateCheckedDate(Request $request, Product $product)
+    {
+        $product->update([
+            'checked_date' => $request->get('checked_date'),
+        ]);
+
+        return response()->json([
+            'status' => 'Update checked date successfully!',
         ]);
     }
 

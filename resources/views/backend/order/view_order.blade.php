@@ -17,7 +17,13 @@
                     <div class="container col-md-8">
                         <div class="row">
                             <div class="btn-back col-md-2" style="margin: 10px 0">
-                                <a href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-dark btn-add-product">Back<i class="fa fa-backward" aria-hidden="true"></i></a>
+                                <?php
+                                    $urlBack = route('admin.orders.index', $stock->id);
+                                    if (session()->has('url_back_to_order_list')) {
+                                        $urlBack = session()->get('url_back_to_order_list');
+                                    }
+                                ?>
+                                <a href="{{$urlBack }}" class="btn btn-dark btn-add-product">Back<i class="fa fa-backward" aria-hidden="true"></i></a>
                             </div>
                             <div class="update_priority col-md-3" data-order_id="{{ $order->id }}" style="margin: 10px 0">
                                 <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">

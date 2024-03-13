@@ -48,7 +48,11 @@
                         @foreach($orders as $order)
                         <tr data-order_id="{{ $order->id }}" class="active order-lines">
                             <td class="order_date">{{ $order->order_date }}</td>
-                            <td class="order_number" style="font-weight: bold; font-size: 18px"><a href="{{ route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]) }}">{{ $order->order_number }}</a></td>
+                            <?php
+                                $redirectUrl = route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]);
+                                session()->put('url_back_to_order_list', url()->full());
+                            ?>
+                            <td class="order_number" style="font-weight: bold; font-size: 18px"><a href="{{ $redirectUrl }}">{{ $order->order_number }}</a></td>
                             <td class="order_priority">
                                 <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">
                                     @foreach(\App\Models\Order::ORDER_PRIORITY as $pKey => $priority)

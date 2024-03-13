@@ -74,6 +74,7 @@
 
         <div class="row col justify-content-center">
             <button class="btn btn-lg btn-primary pl-3 pr-3"  type="submit">Search</button>
+            <a href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-lg btn-dark pl-3 pr-3" style="margin-left: 10px">Reset</a>
         </div>
     </form>
 </div>

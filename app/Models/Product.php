@@ -42,10 +42,21 @@ class Product extends Model
         'quantity',
         'type',
         'sub_product_id',
+        'checked_date',
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function order_detail()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
+
+    public function product_supplier()
+    {
+        return $this->hasMany(SuppliersProduct::class);
     }
 }
