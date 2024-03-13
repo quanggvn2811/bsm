@@ -107,6 +107,9 @@ class OrderController extends Controller
 
     public function store(Request $request, Stock $stock)
     {
+        if (!$request->get('order_products')) {
+            return redirect()->back()->withFlashDanger('Add a product item pls.');
+        }
         try {
             $data = $request->all();
 
@@ -229,6 +232,10 @@ class OrderController extends Controller
 
     public function update(Request $request, Stock $stock, Order $order)
     {
+        if (!$request->get('order_products')) {
+            return redirect()->back()->withFlashDanger('Add a product item pls.');
+        }
+
         try {
             $data = $request->all();
 
@@ -309,10 +316,10 @@ class OrderController extends Controller
 
             });
 
-            return redirect()->back()->withFlashSuccess('Updated an order!');
+            return redirect()->route('admin.orders.index', ['stock' => $stock->id])->withFlashSuccess('Updated order: ' . $order->order_number);
+
 
         } catch (\Exception $e) {
-            dd($e);
             return redirect()->back()->withFlashSuccess('Somethings went wrong!. Please content your admin.');
         }
     }

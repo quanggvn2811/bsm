@@ -6,8 +6,8 @@
 @endsection
 
 @section('content')
-    @include('includes.messages')
     <div id="page-wrapper">
+        @include('includes.messages')
         <div class="main-page">
             <div class="tables">
                 <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>
