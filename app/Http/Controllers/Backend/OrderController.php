@@ -363,6 +363,13 @@ class OrderController extends Controller
 
     public function destroy(Request $request, Stock $stock, Order $order)
     {
+        $oderDetail = OrderDetail::whereOrderId($order->id);
+        foreach ($oderDetail->get() as $detail) {
+            Product::find($detail->product_id)->increment('quantity', $detail->quantity);
+        }
+
+        $oderDetail->delete();
+
         if (!$order->delete()) {
             return redirect()->back()->withFlashDanger('Something went wrong!, Pls contact your administrator.');
         }
