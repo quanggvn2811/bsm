@@ -32,11 +32,21 @@ $(document).ready(function() {
     $('.quantity .subQuantity').on('click', function () {
         ProductQuantity.prodId = $(this).closest('tr').data('product_id');
         ProductQuantity.updateQuantity(-1, $(this).closest('tr').find('.quantityValue'));
+        let shouldUpdateCheckedDate = $('#is-today-checked-mode').is(':checked') && moment().format('DD/MM/YYYY') !== $('#checked-date-' + ProductQuantity.prodId).val();
+        if (shouldUpdateCheckedDate) {
+            updateCheckedDate(ProductQuantity.prodId);
+            $('#checked-date-' + ProductQuantity.prodId).val(moment().format('DD/MM/YYYY'));
+        }
     });
 
     $('.quantity .plusQuantity').on('click', function () {
         ProductQuantity.prodId = $(this).closest('tr').data('product_id');
         ProductQuantity.updateQuantity(1, $(this).closest('tr').find('.quantityValue'));
+        let shouldUpdateCheckedDate = $('#is-today-checked-mode').is(':checked') && moment().format('DD/MM/YYYY') !== $('#checked-date-' + ProductQuantity.prodId).val();
+        if (shouldUpdateCheckedDate) {
+            updateCheckedDate(ProductQuantity.prodId);
+            $('#checked-date-' + ProductQuantity.prodId).val(moment().format('DD/MM/YYYY'));
+        }
     });
 
     $('.prodType').on('change', function () {
@@ -125,7 +135,7 @@ $(document).ready(function() {
     $('.search-product-header').on('click', function (e) {
         $('.product-search-box').toggle();
     });
-    function updateCheckedDate(productId, checkedDate) {
+    function updateCheckedDate(productId, checkedDate = moment().format('DD/MM/YYYY')) {
         if (null === productId) {
             return false;
         }
