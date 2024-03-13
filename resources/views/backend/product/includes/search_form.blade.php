@@ -1,6 +1,7 @@
 <div class="form-search-advanced col">
     <form method="GET">
-        <div class="row col">
+        <h4 class="header-wrapper search-product-header">Search Products</h4>
+        <div class="row col product-search-box">
             <div class="row col-md-6">
                 <div class="form-group row">
                     <label class="col-md-2" for="title">Name</label>
@@ -72,7 +73,7 @@
             </div>
         </div>
 
-        <div class="row col justify-content-center">
+        <div class="row col justify-content-center product-search-box">
             <button class="btn btn-lg btn-primary pl-3 pr-3"  type="submit">Search</button>
             <a href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-lg btn-dark pl-3 pr-3" style="margin-left: 10px">Reset</a>
         </div>
@@ -82,5 +83,11 @@
     .justify-content-center {
         display: flex;
         justify-content: center;
+    }
+    .header-wrapper {
+        text-transform: uppercase;
+        font-style: italic;
+        color: green !important;
+        cursor: pointer;
     }
 </style>

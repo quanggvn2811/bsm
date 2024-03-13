@@ -122,6 +122,9 @@ $(document).ready(function() {
         });
     }
 
+    $('.search-product-header').on('click', function (e) {
+        $('.product-search-box').toggle();
+    });
     function updateCheckedDate(productId, checkedDate) {
         if (null === productId) {
             return false;
