@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 @include('backend.product.includes.search_form')
-                <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
+                <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto; position: relative">
                     <h4>Products List ({{ $products->total() }})</h4>
                     <div class="row" style="width: 200px; float: right; display: flex">
                         <div class="col-12  mt-2 text-right d-block d-sm-none">
@@ -27,6 +27,10 @@
                         {{--<div class="col-7 text-right d-none d-sm-block">
                             {{ $products->appends(request()->input())->onEachSide(4)->links() }}
                         </div>--}}
+                    </div>
+                    <div class="form-check form-switch" style="display: inline-block; color: red; position: absolute; top: 1.6em; right: 1.5em; font-size: 18px; font-style: italic">
+                        <input type="checkbox" id="is-today-checked-mode" name="is-today-checked-mode" value="1">
+                        <label for="is-today-checked-mode">Today checked</label>
                     </div>
                     <table class="table">
                         <thead>
