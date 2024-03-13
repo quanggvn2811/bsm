@@ -39,8 +39,11 @@ class ProductController extends Controller
         }
 
         $supplier = $request->get('prod_supplier');
+
         if ($supplier) {
-            //$products = $products->where('name', 'like', '%' . $name . '%');
+            $products = $products->whereHas('product_supplier', function ($query) use ($supplier) {
+                $query->whereSupplierId($supplier);
+            });
         }
 
         $quantity = $request->get('prod_quantity');
