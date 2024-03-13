@@ -42,6 +42,7 @@ class Product extends Model
         'quantity',
         'type',
         'sub_product_id',
+        'checked_date',
     ];
 
     public function category()

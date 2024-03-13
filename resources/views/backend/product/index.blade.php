@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 @include('backend.product.includes.search_form')
-                <div class="bs-example widget-shadow" data-example-id="contextual-table">
+                <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
                     <h4>Products List ({{ $products->total() }})</h4>
                     <div class="row" style="width: 200px; float: right; display: flex">
                         <div class="col-12  mt-2 text-right d-block d-sm-none">
@@ -37,7 +37,7 @@
                             <th>Avatar</th>
                             <th>Quantity</th>
                             <th class="hide_with_mobile">Category</th>
-                            <th class="hide_with_mobile">Status</th>
+                            <th class="hide_with_mobile">Checked Date</th>
                             <th class="hide_with_mobile">Action</th>
                         </tr>
                         </thead>
@@ -64,7 +64,16 @@
                                 <button class="btn btn-success plusQuantity"><i class="fa fa-plus"></i></button>
                             </td>
                             <td class="category hide_with_mobile">{{ $product->category->name }}</td>
-                            <td class="status hide_with_mobile" data-status_val="{{ $product->status }}">{{ $product->status ? 'Active' : 'Inactive' }}</td>
+                            <td class="checked-date">
+                                <?php
+                                    $bgColor = '#999';
+                                    if (!empty($product->checked_date) && '01/01/2024' !== $product->checked_date) {
+                                        $bgColor = '#399b12';
+                                    }
+                                ?>
+                                <input value="{{ $product->checked_date }}" style="width: 110px; border-radius: 4px; background-color: {{ $bgColor }}; color: #ffffff" class="btn" type="text" name="checked-date-{{ $product->id }}" id="checked-date-{{ $product->id }}">
+                                <i class="fa fa-check-circle alert-updated-checked-date-{{ $product->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                            </td>
                             <td class="btn-action hide_with_mobile">
                                 <a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}" class="btn btn-primary btn-edit-product"><i class="fa fa-edit"></i></a>
                                 <form style="display: inline-block" action="{{ route('admin.products.destroy', $product->id) }}" method="POST">
@@ -109,4 +118,5 @@
     </style>
     <script src="{{ asset('public/js/products.js')  . '?v=' . config('app.commit_version') }}"></script>
     <input type="hidden" value="{{ $stock->id }}" name="stock_id">
+    <input type="hidden" value="{{ json_encode($products) }}" id="_products">
 @endsection

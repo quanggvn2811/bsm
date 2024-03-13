@@ -93,6 +93,61 @@ $(document).ready(function() {
 
         $('#avg_cost').val(avgCost.toFixed(2));
     }
+
+    const products = JSON.parse($('#_products').val());
+    if (products?.data) {
+        products.data.forEach(function (product) {
+            let startDate = '01/01/2024';
+            const selector = '#checked-date-' + product.id;
+            if ($(selector).val()) {
+                startDate = $(selector).val();
+            }
+            $(selector).daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1920,
+                maxYear: parseInt(moment().format('YYYY'),10),
+                startDate: startDate,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                },
+                autoApply: true,
+            })
+                .attr('readonly', 'readonly');
+            $(selector).on('apply.daterangepicker', function(ev, picker) {
+                const datePicker = picker.endDate.format('DD/MM/YYYY');
+                $(this).val(datePicker);
+                updateCheckedDate(product.id, datePicker);
+            });
+        });
+    }
+
+    function updateCheckedDate(productId, checkedDate) {
+        if (null === productId) {
+            return false;
+        }
+
+        $.ajax({
+            type:'POST',
+            url:'/admin/products/' + productId + '/update_checked_date',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                checked_date: checkedDate,
+            },
+            success: function(data) {
+                let bgColor = '01/01/2024' !== $('#checked-date-' + productId).val() ? '#399b12' : '#999';
+                console.log(bgColor)
+                $('#checked-date-' + productId).css('background-color', bgColor);
+                $('.alert-updated-checked-date-' + productId).show();
+                setTimeout(function () {
+                    $('.alert-updated-checked-date-' + productId).hide();
+                }, 2000);
+            },
+            error: function() {
+            }
+        });
+    }
 });
 
 

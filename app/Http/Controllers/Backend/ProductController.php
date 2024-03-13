@@ -239,6 +239,17 @@ class ProductController extends Controller
         ]);
     }
 
+    public function updateCheckedDate(Request $request, Product $product)
+    {
+        $product->update([
+            'checked_date' => $request->get('checked_date'),
+        ]);
+
+        return response()->json([
+            'status' => 'Update checked date successfully!',
+        ]);
+    }
+
     public function destroy(Product $product)
     {
         if (!$product->delete()) {
