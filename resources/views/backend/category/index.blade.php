@@ -11,11 +11,12 @@
             <div class="tables">
                 <h2 class="title1 col-md-4">{{ $stock->name }}/Categories</h2>
                 <div class="btn-create">
-                    <button class="btn btn-primary btn-add-category" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Category</button>
-                    <a href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Product</a>
-                    <a href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-dark btn-add-product">All Products</a>
-                    <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
-                    <a href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-info btn-add-product">All Orders</a>
+                    <button style="margin: 5px 3px" class="btn btn-primary btn-add-category" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Category</button>
+                    <a style="margin: 5px 3px" href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Product</a>
+                    <a style="margin: 5px 3px" href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-dark btn-add-product">All Products</a>
+                    <a style="margin: 5px 3px" href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
+                    <a style="margin: 5px 3px" href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-info btn-add-product">All Orders</a>
+                    <a style="margin: 5px 3px" href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-danger import-bills">Import Bills</a>
                 </div>
                 <div class="btn-create-product">
 

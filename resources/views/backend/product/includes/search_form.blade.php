@@ -1,4 +1,4 @@
-<div class="form-search-advanced col">
+<div class="form-search-advanced col row">
     <form method="GET">
         <h4 class="header-wrapper search-product-header">Search Products</h4>
         <div class="row col product-search-box">
