@@ -16,7 +16,9 @@
                     <a style="margin: 5px 3px" href="{{ route('admin.products.index', $stock->id) }}" class="btn btn-dark btn-add-product">All Products</a>
                     <a style="margin: 5px 3px" href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
                     <a style="margin: 5px 3px" href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-info btn-add-product">All Orders</a>
+                    @if($isAdmin)
                     <a style="margin: 5px 3px" href="{{ route('admin.import_bills.create', $stock->id) }}" class="btn btn-danger import-bills">Import Bills</a>
+                    @endif
                 </div>
                 <div class="btn-create-product">
 

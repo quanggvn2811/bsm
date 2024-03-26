@@ -38,7 +38,7 @@ $(document).ready(function() {
 
     // For edit order
     setTimeout(function () {
-        updateOrderProducts();
+        updateOrderProducts(true);
     }, 2000);
 
     $(document).on('click', '.btn-delete-plus-product-row', function (e) {
@@ -50,7 +50,7 @@ $(document).ready(function() {
         updateOrderProducts();
     });
 
-    function updateOrderProducts() {
+    function updateOrderProducts(isEdit = false) {
         let orderProducts = [];
         const plusRows = $('.plus-product-item-row');
         let amountCost = 0;
@@ -68,7 +68,9 @@ $(document).ready(function() {
 
         $('.import_bill_products').val(orderProducts.join('_'));
 
-        $('.total_bill').val(amountCost);
+        if (!isEdit) {
+            $('.total_bill').val(amountCost);
+        }
 
     }
 

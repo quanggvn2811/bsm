@@ -15,4 +15,9 @@ class ImportBill extends Model
         'total',
         'notes',
     ];
+
+    public function import_bill_products()
+    {
+        return $this->hasMany(ImportBillProduct::class);
+    }
 }
