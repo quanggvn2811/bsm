@@ -288,6 +288,10 @@ $(document).ready(function() {
     });*/
 
     $('.btn-save-box-size').on('click', function (e) {
+        if (!confirm('Bạn đã đọc ghi chú chưa?')) {
+            return;
+        }
+
         let x = $('input[name="long"]').val();
         let y = $('input[name="wide"]').val();
         let z = $('input[name="high"]').val();
