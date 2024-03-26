@@ -157,6 +157,9 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="dropdown head-dpdn">
+                        <a href="#" class="dropdown-toggle reload-page" data-toggle="dropdown" aria-expanded="false"><i style="color: chartreuse" class="fa fa-refresh"></i></a>
+                    </li>
                 </ul>
                 <div class="clearfix"> </div>
             </div>
@@ -186,7 +189,7 @@
                                 <span class="prfil-img"><img src="images/2.jpg" alt=""> </span>
                                 <div class="user-name">
                                     <p>Admin Name</p>
-                                    <span>Administrator</span>
+                                    <span>QuangGVN</span>
                                 </div>
                                 <i class="fa fa-angle-down lnr"></i>
                                 <i class="fa fa-angle-up lnr"></i>

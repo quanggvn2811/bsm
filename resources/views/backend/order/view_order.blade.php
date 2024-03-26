@@ -114,7 +114,7 @@
                                                 <input value="{{ $z }}" required name="high" type="number" class="form-control box-size-input" style="border-radius: 4px" placeholder="High (Chiều Cao)">
                                             </div>
                                             <div class="col-md-3 box-size-field">
-                                                <button class="btn btn-success btn-save-box-size">Save</button>
+                                                <button {{--onclick="return confirm('Bạn đã đọc ghi chú chưa?');"--}} class="btn btn-success btn-save-box-size">Save</button>
                                                 <i class="fa fa-check-circle alert-updated-box-size" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                                                 <span class="save-box-size-error" style="color: red; display: none"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> X, Y, Z is required!</span>
                                             </div>

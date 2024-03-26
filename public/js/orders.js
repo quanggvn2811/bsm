@@ -103,6 +103,11 @@ $(document).ready(function() {
         updateOrderProducts();
     });
 
+    // For edit order
+    setTimeout(function () {
+        updateOrderProducts();
+    }, 2000);
+
     $(document).on('click', '.btn-delete-plus-product-row', function (e) {
         $(e.target).closest('tr').remove();
         updateOrderProducts();
@@ -283,6 +288,10 @@ $(document).ready(function() {
     });*/
 
     $('.btn-save-box-size').on('click', function (e) {
+        if (!confirm('Bạn đã đọc ghi chú chưa?')) {
+            return;
+        }
+
         let x = $('input[name="long"]').val();
         let y = $('input[name="wide"]').val();
         let z = $('input[name="high"]').val();
@@ -424,6 +433,29 @@ $(document).ready(function() {
     $('input[name="order_date_to"]').on('apply.daterangepicker', function(ev, picker) {
         const datePicker = picker.endDate.format('DD/MM/YYYY');
         $(this).val(datePicker);
+    });
+
+    $('.search-date').on('click', function (e) {
+        let from = $('.order_date_from').val();
+        let to = $('.order_date_to').val();
+
+        // Today search
+        if ($(this).hasClass('today')) {
+            from = to = moment().format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('yesterday')) {
+            from = to = moment().subtract(1, 'day').format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('this-month')) {
+            from = moment().startOf('month').format('DD/MM/YYYY');
+            to = moment().endOf('month').format('DD/MM/YYYY');
+        }
+
+        $('.order_date_from').val(from);
+        $('.order_date_to').val(to);
+        $('.btn-submit-search').click();
     });
 
 });
