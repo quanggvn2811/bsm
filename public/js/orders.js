@@ -103,6 +103,11 @@ $(document).ready(function() {
         updateOrderProducts();
     });
 
+    // For edit order
+    setTimeout(function () {
+        updateOrderProducts();
+    }, 2000);
+
     $(document).on('click', '.btn-delete-plus-product-row', function (e) {
         $(e.target).closest('tr').remove();
         updateOrderProducts();
