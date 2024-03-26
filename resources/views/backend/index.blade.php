@@ -169,7 +169,7 @@
         <div class="header-right">
 
 
-            <!--search-box-->
+            {{--<!--search-box-->
             <div class="search-box">
                 <form class="input">
                     <input class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-31" />
@@ -179,7 +179,7 @@
                         </svg>
                     </label>
                 </form>
-            </div><!--//end-search-box-->
+            </div><!--//end-search-box-->--}}
 
             <div class="profile_details">
                 <ul>
@@ -209,6 +209,51 @@
         </div>
         <div class="clearfix"> </div>
     </div>
+    <style>
+        /*.table tr:nth-child(2n) td{
+            background-color: #FFF !important;
+        }*/
+        @media (max-width: 943px) {
+            .header-left {
+                margin-left: 28%;
+                width: 34%;
+            }
+            .header-right {
+                width: 38%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-left {
+                margin-left: 10px;
+                width: 60%;
+            }
+            .header-right {
+                width: calc(100% - 60% - 10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-left {
+                margin-left: 10px;
+                width: calc(100% - 10px);
+            }
+            .header-right {
+                display: none;
+            }
+            #page-wrapper {
+                padding-top: 70px !important;
+            }
+        }
+        @media only screen and (max-width: 1024px) {
+            h2 {
+                font-size: 1.4em !important;
+            }
+            h4 {
+                font-size: 1.2em !important;
+            }
+        }
+    </style>
     <!-- //header-ends -->
     <!-- main content start-->
     @yield('content')

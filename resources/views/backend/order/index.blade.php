@@ -19,19 +19,19 @@
                 </div>
                 @include('backend.order.includes.search_form')
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
-                    <h4>Orders List ({{ $orders->total() }})</h4>
+                    <h4 style="margin-bottom: 0">Orders List ({{ $orders->total() }})</h4>
                     <table class="table">
                         <thead>
                         <tr>
-                            <th class="">Date</th>
+                            <th style="min-width: 92px;" class="">Date</th>
                             <th >Order Number</th>
                             <th class="">Priority</th>
                             <th>Status</th>
                             <th>Shipping Unit</th>
                             <th class="hide_with_mobile">Notes</th>
-                            <th class="">Customer</th>
+                            <th class="min-with-150">Customer</th>
                             <th class="">Phone</th>
-                            <th class="hide_with_mobile">Address</th>
+                            <th class="hide_with_mobile min-with-150">Address</th>
                             @if($isAdmin)
                                 <th class="total">Total</th>
                                 <th class="amount-profit">Amount Profit</th>
@@ -80,7 +80,7 @@
                             <td class="order_notes hide_with_mobile">{!! $order->notes !!}</td>
                             <td class="customer">{{ $order->customer->name }}</td>
                             <td class="phone">{{ $order->customer->phone }}</td>
-                            <td class="address hide_with_mobile">{{ $order->order_address }}</td>
+                            <td class="address hide_with_mobile min-with-150">{{ $order->order_address }}</td>
                             @if($isAdmin)
                                     <?php
                                     $amountProfit = $order->total + $order->ship_by_customer - $order->ship_by_shop - $order->cost;
@@ -91,7 +91,7 @@
                                 <td class="amount-profit">{{ number_format($amountProfit) }}</td>
                                 <td class="profit-percent">{{ $order->total > 0 ? number_format($amountProfit / $order->total, 2) : 0 }}%</td>
                             @endif
-                            <td class="action"><a class="btn btn-primary" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
+                            <td class="action"><a class="btn btn-primary btn-edit-order" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
                         </tr>
                         @endforeach
                         @if($isAdmin)
@@ -118,7 +118,7 @@
         </div>
     </div>
     <style>
-        .product-lines td {
+        .order-lines td {
             vertical-align: middle !important;
         }
         .product-lines .name, .product-lines .description {
@@ -140,11 +140,49 @@
             }
         }
 
+        @media only screen and (max-width: 767px) {
+            .date-to-wrapper {
+                margin-top: 20px !important;
+            }
+        }
+
+        @media only screen and (max-width: 1024px) {
+            .tables .order_priority .btn {
+                padding: 0 !important;
+                width: 100px !important;
+                height: 28px;
+            }
+            .tables .order_status .btn {
+                padding: 0 !important;
+                width: 110px !important;
+                height: 28px;
+            }
+            .tables .order_shipping_unit .btn {
+                height: 28px;
+                padding: 0 !important;
+            }
+            .btn-edit-order {
+                padding: 5px 14px;
+                font-size: 11px;
+                line-height: 1.5;
+                border-radius: 3px;
+            }
+            .order-lines td {
+                padding: 10px !important;
+            }
+            .btn-sm-action {
+                padding: 5px 14px;
+                font-size: 13px;
+                line-height: 1.5;
+                border-radius: 3px;
+            }
+        }
+
         .tables .order_priority .normal {
             color: #fff;
             background-color: #5cb85c !important;
             border-color: #4cae4c !important;
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 5px 15px;
             width: 110px;
         }
@@ -152,12 +190,12 @@
             color: #fff;
             background-color: #c9302c !important;
             border-color: #ac2925 !important;
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 5px 15px;
             width: 110px;
         }
         .tables .order_priority .low {
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 5px 15px;
             width: 110px;
             background-color: #999;
@@ -166,7 +204,7 @@
         }
 
         .tables .order_status select {
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 5px 15px;
             width: 130px;
             border-color: #999;
@@ -206,7 +244,7 @@
         }
         #shipping_unit {
             width: 100px;
-            border-radius: 8px;
+            border-radius: 4px;
         }
         .ghn {
             color: #f26522;
@@ -219,6 +257,13 @@
         }
         .ghtk {
             color: #01904a;
+        }
+        .min-with-150 {
+            min-width: 150px;
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
