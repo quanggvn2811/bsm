@@ -12,4 +12,5 @@ Route::group([
     Route::post('stock/{stock}/add/{associated_session?}', [ImportBillController::class, 'store'])->name('import_bills.store');
     Route::get('stock/{stock}/edit/{importBill}/{associated_session?}', [ImportBillController::class, 'edit'])->name('import_bills.edit');
     Route::post('stock/{stock}/edit/{importBill}/{associated_session?}', [ImportBillController::class, 'update'])->name('import_bills.update');
+    Route::delete('stock/{stock}/delete/{importBill}/{associated_session?}', [ImportBillController::class, 'destroy'])->name('import_bills.destroy');
 });

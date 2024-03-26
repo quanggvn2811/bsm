@@ -14,7 +14,7 @@
                     <h2 class="title1 col-md-4"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> /
                         <a href="{{ route('admin.import_bills.index', $stock->id) }}">All Bills</a></h2>
                     <div class="btn-create">
-                        <a href="{{ route('admin.import_bills.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add A Bill</a>
+                        <a href="{{ route('admin.import_bills.create', $stock->id) }}" class="btn btn-success btn-add-product">Add A Bill</a>
                     </div>
                 </div>
                 {{--@include('backend.order.includes.search_form')--}}
@@ -42,7 +42,7 @@
                                     <td>
                                         <a class="btn btn-primary btn-edit-bill" href="{{ route('admin.import_bills.edit', ['stock' => $stock->id, 'importBill' => $bill->id]) }}"><i class="fa fa-edit"></i></a>
                                         <div class="" style="margin: 10px 0; display: inline-block">
-                                            <form style="display: inline-block" action="{{--{{ route('admin.import_bills.destroy', ['stock' => $stock->id, 'importBill' => $bill->id]) }}--}}" method="POST">
+                                            <form style="display: inline-block" action="{{ route('admin.import_bills.destroy', ['stock' => $stock->id, 'importBill' => $bill->id]) }}" method="POST">
                                                 @csrf
                                                 @method('delete')
                                                 <button type="submit" onclick="return confirm('Delete bill #{{ $bill->id }}, are you sure?')"

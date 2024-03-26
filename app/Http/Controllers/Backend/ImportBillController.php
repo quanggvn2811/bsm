@@ -157,4 +157,20 @@ class ImportBillController extends Controller
             return redirect()->back()->withFlashDanger('Somethings went wrong!. Please content your admin.');
         }
     }
+
+    public function destroy(Request $request, Stock $stock, ImportBill $importBill)
+    {
+        $billDetail = ImportBillProduct::whereImportBillId($importBill->id);
+        foreach ($billDetail->get() as $detail) {
+            Product::find($detail->product_id)->decrement('quantity', $detail->quantity);
+        }
+
+        $billDetail->delete();
+
+        if (!$importBill->delete()) {
+            return redirect()->back()->withFlashDanger('Something went wrong!, Pls contact your administrator.');
+        }
+
+        return redirect()->route('admin.import_bills.index', $stock->id)->withFlashSuccess('Deleted bill #' . $importBill->id);
+    }
 }
