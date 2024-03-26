@@ -14,14 +14,14 @@
                 <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
                     <div class="form-body">
-                        <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="{{ route('admin.orders.store', ['stock' => $stock->id]) }}">
+                        <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="">
                             @csrf
                             <div class="import-bills">
                                 <h4 class="header-wrapper header-import-bills">Bill Info</h4>
                                 <div class="import-bills-wrapper body-import-bills">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="">Supplier</label>
-                                        <select required class="form-control prod_suppliers_id" id="prodSupplier" name="">
+                                        <select required class="form-control prod_suppliers_id" id="prodSupplier" name="supplier_id">
                                             @foreach($suppliers as $supplier)
                                                     <?php
                                                     $selectedSupplier = '';
@@ -33,13 +33,17 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="">Date</label>
                                         <input required type="text" name="order_date" class="form-control order_date" id="order_date">
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="">Total Bill</label>
-                                        <input required disabled type="number" name="total_bill" class="form-control total_bill" id="total_bill">
+                                        <input required type="number" value="0" name="total_bill" class="form-control total_bill" id="total_bill">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="notes">Notes</label>
+                                        <textarea style="border-radius: 4px" class="form-control" id="notes" cols="10" rows="5" name="notes"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +70,7 @@
                                                 <th>SKU</th>
                                                 <th>Product Name</th>
                                                 <th>Quantity</th>
-                                                <th>Price Item</th>
+                                                <th>Cost Item</th>
                                                 <th>Image</th>
                                                 <th>Action</th>
                                             </tr> </thead>
@@ -76,6 +80,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" class="import_bill_products" name="import_bill_products">
                             <button style="margin: 20px" type="submit" class="btn btn-success">Create</button>
                         </form>
                     </div>
@@ -83,6 +88,12 @@
             </div>
         </div>
     </div>
+    <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
+    <script src="{{ asset('public/js/import_bills.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script>
+        var productImagePublicFolder = '<?php echo e(asset('public/Pro_Images/')); ?>';
+    </script>
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
@@ -139,6 +150,4 @@
             }
         }
     </style>
-    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
-    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection

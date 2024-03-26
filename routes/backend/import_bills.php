@@ -8,4 +8,5 @@ Route::group([
     // 'middleware' => 'role:administrator'
 ], function () {
     Route::get('stock/{stock}/add/{associated_session?}', [ImportBillController::class, 'create'])->name('import_bills.create');
+    Route::post('stock/{stock}/add/{associated_session?}', [ImportBillController::class, 'store'])->name('import_bills.store');
 });
