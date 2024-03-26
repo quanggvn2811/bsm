@@ -435,4 +435,27 @@ $(document).ready(function() {
         $(this).val(datePicker);
     });
 
+    $('.search-date').on('click', function (e) {
+        let from = $('.order_date_from').val();
+        let to = $('.order_date_to').val();
+
+        // Today search
+        if ($(this).hasClass('today')) {
+            from = to = moment().format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('yesterday')) {
+            from = to = moment().subtract(1, 'day').format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('this-month')) {
+            from = moment().startOf('month').format('DD/MM/YYYY');
+            to = moment().endOf('month').format('DD/MM/YYYY');
+        }
+
+        $('.order_date_from').val(from);
+        $('.order_date_to').val(to);
+        $('.btn-submit-search').click();
+    });
+
 });
