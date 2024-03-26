@@ -28,7 +28,7 @@
                             <th class="">Priority</th>
                             <th>Status</th>
                             <th>Shipping Unit</th>
-                            <th class="hide_with_mobile">Notes</th>
+                            <th class="hide_with_mobile .min-with-150">Notes</th>
                             <th class="min-with-150">Customer</th>
                             <th class="">Phone</th>
                             <th class="hide_with_mobile min-with-150">Address</th>
@@ -77,8 +77,8 @@
                                 </select>
                                 <i class="fa fa-check-circle alert-updated-shipping-unit-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
-                            <td class="order_notes hide_with_mobile">{!! $order->notes !!}</td>
-                            <td class="customer">{{ $order->customer->name }}</td>
+                            <td class="order_notes hide_with_mobile min-with-150">{!! $order->notes !!}</td>
+                            <td class="customer min-with-150">{{ $order->customer->name }}</td>
                             <td class="phone">{{ $order->customer->phone }}</td>
                             <td class="address hide_with_mobile min-with-150">{{ $order->order_address }}</td>
                             @if($isAdmin)
@@ -146,7 +146,7 @@
             }
         }
 
-        @media only screen and (max-width: 1024px) {
+        @media only screen and (max-width: 1200px) {
             .tables .order_priority .btn {
                 padding: 0 !important;
                 width: 100px !important;
