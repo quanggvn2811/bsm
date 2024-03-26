@@ -11,7 +11,7 @@
         <div class="main-page">
             @include('includes.messages')
             <div class="tables">
-                <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>
+                <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Bill</h2>
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
                     <div class="form-body">
                         <form enctype="multipart/form-data" class="add-edit-product-form" method="post" action="">

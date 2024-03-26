@@ -20,4 +20,9 @@ class ImportBill extends Model
     {
         return $this->hasMany(ImportBillProduct::class);
     }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
 }

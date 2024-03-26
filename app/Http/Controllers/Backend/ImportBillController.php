@@ -14,6 +14,26 @@ use Illuminate\Support\Facades\DB;
 
 class ImportBillController extends Controller
 {
+
+    public function index(Request $request, Stock $stock)
+    {
+        $isAdmin = 'admin@admin.com' === auth()->user()->email;
+
+        $importBills = ImportBill::whereHas('supplier', function ($query) use ($stock) {
+            $query->where('suppliers.stock_id', $stock->id);
+        });
+
+        $importBills = $importBills->with('supplier');
+        $importBills = $importBills->with('import_bill_products');
+
+        $importBills = $importBills->orderBy('import_bills.date', 'ASC')->paginate(config('app.page_count'));
+
+        return view('backend.import_bill.index')
+            ->withStock($stock)
+            ->withIsAdmin($isAdmin)
+            ->withImportBills($importBills)
+            ;
+    }
     public function create(Request $request, Stock $stock)
     {
         $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
@@ -61,10 +81,10 @@ class ImportBillController extends Controller
                     Product::find($prodId)->increment('quantity', $quantity);
 
                 }
+
             });
 
-            return redirect()->back()->withFlashSuccess('Added a bill!');
-            //return redirect()->route('admin.orders.index', ['stock' => $stock->id])->withFlashSuccess('Added an order!');
+            return redirect()->route('admin.import_bills.index', ['stock' => $stock->id])->withFlashSuccess('Added a bill');
 
         } catch (\Exception $e) {
             return redirect()->back()->withFlashDanger('Somethings went wrong!. Please content your admin.');
@@ -131,8 +151,7 @@ class ImportBillController extends Controller
                 }
             });
 
-            return redirect()->back()->withFlashSuccess('Edited a bill!');
-            //return redirect()->route('admin.orders.index', ['stock' => $stock->id])->withFlashSuccess('Added an order!');
+            return redirect()->route('admin.import_bills.index', ['stock' => $stock->id])->withFlashSuccess('Edited bill #' . $importBill->id);
 
         } catch (\Exception $e) {
             return redirect()->back()->withFlashDanger('Somethings went wrong!. Please content your admin.');
