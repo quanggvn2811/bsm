@@ -416,6 +416,11 @@
         });
     });
 
+    $('.reload-page').on('click', () => {
+        $('.reload-page').css('opacity', 0.5);
+        window.location.reload();
+    });
+
 </script>
 <!-- //for index page weekly sales java script -->
 
