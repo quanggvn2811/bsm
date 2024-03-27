@@ -36,8 +36,8 @@
                         <tr>
                             <th style="min-width: 92px;" class="">Date</th>
                             <th >Order Number</th>
-                            <th class="">Priority</th>
                             <th>Status</th>
+                            <th class="">Priority</th>
                             <th>Shipping Unit</th>
                             <th class="hide_with_mobile .min-with-150">Notes</th>
                             <th class="min-with-150">Customer</th>
@@ -64,14 +64,6 @@
                                 session()->put('url_back_to_order_list', url()->full());
                             ?>
                             <td class="order_number" style="font-weight: bold; font-size: 18px"><a href="{{ $redirectUrl }}">{{ $order->order_number }}</a></td>
-                            <td class="order_priority">
-                                <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">
-                                    @foreach(\App\Models\Order::ORDER_PRIORITY as $pKey => $priority)
-                                        <option @if($order->priority == $pKey) selected @endif value="{{ $pKey }}">{{ $priority }}</option>
-                                    @endforeach
-                                </select>
-                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
-                            </td>
                             <td class="order_status">
                                 <select name="status_id" id="status_id" class="form-control btn {{str_replace(' ', '_', strtolower(\App\Models\Order::ORDER_STATUS[$order->status_id]))}}">
                                     @foreach(\App\Models\Order::ORDER_STATUS as $statusKey => $status)
@@ -79,6 +71,14 @@
                                     @endforeach
                                 </select>
                                 <i class="fa fa-check-circle alert-updated-status-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                            </td>
+                            <td class="order_priority">
+                                <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">
+                                    @foreach(\App\Models\Order::ORDER_PRIORITY as $pKey => $priority)
+                                        <option @if($order->priority == $pKey) selected @endif value="{{ $pKey }}">{{ $priority }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="order_shipping_unit">
                                 <select name="shipping_unit" id="shipping_unit" class="form-control shipping_unit btn {{ strtolower(\App\Models\ShippingUnit::whereId($order->shipping_unit)->first()->acronym) }}">
