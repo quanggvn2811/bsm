@@ -9,7 +9,16 @@
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables">
-                <h2 class="title1 col-md-4">{{ $stock->name }}/Categories</h2>
+                <div class="col-md-4 pd-l-0">
+                    <div class="short-url-menu">
+                        <div class="first">
+                            <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
+                        </div>
+                        <div class="second">
+                            <a href="{{ route('admin.categories.index', $stock->id) }}">Categories</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="btn-create">
                     <button style="margin: 5px 3px" class="btn btn-primary btn-add-category" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Category</button>
                     <a style="margin: 5px 3px" href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product" {{--data-toggle="modal" data-target="#update-stock-dialog"--}}>Add Product</a>

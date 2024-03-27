@@ -10,7 +10,17 @@
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables">
-                <h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>
+                {{--<h2 class="title1 col-md-4" style="width: 100%; margin-top: .8em"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Product</h2>--}}
+                <div class="col-md-12 pd-l-0" style="margin-bottom: 20px">
+                    <div class="short-url-menu">
+                        <div class="first">
+                            <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
+                        </div>
+                        <div class="second">
+                            <a href="">@if($isEdit) Edit Product @else Add Product @endif</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-grids row widget-shadow" data-example-id="basic-forms">
                     <div class="form-body">
                         @php

@@ -11,8 +11,16 @@
         <div class="main-page">
             <div class="tables">
                 <div class="row">
-                    <h2 class="title1 col-md-4"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> /
-                        <a href="{{ route('admin.import_bills.index', $stock->id) }}">All Bills</a></h2>
+                    <div class="col-md-4 pd-l-0">
+                        <div class="short-url-menu">
+                            <div class="first">
+                                <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
+                            </div>
+                            <div class="second">
+                                <a href="{{ route('admin.import_bills.index', $stock->id) }}">All Bills</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="btn-create">
                         <a href="{{ route('admin.import_bills.create', $stock->id) }}" class="btn btn-success btn-add-product">Add A Bill</a>
                     </div>
