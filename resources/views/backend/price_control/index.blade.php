@@ -25,6 +25,9 @@
                 {{--@include('backend.order.includes.search_form')--}}
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
                     <h4 style="margin-bottom: 0">Price Product ({{ $products->total() }})</h4>
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $products->appends(Request::all())->links() }}
+                    </div>
                     <table class="table">
                         <thead>
                         <tr>
@@ -68,13 +71,8 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="row" style="width: 200px; float: right; display: flex">
-                        <div class="col-12  mt-2 text-right d-block d-sm-none">
-                            {{ $products->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}
-                        </div>
-                        {{--<div class="col-7 text-right d-none d-sm-block">
-                            {{ $orders->appends(request()->input())->onEachSide(4)->links() }}
-                        </div>--}}
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $products->appends(Request::all())->links() }}
                     </div>
                 </div>
             </div>

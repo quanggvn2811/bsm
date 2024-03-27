@@ -103,6 +103,11 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
         .pd-l-0 {
             padding-left: 0;
         }
+        @media only screen and (max-width: 767px) {
+            .short-url-menu {
+                margin-bottom: 20px;
+            }
+        }
     </style>
     <!--pie-chart --><!-- index page sales reviews visitors pie chart -->
     <script src="{{ asset('template/js/pie-chart.js') }}" type="text/javascript"></script>

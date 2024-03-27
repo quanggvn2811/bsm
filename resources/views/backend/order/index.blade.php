@@ -11,8 +11,6 @@
         <div class="main-page">
             <div class="tables">
                 <div class="row">
-                    {{--<h2 class="title1 col-md-4"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> /
-                        <a href="{{ route('admin.orders.index', $stock->id) }}">All Orders</a></h2>--}}
                     <div class="col-md-4 pd-l-0">
                         <div class="short-url-menu">
                             <div class="first">
@@ -30,6 +28,9 @@
                 @include('backend.order.includes.search_form')
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
                     <h4 style="margin-bottom: 0">Orders List ({{ $orders->total() }})</h4>
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $orders->appends(Request::all())->links() }}
+                    </div>
                     <table class="table">
                         <thead>
                         <tr>
@@ -115,13 +116,8 @@
                         @endif
                         </tbody>
                     </table>
-                    <div class="row" style="width: 200px; float: right; display: flex">
-                        <div class="col-12  mt-2 text-right d-block d-sm-none">
-                            {{ $orders->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}
-                        </div>
-                        {{--<div class="col-7 text-right d-none d-sm-block">
-                            {{ $orders->appends(request()->input())->onEachSide(4)->links() }}
-                        </div>--}}
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $orders->appends(Request::all())->links() }}
                     </div>
                 </div>
             </div>

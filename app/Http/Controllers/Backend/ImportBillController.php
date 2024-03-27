@@ -101,6 +101,8 @@ class ImportBillController extends Controller
             $productById[$prod['id']] = $prod;
         }
 
+        $importBill = ImportBill::whereId($importBill->id)->with('import_bill_products')->with('import_bill_products.product')->first();
+
         $suppliers = Supplier::whereStockId($stock->id)->get();
         return view('backend.import_bill.edit')
             ->withStock($stock)
