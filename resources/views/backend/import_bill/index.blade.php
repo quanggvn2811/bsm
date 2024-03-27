@@ -35,7 +35,7 @@
                         <?php $totalBill = 0; ?>
                             @foreach($importBills as $bill)
                                 <?php $totalBill += $bill->total; ?>
-                                <tr data-import_bill_id="{{ $bill->id }}" class="bill-line">
+                                <tr data-import_bill_id="{{ $bill->id }}" class="bill-line active">
                                     <td><a href="{{ route('admin.import_bills.edit', ['stock' => $stock->id, 'importBill' => $bill->id]) }}">{{ $bill->id }}</a></td>
                                     <td>{{ $bill->date }}</td>
                                     <td>{{ $bill->supplier->name ?? '' }}</td>
@@ -56,7 +56,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            <tr>
+                            <tr class="active">
                                 <td colspan="3" style="color: red; border-left: 10px solid red">
                                     Total Bills
                                 </td>

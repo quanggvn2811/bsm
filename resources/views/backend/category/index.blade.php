@@ -18,6 +18,7 @@
                     <a style="margin: 5px 3px" href="{{ route('admin.orders.index', $stock->id) }}" class="btn btn-info btn-add-product">All Orders</a>
                     @if($isAdmin)
                     <a style="margin: 5px 3px" href="{{ route('admin.import_bills.index', $stock->id) }}" class="btn btn-danger import-bills">Import Bills</a>
+                    <a style="margin: 5px 3px; background-color: rgb(16 171 136 / 75%); border-color: rgb(16 171 136 / 75%)" href="{{ route('admin.import_bills.index', $stock->id) }}" class="btn btn-danger import-bills">Price Control</a>
                     @endif
                 </div>
                 <div class="btn-create-product">
