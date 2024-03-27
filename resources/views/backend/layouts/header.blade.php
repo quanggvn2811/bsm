@@ -61,6 +61,48 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
             width: 100%;
             height: 295px;
         }
+        .short-url-menu {
+            display: flex;
+            align-content: center;
+            text-transform: uppercase;
+        }
+        .short-url-menu .first,
+        .short-url-menu .angle-right,
+        .short-url-menu .second {
+            font-size: 14px;
+            font-weight: 550;
+            font-style: italic;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .short-url-menu a {
+            text-decoration: none;
+        }
+        .short-url-menu .first {
+            color: #17a2b8;
+            border: solid 1px #17a2b8;
+        }
+        .short-url-menu .first a {
+            color: #17a2b8;
+        }
+        .short-url-menu .first:hover {
+            opacity: .6;
+        }
+
+        .short-url-menu .second {
+            color: #6c757d;
+            border: solid 1px #6c757d;
+            border-left: none;
+        }
+        .short-url-menu .second a {
+            color: #6c757d;
+        }
+        .short-url-menu .second:hover {
+            opacity: .6;
+        }
+        .pd-l-0 {
+            padding-left: 0;
+        }
     </style>
     <!--pie-chart --><!-- index page sales reviews visitors pie chart -->
     <script src="{{ asset('template/js/pie-chart.js') }}" type="text/javascript"></script>

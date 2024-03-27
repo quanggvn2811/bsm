@@ -11,9 +11,16 @@
         <div class="main-page">
             <div class="tables">
                 <div class="row">
-                    {{--/*<?php dd($order) ?>*/--}}
-                    <h2 class="title1 col-md-4">{{ $stock->name }} /
-                        {{ $order->order_number }}</h2>
+                    <div class="col-md-4 pd-l-0">
+                        <div class="short-url-menu">
+                            <div class="first">
+                                <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
+                            </div>
+                            <div class="second">
+                                <a href="">{{ $order->order_number }}</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="container col-md-8">
                         <div class="row">
                             <div class="btn-back col-md-2" style="margin: 10px 0">

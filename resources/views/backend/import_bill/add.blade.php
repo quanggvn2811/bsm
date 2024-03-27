@@ -12,7 +12,17 @@
             @include('includes.messages')
             <div class="tables">
                 <div class="row">
-                    <h2 class="title1 col-md-4" style="/*width: 100%; margin-top: .8em*/"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Bill</h2>
+                    {{--<h2 class="title1 col-md-4" style="/*width: 100%; margin-top: .8em*/"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> / Add Bill</h2>--}}
+                    <div class="col-md-4 pd-l-0">
+                        <div class="short-url-menu">
+                            <div class="first">
+                                <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
+                            </div>
+                            <div class="second">
+                                <a href="{{ route('admin.import_bills.create', $stock->id) }}">Add A BILL</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <a href="{{ route('admin.import_bills.index', $stock->id)  }}" class="btn btn-dark btn-add-product">Back<i class="fa fa-backward" aria-hidden="true"></i></a>
                     </div>
