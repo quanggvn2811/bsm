@@ -27,6 +27,13 @@
                         <input required type="text" @if(isset($_GET['order_date_to'])) value="{{ $_GET['order_date_to'] }}" @endif name="order_date_to" class="form-control order_date_to col-md-6" id="order_date_to">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-md-4" for="title">Product Name</label>
+                    <div class="col-md-8">
+                        <input class="form-control"  autofocus type="text" id="validationCustom01" name="product_name"
+                               value="{{$_GET['product_name'] ?? ''}}">
+                    </div>
+                </div>
             </div>
             <div class="row col-md-6 search-box-item">
                 <div class="form-group row">

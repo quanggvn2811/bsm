@@ -67,6 +67,13 @@ class OrderController extends Controller
             $orders = $orders->whereStatusId($statusId);
         }
 
+        $productName = $request->get('product_name');
+        if ($productName) {
+            $orders = $orders->whereHas('order_detail.product', function ($query) use ($productName) {
+                $query->where('products.name', 'like', '%' . $productName . '%');
+            });
+        }
+
         $orders = $orders->with('customer');
 
         $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(config('app.page_count'));
