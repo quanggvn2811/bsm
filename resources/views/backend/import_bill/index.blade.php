@@ -32,7 +32,9 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <?php $totalBill = 0; ?>
                             @foreach($importBills as $bill)
+                                <?php $totalBill += $bill->total; ?>
                                 <tr data-import_bill_id="{{ $bill->id }}" class="bill-line">
                                     <td><a href="{{ route('admin.import_bills.edit', ['stock' => $stock->id, 'importBill' => $bill->id]) }}">{{ $bill->id }}</a></td>
                                     <td>{{ $bill->date }}</td>
@@ -41,7 +43,7 @@
                                     <td>{{ $bill->notes }}</td>
                                     <td>
                                         <a class="btn btn-primary btn-edit-bill" href="{{ route('admin.import_bills.edit', ['stock' => $stock->id, 'importBill' => $bill->id]) }}"><i class="fa fa-edit"></i></a>
-                                        <div class="" style="margin: 10px 0; display: inline-block">
+                                        <div class="" style="display: inline-block">
                                             <form style="display: inline-block" action="{{ route('admin.import_bills.destroy', ['stock' => $stock->id, 'importBill' => $bill->id]) }}" method="POST">
                                                 @csrf
                                                 @method('delete')
@@ -54,6 +56,12 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            <tr>
+                                <td colspan="3" style="color: red; border-left: 10px solid red">
+                                    Total Bills
+                                </td>
+                                <td colspan="3">{{ number_format($totalBill) }}</td>
+                            </tr>
                         </tbody>
                     </table>
                     <div class="row" style="width: 200px; float: right; display: flex">
