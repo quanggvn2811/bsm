@@ -12,61 +12,57 @@
             <div class="tables">
                 <div class="row">
                     <h2 class="title1 col-md-4"><a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a> /
-                        <a href="{{ route('admin.import_bills.index', $stock->id) }}">All Bills</a></h2>
-                    <div class="btn-create">
-                        <a href="{{ route('admin.import_bills.create', $stock->id) }}" class="btn btn-success btn-add-product">Add A Bill</a>
-                    </div>
+                        <a href="#">Price Control</a></h2>
                 </div>
                 {{--@include('backend.order.includes.search_form')--}}
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
-                    <h4 style="margin-bottom: 0">Bills ({{ $importBills->total() }})</h4>
+                    <h4 style="margin-bottom: 0">Price Product ({{ $products->total() }})</h4>
                     <table class="table">
                         <thead>
                         <tr>
-                            <th style="" class="">#</th>
-                            <th style="min-width: 92px;" class="">Date</th>
-                            <th>Supplier</th>
-                            <th class="">Total Bill</th>
-                            <th>Notes</th>
-                            <th class="" style="min-width: 120px">Action</th>
+                            <th style="" class="product-id">#</th>
+                            <th style="" class="product-sku">SKU</th>
+                            <th style="" class="product-name">Product Name</th>
+                            <th style="" class="product-avatar">Avatar</th>
+                            <th style="" class="product-cost">Cost</th>
+                            @foreach($shops as $shop)
+                                <th>{{ $shop->name }}</th>
+                            @endforeach
+                            <th style="" class="action">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php $totalBill = 0; ?>
-                            @foreach($importBills as $bill)
-                                <?php $totalBill += $bill->total; ?>
-                                <tr data-import_bill_id="{{ $bill->id }}" class="bill-line active">
-                                    <td><a href="{{ route('admin.import_bills.edit', ['stock' => $stock->id, 'importBill' => $bill->id]) }}">{{ $bill->id }}</a></td>
-                                    <td>{{ $bill->date }}</td>
-                                    <td>{{ $bill->supplier->name ?? '' }}</td>
-                                    <td>{{ number_format($bill->total) }}</td>
-                                    <td>{{ $bill->notes }}</td>
-                                    <td>
-                                        <a class="btn btn-primary btn-edit-bill" href="{{ route('admin.import_bills.edit', ['stock' => $stock->id, 'importBill' => $bill->id]) }}"><i class="fa fa-edit"></i></a>
-                                        <div class="" style="display: inline-block">
-                                            <form style="display: inline-block" action="{{ route('admin.import_bills.destroy', ['stock' => $stock->id, 'importBill' => $bill->id]) }}" method="POST">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" onclick="return confirm('Delete bill #{{ $bill->id }}, are you sure?')"
-                                                        class="btn btn-danger btn-delete-product">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                            @foreach($products as $product)
+                                    <?php
+                                    $prodImages = json_decode($product->images);
+                                    $avatarSrc = '#';
+                                    if (!empty($prodImages[0])) {
+                                        $avatar = $prodImages[0];
+                                        $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
+                                    }
+                                    ?>
+                                <tr class="active product-lines" data-product-id="{{ $product->id }}">
+                                    <td style="" class="product-id">{{ $product->id }}</td>
+                                    <td style="" class="product-sku">{{ $product->sku }}</td>
+                                    <td style="" class=""><span class="span-tooltip" data-toggle="tooltip" data-original-title="{{ $product->name }}">{{ $product->name }}</span></td>
+                                    <td class="avatar" style="padding: 3px"><img class="avatar_product" style="max-width: 80px; max-height: 80px" src="{{ $avatarSrc }}"></td>
+                                    <td style="" class="product-cost">{{ number_format($product->cost) }}</td>
+                                    @foreach($shops as $shop)
+                                        <td>
+                                            <input data-product_id="{{ $product->id }}" data-shop_id="{{ $shop->id }}" {{--data-toggle="tooltip" data-original-title="{{ $product->name }}"--}} style="width: 120px; border-radius: 4px" type="number" class="form-control shop-price" value="{{ \App\Models\PriceControl::whereProductId($product->id)->whereShopId($shop->id)->first()->price ?? 0 }}">
+                                            <i class="fa fa-check-circle alert-updated-price-control-{{$product->id . '_' . $shop->id}}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                                        </td>
+                                    @endforeach
+                                    <td class="action">
+                                        <a class="btn btn-primary btn-edit-price-control" href="#"><i class="fa fa-edit"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
-                            <tr class="active">
-                                <td colspan="3" style="color: red; border-left: 10px solid red">
-                                    Total Bills
-                                </td>
-                                <td colspan="3">{{ number_format($totalBill) }}</td>
-                            </tr>
                         </tbody>
                     </table>
                     <div class="row" style="width: 200px; float: right; display: flex">
                         <div class="col-12  mt-2 text-right d-block d-sm-none">
-                            {{ $importBills->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}
+                            {{ $products->appends(request()->input())->render('vendor.pagination.simple-bootstrap-4') }}
                         </div>
                         {{--<div class="col-7 text-right d-none d-sm-block">
                             {{ $orders->appends(request()->input())->onEachSide(4)->links() }}
@@ -77,7 +73,7 @@
         </div>
     </div>
     <style>
-        .bill-line td {
+        .product-lines td {
             vertical-align: middle !important;
         }
         .product-lines .name, .product-lines .description {
@@ -201,29 +197,55 @@
             background-color: rgb(212, 237, 188);
             color: rgb(17, 115, 75);
         }
-        #shipping_unit {
-            width: 100px;
-            border-radius: 4px;
+        .product-name {
+            /*min-width: 150px;
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;*/
         }
-        .ghn {
-            color: #f26522;
-        }
-        .vtp {
-            color: #EE0033;
-        }
-        .best {
-            color: rgba(226,7,38,.88);
-        }
-        .ghtk {
-            color: #01904a;
-        }
-        .min-with-150 {
-            min-width: 150px;
+        .span-tooltip {
             max-width: 300px;
+            display: block;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
     </style>
-    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.shop-price').on('change', function (e) {
+                let price = $(this).val();
+                if (parseInt(price) > 0) {
+                    let padEnd = String(parseInt(price)).padEnd(String(parseInt(price)).length + 3, '0');
+                    // new Intl.NumberFormat().format(parseInt(padEnd))
+                    $(e.target).val(padEnd);
+                    price = parseInt(padEnd);
+                }
+
+                let shopId = $(this).data('shop_id');
+                let productId = $(this).data('product_id');
+
+                $.ajax({
+                    type:'POST',
+                    url:'/admin/price_controls/save_shop_price_control',
+                    dataType: 'json',
+                    data: {
+                        _token: $('input[name="_token"]').val(),
+                        price: price,
+                        shop_id: shopId,
+                        product_id: productId,
+                    },
+                    success: function(data) {
+                        let alert = $('.alert-updated-price-control-' + productId + '_' + shopId);
+                        alert.show();
+                        setTimeout(function () {
+                            alert.hide();
+                        }, 2000);
+                    },
+                });
+            });
+        });
+    </script>
 @endsection
