@@ -46,5 +46,6 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'admin', 'as' => 'admin.', '
     require_once 'backend/products.php';
     require_once 'backend/orders.php';
     require_once 'backend/import_bills.php';
+    require_once 'backend/price_controls.php';
     require_once 'backend/dashboard.php';
 });

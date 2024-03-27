@@ -7,5 +7,9 @@ $(document).ready(function() {
             // new Intl.NumberFormat().format(parseInt(padEnd))
             $(e.target).val(padEnd);
         }
-    })
+    });
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 });
