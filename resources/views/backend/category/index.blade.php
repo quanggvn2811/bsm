@@ -54,7 +54,7 @@
                             <td class="description">{{ $category->description }}</td>
                             <td class="sku">{{ $category->sku }}</td>
                             <td class="status" data-status_val="{{ $category->status }}">{{ $category->status ? 'Active' : 'Inactive' }}</td>
-                            <td>
+                            <td style="min-width: 120px">
                                 <button class="btn btn-primary btn-edit-category"><i class="fa fa-edit"></i></button>
                                 <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                             </td>

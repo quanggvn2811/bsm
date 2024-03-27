@@ -15,4 +15,9 @@ class ImportBillProduct extends Model
         'quantity',
         'price_item',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

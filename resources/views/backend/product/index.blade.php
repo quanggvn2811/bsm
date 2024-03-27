@@ -11,7 +11,7 @@
         <div class="main-page">
             <div class="tables">
                 <div class="row">
-                    <div class="col-md-4 pd-l-0">
+                    <div class="col-md-4 col-sm-6 pd-l-0">
                         <div class="short-url-menu">
                             <div class="first">
                                 <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
@@ -21,7 +21,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="btn-create">
+                    <div class="btn-create col-md-8 col-sm-6">
                         <a href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product">Add Product</a>
                     </div>
                 </div>
@@ -39,13 +39,13 @@
                         <thead>
                         <tr>
                             <th class="hide_with_mobile">SKU</th>
-                            <th >Name</th>
-                            <th class="hide_with_mobile">Description</th>
+                            <th style="min-width: 150px">Name</th>
+                            <th class="hide_with_mobile" style="min-width: 150px">Description</th>
                             <th>Avatar</th>
-                            <th>Quantity</th>
+                            <th style="min-width: 170px">Quantity</th>
                             <th class="hide_with_mobile">Category</th>
                             <th class="hide_with_mobile">Checked Date</th>
-                            <th class="hide_with_mobile">Action</th>
+                            <th class="hide_with_mobile" style="min-width: 120px">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -60,9 +60,9 @@
                                 ?>
                         <tr data-product_id="{{ $product->id }}" class="active product-lines">
                             <td class="sku hide_with_mobile"> {{ $product->sku }}</td>
-                            <td class="name"><a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}">{{ $product->name }}</a></td>
-                            <td class="description hide_with_mobile">{{ $product->description }}</td>
-                            <td class="avatar" style="padding: 3px"><img class="avatar_product" style="max-width: 120px; max-height: 120px" src="{{ $avatarSrc }}"></td>
+                            <td class="name"><a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}"><span class="span-tool-top" data-original-title="{{ $product->name }}" data-toggle="tooltip">{{ $product->name }}</span></a></td>
+                            <td class="description hide_with_mobile"><span class="span-tooltip" data-toggle="tooltip" data-original-title="{!! $product->description !!}">{!! $product->description !!}</span></td>
+                            <td class="avatar" style="padding: 3px"><img class="avatar_product" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}"></td>
                             <td class="quantity">
                                 <button class="btn btn-danger subQuantity"><i class="fa fa-minus"></i></button>
                                 <button class="btn btn-default quantityValue">
@@ -127,6 +127,7 @@
         }
     </style>
     <script src="{{ asset('public/js/products.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
     <input type="hidden" value="{{ $stock->id }}" name="stock_id">
     <input type="hidden" value="{{ json_encode($products) }}" id="_products">
 @endsection
