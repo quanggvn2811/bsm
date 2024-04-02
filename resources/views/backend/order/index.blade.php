@@ -63,7 +63,7 @@
                                 $redirectUrl = route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]);
                                 session()->put('url_back_to_order_list', url()->full());
                             ?>
-                            <td class="order_number" style="font-weight: bold; font-size: 18px"><a href="{{ $redirectUrl }}">{{ $order->order_number }}</a></td>
+                            <td class="order_number" style="font-weight: bold; font-size: 18px"><a class="order-number-{{$order->id}}" href="{{ $redirectUrl }}">{{ $order->order_number }}</a><i style="color: #337ab7; margin-left: 5px; display: inline" class="fa fa-clone copy-order-number-icon" data-trigger_to="order-number-{{$order->id}}"></i></td>
                             <td class="order_status">
                                 <select name="status_id" id="status_id" class="form-control btn {{str_replace(' ', '_', strtolower(\App\Models\Order::ORDER_STATUS[$order->status_id]))}}">
                                     @foreach(\App\Models\Order::ORDER_STATUS as $statusKey => $status)

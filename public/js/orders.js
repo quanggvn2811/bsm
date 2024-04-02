@@ -280,6 +280,16 @@ $(document).ready(function() {
         $(e.target).css('color', 'darkred')
     });
 
+    $('.copy-order-number-icon').on('click', function (e) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($('.' + $(e.target).data('trigger_to')).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        $(e.target).css('color', 'darkred')
+    });
+
     // Store box size
     /*$('.box-size-input').on('keypress', function (e) {
         let x = $('input[name="long"]').val();
