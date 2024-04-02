@@ -25,10 +25,11 @@ class OrderController extends Controller
     {
         $from = $request->get('order_date_from', today()->subDays(5)->format('d/m/Y'));
         $to = $request->get('order_date_to', today()->format('d/m/Y'));
+        $from = Carbon::createFromFormat(config('app.date_format'), $from)->format('Y-m-d');
+        $to = Carbon::createFromFormat(config('app.date_format'), $to)->format('Y-m-d');
 
-        $orders = Order::where('order_date', '>=', $from)
-            ->where('order_date', '<=', $to)
-            ;
+        // STR_TO_DATE(orders.order_date,'%d/%m/%Y')) convert string %d/%m/%Y (08/03/2024) to Y-m-d
+        $orders = Order::whereBetween(DB::raw("(STR_TO_DATE(orders.order_date,'%d/%m/%Y'))"), [$from, $to]);
 
         $customerName = $request->get('customer_name');
         $customerPhone = $request->get('customer_phone');
@@ -162,7 +163,7 @@ class OrderController extends Controller
 
                 $order['shop_id'] = $shop->id;
 
-                $startOfMonth = Carbon::createFromFormat(config('app.date_format'), $orderDate)->startOfMonth()->format('d/m/Y');
+                /*$startOfMonth = Carbon::createFromFormat(config('app.date_format'), $orderDate)->startOfMonth()->format('d/m/Y');
                 $endOfMonth = Carbon::createFromFormat(config('app.date_format'), $orderDate)->endOfMonth()->format('d/m/Y');
                 $orderIndex = Order::whereShopId($shop->id)
                                     ->where('order_date', '<', $endOfMonth)
@@ -170,7 +171,9 @@ class OrderController extends Controller
                                     ->count()
                                     ;
 
-                $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%03d", intval($orderIndex) + 1);
+                $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%03d", intval($orderIndex) + 1);*/
+
+                $orderNumber = $shop->prefix . '_' . date('ymdHis');
 
                 $order['order_number'] = $orderNumber;
 
@@ -187,6 +190,11 @@ class OrderController extends Controller
                 $order['evidence'] = json_encode($evd);
 
                 $order = Order::create($order);
+
+                // Update order_number
+                $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%04d", substr($order->id, -4));
+
+                $order->update(['order_number' => $orderNumber]);
 
                 $orderProductArr = explode('_', $request->get('order_products'));
                 foreach ($orderProductArr as $orderProduct) {
@@ -282,7 +290,13 @@ class OrderController extends Controller
 
                 $shop = Shop::find($request->get('shop_id'));
 
-                $orderData['shop_id'] = $shop->id;
+                if ($order->shop_id != $shop->id) {
+                    // Update shop
+                    $orderData['shop_id'] = $shop->id;
+                    $orderNumber = explode('_', $order->order_number);
+                    // Update order number prefix
+                    $orderData['order_number'] = $shop->prefix . '_' . $orderNumber[1];
+                }
 
                 if ($request->hasFile('evidence')) {
                     $evd = [];
