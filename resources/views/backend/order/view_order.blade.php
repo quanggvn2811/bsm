@@ -17,8 +17,9 @@
                                 <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
                             </div>
                             <div class="second">
-                                <a href="">{{ $order->order_number }}</a>
+                                <a href="" class="order-number">{{ $order->order_number }}</a>
                             </div>
+                            <i style="color: #337ab7; margin-left: 10px; font-size: 20px" class="fa fa-clone copy-order-number-icon" data-trigger_to="order-number"></i>
                         </div>
                     </div>
                     <div class="container col-md-8">
