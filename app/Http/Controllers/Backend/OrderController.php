@@ -25,10 +25,11 @@ class OrderController extends Controller
     {
         $from = $request->get('order_date_from', today()->subDays(5)->format('d/m/Y'));
         $to = $request->get('order_date_to', today()->format('d/m/Y'));
+        $from = Carbon::createFromFormat(config('app.date_format'), $from)->format('Y-m-d');
+        $to = Carbon::createFromFormat(config('app.date_format'), $to)->format('Y-m-d');
 
-        $orders = Order::where('order_date', '>=', $from)
-            ->where('order_date', '<=', $to)
-            ;
+        // STR_TO_DATE(orders.order_date,'%d/%m/%Y')) convert string %d/%m/%Y (08/03/2024) to Y-m-d
+        $orders = Order::whereBetween(DB::raw("(STR_TO_DATE(orders.order_date,'%d/%m/%Y'))"), [$from, $to]);
 
         $customerName = $request->get('customer_name');
         $customerPhone = $request->get('customer_phone');
