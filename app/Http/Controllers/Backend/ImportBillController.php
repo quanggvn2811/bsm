@@ -26,7 +26,7 @@ class ImportBillController extends Controller
         $importBills = $importBills->with('supplier');
         $importBills = $importBills->with('import_bill_products');
 
-        $importBills = $importBills->orderBy('import_bills.date', 'ASC')->paginate(config('app.page_count'));
+        $importBills = $importBills->orderBy(DB::raw("(STR_TO_DATE(import_bills.date,'%d/%m/%Y'))"), 'DESC')->paginate(config('app.page_count'));
 
         return view('backend.import_bill.index')
             ->withStock($stock)

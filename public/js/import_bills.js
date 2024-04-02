@@ -21,9 +21,11 @@ $(document).ready(function() {
 
         let index = $('.plus-product-item-row').length + 1;
 
+        let sku = selectedProduct["sku"] == null ? '' : selectedProduct["sku"];
+
         let plusRowHtml = '<tr data-product_id="' + selectedProductId + '" class="plus-product-item-row">\n' +
             '<th scope="row">' + index + '</th>\n' +
-            '<td>' + selectedProduct["sku"] + '</td>\n' +
+            '<td>' + sku + '</td>\n' +
             '<td>' + selectedProduct["name"] + '</td>\n' +
             '<td><input type="number" class="form-control quantity-plus" value="1"></td>\n' +
             '<td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
