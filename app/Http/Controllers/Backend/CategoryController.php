@@ -12,7 +12,7 @@ class CategoryController extends Controller
     public function index (Request $request, Stock $stock)
     {
         $categories = Category::whereStockId($stock->id)->orderBy('name')->get();
-        $isAdmin = 'admin@admin.com' === auth()->user()->email;
+        $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
 
         return view('backend.category.index')
             ->withCategories($categories)

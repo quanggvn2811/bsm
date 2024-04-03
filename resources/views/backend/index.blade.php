@@ -188,8 +188,8 @@
                             <div class="profile_img">
                                 <span class="prfil-img"><img src="images/2.jpg" alt=""> </span>
                                 <div class="user-name">
-                                    <p>Admin Name</p>
-                                    <span>QuangGVN</span>
+                                    <p>Username</p>
+                                    <span>{{ \Illuminate\Support\Facades\Auth::user()->email }}</span>
                                 </div>
                                 <i class="fa fa-angle-down lnr"></i>
                                 <i class="fa fa-angle-up lnr"></i>
@@ -200,7 +200,7 @@
                             <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
                             <li> <a href="#"><i class="fa fa-user"></i> My Account</a> </li>
                             <li> <a href="#"><i class="fa fa-suitcase"></i> Profile</a> </li>
-                            <li> <a href="#"><i class="fa fa-sign-out"></i> Logout</a> </li>
+                            <li> <a href="{{ route('admin.logout') }}"><i class="fa fa-sign-out"></i> Logout</a> </li>
                         </ul>
                     </li>
                 </ul>

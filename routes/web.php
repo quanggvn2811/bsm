@@ -27,6 +27,11 @@ Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function () {
     //include_route_files(__DIR__.'/frontend/');
 });
 
+
+Route::group(['namespace' => 'Backend', 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    require_once 'backend/login.php';
+});
+
 /*
  * Backend Routes
  * Namespaces indicate folder structure
@@ -41,7 +46,6 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'admin', 'as' => 'admin.', '
      * These routes can not be hit if the password is expired
      */
     // include_route_files(__DIR__.'/backend/');
-    require_once 'backend/login.php';
     require_once 'backend/stocks.php';
     require_once 'backend/categories.php';
     require_once 'backend/products.php';

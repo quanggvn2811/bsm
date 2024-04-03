@@ -32,11 +32,12 @@
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url({{ asset('public/login_template/images/bg-01.jpg') }});">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" method="post" action="">
+                    @csrf
 					<span class="login100-form-title p-b-49">
 						BSM Login
 					</span>
-
+                    @include('includes.messages')
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
 						<span class="label-input100">Username</span>
 						<input class="input100" type="text" name="username" placeholder="Type your username">

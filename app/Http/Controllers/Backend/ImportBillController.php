@@ -17,7 +17,7 @@ class ImportBillController extends Controller
 
     public function index(Request $request, Stock $stock)
     {
-        $isAdmin = 'admin@admin.com' === auth()->user()->email;
+        $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
 
         $importBills = ImportBill::whereHas('supplier', function ($query) use ($stock) {
             $query->where('suppliers.stock_id', $stock->id);

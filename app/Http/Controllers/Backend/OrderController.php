@@ -79,7 +79,7 @@ class OrderController extends Controller
 
         $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(config('app.page_count'));
 
-        $isAdmin = 'admin@admin.com' === auth()->user()->email;
+        $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
 
         return view('backend.order.index')
             ->withStock($stock)
