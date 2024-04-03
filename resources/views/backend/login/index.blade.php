@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V4</title>
+	<title>BSM Login</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -36,6 +36,7 @@
                     @csrf
 					<span class="login100-form-title p-b-49">
 						BSM Login
+                    <small style="color: #620de3; font-size: 14px; display: block;">Basic Stock Manager</small>
 					</span>
                     @include('includes.messages')
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
