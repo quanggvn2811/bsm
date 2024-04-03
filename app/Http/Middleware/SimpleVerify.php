@@ -23,13 +23,13 @@ class SimpleVerify
             $accessToken = $request->associated_session;
 
             if (!$accessToken) {
-                abort(404);
+                return redirect()->route('admin.login.index');
             }
 
             $role = strtolower(substr($accessToken, 0, 5));
 
             if (!in_array($role, self::ACCESS_ROLE)) {
-                abort(404);
+                return redirect()->route('admin.login.index');
             }
 
             // $canAccess = $accessToken === env('APP_ADMIN_ACCESS_TOKEN') || $accessToken === env('APP_STAFF_ACCESS_TOKEN');
@@ -52,7 +52,7 @@ class SimpleVerify
 
             if (!Auth::attempt($login))
             {
-                abort(404);
+                return redirect()->route('admin.login.index');
             }
         }
 
