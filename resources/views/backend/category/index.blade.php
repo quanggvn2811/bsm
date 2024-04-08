@@ -28,6 +28,7 @@
                     @if($isAdmin)
                     <a style="margin: 5px 3px" href="{{ route('admin.import_bills.index', $stock->id) }}" class="btn btn-danger import-bills">Import Bills</a>
                     <a style="margin: 5px 3px; background-color: rgb(16 171 136 / 75%); border-color: rgb(16 171 136 / 75%)" href="{{ route('admin.price_controls.index', $stock->id) }}" class="btn btn-danger import-bills">Price Control</a>
+                    <a style="margin: 5px 3px; background-color: rgb(119 165 11 / 75%); border-color: rgb(119 165 11 / 75%)" href="{{ route('admin.revenue_report.index', $stock->id) }}" class="btn btn-danger revenue_report">Revenue Report</a>
                     @endif
                 </div>
                 <div class="btn-create-product">
