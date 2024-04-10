@@ -173,7 +173,7 @@
                                                 <th>Cost Item</th>
                                                 <th>Price Item</th>
                                                 <th>Image</th>
-                                                <th>Sub Products</th>
+                                                <th><span class="span-tooltip" data-toggle="tooltip" data-original-title="Before add order">Before In Stock</span></th>
                                                 <th>Action</th>
                                             </tr> </thead>
                                             <tbody>
@@ -247,8 +247,8 @@
             }
         }
     </style>
-    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script>
         var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
     </script>
