@@ -64,13 +64,17 @@ $(document).ready(function() {
 
         let selectedProduct = productById[selectedProductId];
 
+        if (selectedProduct["quantity"] <= 0 && !confirm('Product is not available, ok?')) {
+            return;
+        }
+
         let avatarUrl = JSON.parse(selectedProduct['images'])[0] ?? '#';
 
         avatarUrl = productImagePublicFolder + '/' + avatarUrl;
 
         let index = $('.plus-product-item-row').length + 1;
 
-        let subProductIds = selectedProduct['sub_product_id'];
+        /*let subProductIds = selectedProduct['sub_product_id'];
 
         let subProductList = '';
 
@@ -84,7 +88,9 @@ $(document).ready(function() {
                     subProductList += '> ' + subProductName;
                 }
             })
-        }
+        }*/
+
+        let qtyClass = selectedProduct["quantity"] > 0 ? 'btn btn-success' : 'btn btn-danger';
 
         let sku = selectedProduct["sku"] == null ? '' : selectedProduct["sku"];
 
@@ -96,7 +102,7 @@ $(document).ready(function() {
             '<td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="' + selectedProduct["cost"] + '"></td>\n' +
             '<td class="td-price-plus"><input type="number" class="form-control price-plus" value="' + selectedProduct["price"] + '"></td>\n' +
             '<td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="' + avatarUrl + '" alt=""></td>\n' +
-            '<td>' + subProductList + '</td>\n' +
+            '<td><button type="button" class="' + qtyClass + '">' + selectedProduct["quantity"] + '</button></td>\n' +
             '<td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>\n' +
             '</tr>';
 

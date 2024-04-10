@@ -186,7 +186,7 @@
                                                 <th>Cost Item</th>
                                                 <th>Price Item</th>
                                                 <th>Image</th>
-                                                <th>Sub Products</th>
+                                                <th><span class="span-tooltip" data-toggle="tooltip" data-original-title="Before add order">Before In Stock</span></th>
                                                 <th>Action</th>
                                             </tr> </thead>
                                             <tbody>
@@ -198,6 +198,9 @@
                                                             $avatar = $prodImages[0];
                                                             $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
                                                         }
+
+                                                        $qtyBeforeOrder = $productById[$detail->product_id]['quantity'] + ($detail->quantity ?? 1);
+                                                        $qtyClass = $qtyBeforeOrder > 0 ? 'btn btn-success' : 'btn btn-danger';
                                                     ?>
                                                     <tr data-product_id="{{ $detail->product_id }}" class="plus-product-item-row">
                                                         <td>{{ $index }}</td>
@@ -207,7 +210,7 @@
                                                         <td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="{{ $detail->cost_item }}"></td>
                                                         <td class="td-price-plus"><input type="number" class="form-control price-plus" value="{{ $detail->price_item }}"></td>
                                                         <td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}" alt=""></td>
-                                                        <td></td>
+                                                        <td><button type="button" class="{{ $qtyClass }}">{{ $qtyBeforeOrder }}</button></td>
                                                         <td><button type="button" class="btn btn-danger btn-delete-plus-product-row"><i class="fa fa-trash"></i></button></td>
                                                     </tr>
                                                 @endforeach
