@@ -66,6 +66,8 @@ class OrderController extends Controller
         $statusId = $request->get('status_id');
         if ($statusId !== null && !in_array('0', $statusId)) {
             $orders = $orders->whereIn('status_id', $statusId);
+        } elseif ($statusId === null) {
+            $orders = $orders->whereIn('status_id', [Order::STATUS_WAITING, Order::STATUS_PENDING, Order::STATUS_TODAY_HANDLE]);
         }
 
         $productName = $request->get('product_name');
