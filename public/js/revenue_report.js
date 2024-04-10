@@ -91,7 +91,11 @@ $(document).ready(function (string) {
             let sumProfit = 0;
             while (moment(index, 'DD/MM/YYYY') <= moment(to, 'DD/MM/YYYY')) {
                 html += '<tr class="active">';
-                html += '<td>' + index + '</td>';
+                // Todo: add link to list order by date
+                let orderUrl = $('#_order_list_url').val();
+                orderUrl += '?order_date_from=' + index;
+                orderUrl += '&order_date_to=' + index;
+                html += '<td><a href="' + orderUrl + '">' + index + '</a></td>';
                 if ('undefined' !== typeof statisticalMonth[index]) {
                     let data = statisticalMonth[index];
 
