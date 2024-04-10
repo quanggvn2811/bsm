@@ -58,6 +58,7 @@
         </div>
     </div>
     <input type="hidden" id="_orders" value="{{ json_encode($orders) }}">
+    <input type="hidden" id="_order_list_url" value="{{ route('admin.orders.index', ['stock' => $stock->id])}}">
     <style>
         /* Style the tab */
         .tab {

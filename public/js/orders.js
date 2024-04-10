@@ -472,4 +472,11 @@ $(document).ready(function() {
         $('.btn-submit-search').click();
     });
 
+    /*$('.select_status_id').on('change', function () {
+        let selected = $(this).val();
+        if ($.inArray('0', selected) !== -1) {
+            console.log(selected);
+        }
+    })*/
+
 });
