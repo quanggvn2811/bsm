@@ -88,16 +88,23 @@
                     <div class="col-md-6" style="padding: 0">
                         <label class="col-md-4" for="title">Status</label>
                         <div class="col-md-8">
-                            <select name="status_id" id="" class="form-control">
-                                <option value="0">All Status</option>
+                            <select name="status_id[]" id="" class="form-control select_status_id" multiple>
+                                <option value="0" @if(isset($_GET['status_id']) && in_array('0', $_GET['status_id'])) selected @endif>All Status</option>
                                 @foreach(\App\Models\Order::ORDER_STATUS as $sKey => $status)
                                         <?php
-                                        $selectedStatus = '';
-                                        if (isset($_GET['status_id'])) {
-                                            if ($_GET['status_id'] == $sKey) {
+                                            $defaultSelected = [
+                                                \App\Models\Order::STATUS_WAITING,
+                                                \App\Models\Order::STATUS_PENDING,
+                                                \App\Models\Order::STATUS_TODAY_HANDLE
+                                            ];
+                                            $selectedStatus = '';
+                                            if (isset($_GET['status_id'])) {
+                                                if (in_array($sKey, $_GET['status_id'])) {
+                                                    $selectedStatus = 'selected';
+                                                }
+                                            } elseif (in_array($sKey, $defaultSelected)) {
                                                 $selectedStatus = 'selected';
                                             }
-                                        }
                                         ?>
                                     <option {{ $selectedStatus }} value="{{ $sKey }}">{{ $status }}</option>
                                 @endforeach
