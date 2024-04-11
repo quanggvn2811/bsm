@@ -60,7 +60,14 @@
                                     <td style="" class="product-cost">{{ number_format($product->cost) }}</td>
                                     @foreach($shops as $shop)
                                         <td>
-                                            <input data-product_id="{{ $product->id }}" data-shop_id="{{ $shop->id }}" {{--data-toggle="tooltip" data-original-title="{{ $product->name }}"--}} style="width: 120px; border-radius: 4px" type="number" class="form-control shop-price" value="{{ \App\Models\PriceControl::whereProductId($product->id)->whereShopId($shop->id)->first()->price ?? 0 }}">
+                                            <?php
+                                                $price = \App\Models\PriceControl::whereProductId($product->id)->whereShopId($shop->id)->first()->price ?? 0;
+                                                $profit = $price - $product->cost;
+                                                $profitPercent = round(($profit / $price) * 100 * 100) / 100;
+                                            ?>
+                                            <input data-toggle="tooltip" data-original-title="Profit: {{ $profit }} <br> %Profit: {{$profitPercent}}"
+                                                   data-html="true"
+                                                   data-product_id="{{ $product->id }}" data-shop_id="{{ $shop->id }}" style="width: 120px; border-radius: 4px" type="number" class="form-control shop-price" value="{{ $price }}">
                                             <i class="fa fa-check-circle alert-updated-price-control-{{$product->id . '_' . $shop->id}}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                                         </td>
                                     @endforeach

@@ -247,8 +247,9 @@
             }
         }
     </style>
-    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
+    {{--Todo:: fix can't auto pad 000 to price when load main.js first--}}
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script>
         var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
     </script>
