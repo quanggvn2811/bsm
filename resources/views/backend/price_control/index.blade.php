@@ -63,7 +63,7 @@
                                             <?php
                                                 $price = \App\Models\PriceControl::whereProductId($product->id)->whereShopId($shop->id)->first()->price ?? 0;
                                                 $profit = $price - $product->cost;
-                                                $profitPercent = round(($profit / $price) * 100 * 100) / 100;
+                                                $profitPercent = $price !== 0 ? round(($profit / $price) * 100 * 100) / 100 : 0;
                                             ?>
                                             <input data-toggle="tooltip" data-original-title="Profit: {{ $profit }} <br> %Profit: {{$profitPercent}}"
                                                    data-html="true"
