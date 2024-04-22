@@ -66,15 +66,20 @@ class ProductController extends Controller
     {
         $suppliers = Supplier::whereStockId($stock->id)->get();
         $categories = Category::whereStockId($stock->id)->get();
+        $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
+        $skus = Product::whereIn('category_id', $categoryInStock)->whereNotNull('sku')->pluck('sku')->toArray();
+
         return view('backend.product.add_edit_product')
             ->withStock($stock)
             ->withSuppliers($suppliers)
             ->withCategories($categories)
+            ->withSkus($skus)
             ;
     }
 
     public function store(Request $request, Stock $stock)
     {
+        // Todo:: add stock prefix to sku to make sku unique in all
         $data = $request->only([
             'name',
             // 'slug',

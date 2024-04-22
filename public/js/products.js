@@ -90,6 +90,15 @@ $(document).ready(function() {
 
     $(document).on('keyup', '.prod_suppliers_cost', calculateAVGCost);
 
+    const skus = JSON.parse($('#_skus').val());
+    $('#prodSku').on('change', function () {
+        if (skus.includes($(this).val())) {
+            $('.validate-sku-used').show();
+        } else {
+            $('.validate-sku-used').hide();
+        }
+    });
+
     function calculateAVGCost() {
         let suppliersCostElm = $('.prod_suppliers_cost');
         let totalCost = 0;

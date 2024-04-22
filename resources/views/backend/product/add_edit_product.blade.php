@@ -75,7 +75,7 @@
                                     <label> <input {{ $checkedStatus }} value="1" type="checkbox" name="status"><b>Status</b></label>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="prodSku">SKU</label>
+                                    <label for="prodSku">SKU</label><span class="validate-sku-used" style="color: red; margin-left: 10px; display: none">SKU is used!</span>
                                     <input name="sku" @if($isEdit) value="{{ $product->sku }}" @endif type="text" class="form-control" id="prodSku" placeholder="SKU">
                                 </div>
                             </div>
@@ -245,6 +245,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="skus" id="_skus" value="{{ json_encode($skus) }}">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
@@ -259,5 +260,5 @@
         }
     </style>
     <script src="{{ asset('public/js/products.js')  . '?v=' . config('app.commit_version') }}"></script>
-    <script src="{{ asset('public/js/main.js') }}"></script>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection

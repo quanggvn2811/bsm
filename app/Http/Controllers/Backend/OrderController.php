@@ -339,6 +339,11 @@ class OrderController extends Controller
 
             });
 
+            if (session()->has('url_back_to_order_list')) {
+                $redirect = session()->get('url_back_to_order_list');
+                return redirect($redirect)->withFlashSuccess('Updated order: ' . $order->order_number);
+            }
+
             return redirect()->route('admin.orders.index', ['stock' => $stock->id])->withFlashSuccess('Updated order: ' . $order->order_number);
 
 
