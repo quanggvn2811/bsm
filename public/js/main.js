@@ -20,4 +20,10 @@ $(document).ready(function() {
             .replace('.00', '')
             ;
     }
+
+    $('.title-header-toggle').on('click', function (e) {
+        let triggerTo = $(this).data('trigger_to');
+        console.log(triggerTo)
+        $('.' + triggerTo).toggle();
+    });
 });

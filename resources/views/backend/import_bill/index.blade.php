@@ -25,7 +25,7 @@
                         <a href="{{ route('admin.import_bills.create', $stock->id) }}" class="btn btn-success btn-add-product">Add A Bill</a>
                     </div>
                 </div>
-                {{--@include('backend.order.includes.search_form')--}}
+                @include('backend.import_bill.includes.search_form')
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
                     <h4 style="margin-bottom: 0">Bills ({{ $importBills->total() }})</h4>
                     <div class="bsm-pagination" style="float: right">
@@ -231,5 +231,6 @@
             text-overflow: ellipsis;
         }
     </style>
-    <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/import_bills.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection
