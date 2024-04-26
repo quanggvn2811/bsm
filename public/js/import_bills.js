@@ -91,4 +91,84 @@ $(document).ready(function() {
         const datePicker = picker.endDate.format('DD/MM/YYYY');
         $(this).val(datePicker);
     });
+
+    // Config date from/ date to
+    $('input[name="bills_from"]').on('apply.daterangepicker', function(ev, picker) {
+        const datePicker = picker.endDate.format('DD/MM/YYYY');
+        $(this).val(datePicker);
+    });
+
+    const searchParams = new URLSearchParams(window.location.search);
+    if (!searchParams.has('bills_from')) {
+        $('#bills_from').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            startDate: moment().subtract('5', 'day').format('DD/MM/YYYY'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    } else {
+        $('#bills_from').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            // startDate: moment().subtract('5', 'day').format('DD/MM/YYYY'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    }
+
+
+    $('#bills_to').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minYear: 2000,
+        maxYear: parseInt(moment().format('YYYY'),10),
+        locale: {
+            format: 'DD/MM/YYYY'
+        },
+        autoApply: true,
+    })
+        .attr('readonly', 'readonly');
+    $('input[name="bills_to"]').on('apply.daterangepicker', function(ev, picker) {
+        const datePicker = picker.endDate.format('DD/MM/YYYY');
+        $(this).val(datePicker);
+    });
+
+    $('.search-date').on('click', function (e) {
+        let from = $('.bills_from').val();
+        let to = $('.bills_to').val();
+
+        // Today search
+        if ($(this).hasClass('today')) {
+            from = to = moment().format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('yesterday')) {
+            from = to = moment().subtract(1, 'day').format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('last-week')) {
+            from = moment().subtract(1, 'weeks').startOf('week').format('DD/MM/YYYY');
+            to = moment().subtract(1, 'weeks').endOf('week').format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('this-month')) {
+            from = moment().startOf('month').format('DD/MM/YYYY');
+            to = moment().endOf('month').format('DD/MM/YYYY');
+        }
+
+        $('.bills_from').val(from);
+        $('.bills_to').val(to);
+        $('.btn-submit-search').click();
+    });
 });

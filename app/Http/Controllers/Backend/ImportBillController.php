@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ImportBillController extends Controller
@@ -17,11 +18,35 @@ class ImportBillController extends Controller
 
     public function index(Request $request, Stock $stock)
     {
+        $suppliers = Supplier::whereStockId($stock->id)->get();
+
         $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
 
-        $importBills = ImportBill::whereHas('supplier', function ($query) use ($stock) {
-            $query->where('suppliers.stock_id', $stock->id);
+        $from = $request->get('bills_from', today()->subDays(5)->format('d/m/Y'));
+        $to = $request->get('bills_to', today()->format('d/m/Y'));
+        $from = Carbon::createFromFormat(config('app.date_format'), $from)->format('Y-m-d');
+        $to = Carbon::createFromFormat(config('app.date_format'), $to)->format('Y-m-d');
+
+        // STR_TO_DATE(orders.order_date,'%d/%m/%Y')) convert string %d/%m/%Y (08/03/2024) to Y-m-d
+        $importBills = ImportBill::whereBetween(DB::raw("(STR_TO_DATE(import_bills.date,'%d/%m/%Y'))"), [$from, $to]);
+
+        $importBills = $importBills->whereHas('supplier', function ($query) use ($stock, $request) {
+            $supplier = $request->get('supplier');
+
+            if ($supplier) {
+                $query->where('suppliers.id', $supplier);
+            } else {
+                $query->where('suppliers.stock_id', $stock->id);
+            }
         });
+
+        $productName = $request->get('product_name');
+        if ($productName) {
+            $importBills = $importBills->whereHas('import_bill_products.product', function ($query) use ($productName) {
+                $productName = str_replace(' ', '%', $productName);
+                $query->where('products.name', 'like', '%' . $productName . '%');
+            });
+        }
 
         $importBills = $importBills->with('supplier');
         $importBills = $importBills->with('import_bill_products');
@@ -32,6 +57,7 @@ class ImportBillController extends Controller
             ->withStock($stock)
             ->withIsAdmin($isAdmin)
             ->withImportBills($importBills)
+            ->withSuppliers($suppliers)
             ;
     }
     public function create(Request $request, Stock $stock)
