@@ -145,6 +145,8 @@ class ProductController extends Controller
     {
         $suppliers = Supplier::whereStockId($stock->id)->get();
         $categories = Category::whereStockId($stock->id)->get();
+        $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
+        $skus = Product::whereIn('category_id', $categoryInStock)->whereNotNull('sku')->pluck('sku')->toArray();
         $subProductSku = '';
         if (Product::TYPE_MULTIPLE === $product->type) {
             $subProductIds = json_decode($product->sub_product_id);
@@ -163,6 +165,7 @@ class ProductController extends Controller
             ->withProduct($product)
             ->withSubProductSku($subProductSku)
             ->withProductSuppliers($productSuppliers)
+            ->withSkus($skus)
             ;
     }
 
