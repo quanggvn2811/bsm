@@ -52,11 +52,12 @@ class OrderController extends Controller
         }
 
         $shopId = $request->get('shop_id');
-        if (!$shopId) {
-            $shopId = Shop::wherePrefix('MDS')->first()->id;
+        if ($shopId !== null && !in_array('0', $shopId)) {
+            $orders = $orders->whereIn('shop_id', $shopId);
+        } elseif ($shopId === null) {
+            $shopId = Shop::whereIn('prefix', ['MDS', 'NX365'])->pluck('id')->toArray();
+            $orders = $orders->whereIn('shop_id', $shopId);
         }
-
-        $orders = $orders->whereShopId($shopId);
 
         $priority = $request->get('priority');
         if ($priority) {
