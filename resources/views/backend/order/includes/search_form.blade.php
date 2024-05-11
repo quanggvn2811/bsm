@@ -47,7 +47,7 @@
                 <div class="form-group row">
                     <label class="col-md-4" for="title">Shop Name</label>
                     <div class="col-md-8">
-                        <select name="shop_id" id="shop_id" required class="form-control">
+                        {{--<select name="shop_id" id="shop_id" required class="form-control">
                             @foreach($shops as $shop)
                                     <?php
                                     $selected = '';
@@ -61,7 +61,27 @@
                                     ?>
                                 <option {{ $selected }} value="{{ $shop->id }}">{{ $shop->name }}</option>
                             @endforeach
-                                {{--<option value="">All Shops</option>--}}
+                                --}}{{--<option value="">All Shops</option>--}}{{--
+                        </select>--}}
+                        <select name="shop_id[]" id="" class="form-control select_status_id" multiple>
+                            <option value="0" @if(isset($_GET['shop_id']) && in_array('0', $_GET['shop_id'])) selected @endif>All Shops</option>
+                            @foreach($shops as $shop)
+                                    <?php
+                                    $defaultSelectedShopPrefix = [
+                                        'MDS',
+                                        'NX365',
+                                    ];
+                                    $selectedShop = '';
+                                    if (isset($_GET['shop_id'])) {
+                                        if (in_array($shop->id, $_GET['shop_id'])) {
+                                            $selectedShop = 'selected';
+                                        }
+                                    } elseif (in_array($shop->prefix, $defaultSelectedShopPrefix)) {
+                                        $selectedShop = 'selected';
+                                    }
+                                    ?>
+                                <option {{ $selectedShop }} value="{{ $shop->id }}">{{ $shop->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
