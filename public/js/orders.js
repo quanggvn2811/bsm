@@ -385,6 +385,7 @@ $(document).ready(function() {
 
     $('.search-order-header').on('click', function (e) {
         $('.search-box-item').toggle();
+        $('.search-box-item').is(":visible") ? updateToggleSearchOrdersKey(1) : updateToggleSearchOrdersKey(0);
     });
 
     $('#customer_phone').on('paste', function (e) {
@@ -484,5 +485,16 @@ $(document).ready(function() {
             console.log(selected);
         }
     })*/
+
+    // Toggle search orders
+    var TOGGLE_SEARCH_ORDERS_KEY = 'IS_SHOW_SEARCH_ORDERS';
+
+    let toggleSearchOrdersStatus = window.localStorage.getItem(TOGGLE_SEARCH_ORDERS_KEY) ?? 0;
+
+    toggleSearchOrdersStatus == 1 ? $('.search-box-item').show() : $('.search-box-item').hide();
+
+    function updateToggleSearchOrdersKey(key) {
+        window.localStorage.setItem(TOGGLE_SEARCH_ORDERS_KEY, key);
+    }
 
 });
