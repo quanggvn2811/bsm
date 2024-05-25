@@ -9,6 +9,7 @@ Route::group([
 ], function () {
     Route::get('stock/{stock}/add_order/{associated_session?}', [OrderController::class, 'create'])->name('orders.create');
     Route::post('stock/{stock}/add_order/{associated_session?}', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('stock/{stock}/reload_products/{associated_session?}', [OrderController::class, 'reloadProducts'])->name('orders.reload_products');
     Route::get('stock/{stock}/edit_order/{order}/{associated_session?}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::post('stock/{stock}/edit_order/{order}/{associated_session?}', [OrderController::class, 'update'])->name('orders.update');
     Route::get('stock/{stock}/{associated_session?}', [OrderController::class, 'index'])->name('orders.index');

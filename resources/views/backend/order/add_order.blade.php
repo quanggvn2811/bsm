@@ -160,7 +160,10 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <button type="button" class="btn btn-success btn-add-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
+                                        <div class="col-md-1" style="height: 34px; display: flex; align-items: center; justify-content: center">
+                                            <i class="fa fa-refresh reload-product-list" aria-hidden="true"></i>
+                                        </div>
+                                        <button type="button" class="btn btn-success btn-add-product-detail-row col-md-2"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
                                     </div>
                                     <div class="form-group row pd-0-10" style="overflow-x:auto;">
                                         <table class="table table-bordered">
@@ -191,6 +194,7 @@
         </div>
     </div>
     <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
+    <input type="hidden" value="{{ $stock->id }}" id="_stock_id">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
@@ -245,6 +249,14 @@
             .td-cost-plus, .td-price-plus {
                 padding: 13px 3px !important;
             }
+        }
+
+        .reload-product-list {
+            font-size: large;
+            color: #449d44;
+        }
+        .reload-product-list:hover {
+            opacity: .5;
         }
     </style>
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>

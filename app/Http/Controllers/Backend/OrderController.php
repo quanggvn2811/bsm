@@ -116,6 +116,25 @@ class OrderController extends Controller
             ;
     }
 
+    public function reloadProducts(Request $request, Stock $stock)
+    {
+        $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
+        $products = Product::whereIn('category_id', $categoryInStock)->get();
+        $productArray = $products->toArray();
+        $productById = [];
+        foreach ($productArray as $prod) {
+            $productById[$prod['id']] = $prod;
+        }
+
+        $return = [
+            'status' => 'success',
+            'products' => $products,
+            'productById' => $productById,
+        ];
+
+        return response()->json($return);
+    }
+
     public function store(Request $request, Stock $stock)
     {
         if (!$request->get('order_products')) {
