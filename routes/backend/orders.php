@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\Api\UpdateOrderFromPancake;
 use App\Http\Controllers\Backend\OrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,10 @@ Route::group([
     Route::get('stock/{stock}/reload_products/{associated_session?}', [OrderController::class, 'reloadProducts'])->name('orders.reload_products');
     Route::get('stock/{stock}/edit_order/{order}/{associated_session?}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::post('stock/{stock}/edit_order/{order}/{associated_session?}', [OrderController::class, 'update'])->name('orders.update');
+
+    // Update order from pos cake
+    Route::get('stock/{stock}/pos_cake_update/{associated_session?}', [UpdateOrderFromPancake::class, 'getPancakeOrders'])->name('orders.pos_cake_update');
+
     Route::get('stock/{stock}/{associated_session?}', [OrderController::class, 'index'])->name('orders.index');
     Route::post('{order}/update_priority/{associated_session?}', [OrderController::class, 'updatePriority'])->name('orders.update_priority');
     Route::post('{order}/update_status/{associated_session?}', [OrderController::class, 'updateStatus'])->name('orders.update_priority');

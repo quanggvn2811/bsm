@@ -84,12 +84,17 @@ class OrderController extends Controller
 
         $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
 
+        // Get list pancake shop id
+        // Todo: fix auto match shop_id with pancake_shop_id in db
+        $pancakeShopId = config('pancake.pancake_shop_id');
+
         return view('backend.order.index')
             ->withStock($stock)
             ->withOrders($orders)
             ->withShippingUnits(ShippingUnit::all())
             ->withShops(Shop::all())
             ->withIsAdmin($isAdmin)
+            ->withPancakeShopId($pancakeShopId)
             ;
     }
 

@@ -8,6 +8,7 @@
 @section('content')
     <div id="page-wrapper">
         @include('includes.messages')
+        <input type="hidden" value="{{ $stock->id }}" name="stock_id">
         <div class="main-page">
             <div class="tables">
                 <div class="row">
@@ -23,6 +24,7 @@
                     </div>
                     <div class="btn-create">
                         <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
+                        <button data-toggle="modal" data-target="#update-order-from-pancake-modal-dialog" type="button" class="btn btn-success btn-update-order-from-pancake"><i style="margin-right: 8px;" class="fa fa-refresh"></i>Order From Pancake</button>
                     </div>
                 </div>
                 @include('backend.order.includes.search_form')
@@ -123,6 +125,7 @@
             </div>
         </div>
     </div>
+    @include('backend.order.includes.update_order_from_pancake')
     <style>
         .order-lines td {
             vertical-align: middle !important;
@@ -272,5 +275,7 @@
             text-overflow: ellipsis;
         }
     </style>
+   {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>--}}
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/update_order_from_pancake.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection
