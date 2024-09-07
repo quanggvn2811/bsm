@@ -80,6 +80,10 @@ class OrderController extends Controller
 
         $orders = $orders->with('customer');
 
+        $orders = $orders->with('order_detail');
+
+        $orders = $orders->with('order_detail.product');
+
         $orders = $orders->orderBy('orders.created_at', 'ASC')->paginate(config('app.page_count'));
 
         $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
@@ -88,6 +92,14 @@ class OrderController extends Controller
         // Todo: fix auto match shop_id with pancake_shop_id in db
         $pancakeShopId = config('pancake.pancake_shop_id');
 
+        $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
+        $products = Product::whereIn('category_id', $categoryInStock)->get();
+        $productArray = $products->toArray();
+        $productById = [];
+        foreach ($productArray as $prod) {
+            $productById[$prod['id']] = $prod;
+        }
+
         return view('backend.order.index')
             ->withStock($stock)
             ->withOrders($orders)
@@ -95,6 +107,8 @@ class OrderController extends Controller
             ->withShops(Shop::all())
             ->withIsAdmin($isAdmin)
             ->withPancakeShopId($pancakeShopId)
+            ->withProducts($products)
+            ->withProductById($productById)
             ;
     }
 

@@ -151,6 +151,9 @@ $(document).ready(function() {
             $('.amount-cost').val(amountCost);
         }
 
+        // Toggle disable button update
+        let numberOfProductInOrder = $('.body-order-detail .plus-product-item-row').length;
+        numberOfProductInOrder > 0 ? $('.btn-do-quick-update-order').removeClass('off-mode') : $('.btn-do-quick-update-order').addClass('off-mode')
     }
 
     $('.order_priority select, .update_priority select').on('change', function (e) {

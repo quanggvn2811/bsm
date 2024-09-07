@@ -8,6 +8,7 @@
 @section('content')
     <div id="page-wrapper">
         @include('includes.messages')
+        @include('backend.order.includes.quick-update-order-modal')
         <input type="hidden" value="{{ $stock->id }}" name="stock_id">
         <div class="main-page">
             <div class="tables">
@@ -28,7 +29,7 @@
                     </div>
                 </div>
                 @include('backend.order.includes.search_form')
-                <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
+                <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto; margin-top: 0">
                     <h4 style="margin-bottom: 0">Orders List ({{ $orders->total() }})</h4>
                     <div class="bsm-pagination" style="float: right">
                         {{ $orders->appends(Request::all())->links() }}
@@ -36,7 +37,7 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th style="min-width: 92px;" class="">Date</th>
+                            <th style="min-width: 130px;" class="">Date</th>
                             <th >Order Number</th>
                             <th>Status</th>
                             <th class="">Priority</th>
@@ -59,8 +60,8 @@
                             $sumProfit = 0;
                         ?>
                         @foreach($orders as $order)
-                        <tr data-order_id="{{ $order->id }}" class="active order-lines">
-                            <td class="order_date">{{ $order->order_date }}</td>
+                        <tr data-order_id="{{ $order->id }}" data-order="{{ json_encode($order) }}" class="active order-lines">
+                            <td data-toggle="modal" data-target="#quick-update-order-modal-dialog" class="order_date quick-update-order" style="color: #673ab7; font-weight: bold; font-size: 15px">{{ $order->order_date }}<i class="fa fa-edit" style="margin-left: 5px; color: #673ab7"></i></td>
                             <?php
                                 $redirectUrl = route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]);
                                 session()->put('url_back_to_order_list', url()->full());
@@ -125,7 +126,13 @@
             </div>
         </div>
     </div>
+    <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
+    <input type="hidden" value="{{ json_encode(\App\Models\Order::ORDER_PRIORITY) }}" id="order_priority_list">
+    <input type="hidden" value="{{ json_encode(\App\Models\Order::ORDER_STATUS) }}" id="order_status_list">
     @include('backend.order.includes.update_order_from_pancake')
+    <script>
+        var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
+    </script>
     <style>
         .order-lines td {
             vertical-align: middle !important;
@@ -281,4 +288,5 @@
    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>--}}
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/update_order_from_pancake.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/quick-update-order.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection
