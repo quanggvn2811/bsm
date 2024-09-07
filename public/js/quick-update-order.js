@@ -5,7 +5,6 @@ $(document).ready(function() {
 
         // Order info
         const order = $this.closest('tr').data('order');
-        console.log(order)
         const updateOrderModal = $('#quick-update-order-modal-dialog');
         updateOrderModal.find('.order-number').text(order.order_number)
         updateOrderModal.find('#quick-update-order-name').val(order.customer.name)
@@ -58,6 +57,10 @@ $(document).ready(function() {
         });
 
         updateOrderModal.find('.body-order-detail table tbody').empty().append(orderDetailHtml);
+
+        // Toggle disable button update
+        let numberOfProductInOrder = $('.body-order-detail .plus-product-item-row').length;
+        numberOfProductInOrder > 0 ? $('.btn-do-quick-update-order').removeClass('off-mode') : $('.btn-do-quick-update-order').addClass('off-mode')
 
         const stockId = $('input[name="stock_id"]').val()
         let urlAction = '/admin/orders/stock/' + stockId + '/edit_order/' + order.id;
