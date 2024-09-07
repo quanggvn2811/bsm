@@ -497,4 +497,41 @@ $(document).ready(function() {
         window.localStorage.setItem(TOGGLE_SEARCH_ORDERS_KEY, key);
     }
 
+    // Reload product list
+    $('.reload-product-list').on('click', function () {
+        const stockId = $('#_stock_id').val()
+        $.ajax({
+            type:'GET',
+            url:'/admin/orders/stock/' + stockId + '/reload_products',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+            },
+            success: function(data) {
+                remakeProductSelection(data?.products)
+                $('#product_by_id_string').val(JSON.stringify(data?.productById))
+            },
+        });
+    });
+
+    // RemakeProductSelection
+
+    function remakeProductSelection(products) {
+        let selectize = $('select#select-product-item')[0].selectize;
+
+        selectize.clear();
+
+        let options = '<option value="">Select product</option>';
+        // selectize.addOption({text: "Select product", value: ""});
+
+        products.forEach(function (product) {
+            let text = product?.sku ? '[' + product?.sku + '] ' +  product?.name : product?.name;
+            options += '<option value="' + product?.id + '">'+ text + '</option>';
+            selectize.addOption({text: text, value: product?.id});
+        });
+
+        $('select#select-product-item').empty().append(options);
+
+    }
+
 });

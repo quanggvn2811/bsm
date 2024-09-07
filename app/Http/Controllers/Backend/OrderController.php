@@ -84,12 +84,17 @@ class OrderController extends Controller
 
         $isAdmin = 'admin@admin.com' === auth()->user()->email || 'admin@bsm.com' === auth()->user()->email;
 
+        // Get list pancake shop id
+        // Todo: fix auto match shop_id with pancake_shop_id in db
+        $pancakeShopId = config('pancake.pancake_shop_id');
+
         return view('backend.order.index')
             ->withStock($stock)
             ->withOrders($orders)
             ->withShippingUnits(ShippingUnit::all())
             ->withShops(Shop::all())
             ->withIsAdmin($isAdmin)
+            ->withPancakeShopId($pancakeShopId)
             ;
     }
 
@@ -114,6 +119,25 @@ class OrderController extends Controller
             ->withProducts($products)
             ->withProductById($productById)
             ;
+    }
+
+    public function reloadProducts(Request $request, Stock $stock)
+    {
+        $categoryInStock = Category::whereStockId($stock->id)->pluck('id')->toArray();
+        $products = Product::whereIn('category_id', $categoryInStock)->get();
+        $productArray = $products->toArray();
+        $productById = [];
+        foreach ($productArray as $prod) {
+            $productById[$prod['id']] = $prod;
+        }
+
+        $return = [
+            'status' => 'success',
+            'products' => $products,
+            'productById' => $productById,
+        ];
+
+        return response()->json($return);
     }
 
     public function store(Request $request, Stock $stock)
@@ -191,6 +215,8 @@ class OrderController extends Controller
                 }
 
                 $order['evidence'] = json_encode($evd);
+
+                $order['last_updated_by'] = auth()->user()->email;
 
                 $order = Order::create($order);
 
@@ -311,6 +337,8 @@ class OrderController extends Controller
 
                     $orderData['evidence'] = json_encode($evd);
                 }
+
+                $orderData['last_updated_by'] = auth()->user()->email;
 
                 $order->update($orderData);
 

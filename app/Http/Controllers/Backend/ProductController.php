@@ -266,4 +266,44 @@ class ProductController extends Controller
 
         return redirect()->back()->withFlashSuccess('Deleted "' . $product->name . '"');
     }
+
+    public function quickCreate(Request $request, Stock $stock)
+    {
+        $productData = $request->only([
+            'name',
+            'cost',
+            'price',
+            'quantity',
+        ]);
+
+
+        $defaultCategory = Category::firstOrCreate([
+            'name' => Category::DEFAULT_CATEGORY_NAME,
+            'stock_id' => $stock->id,
+            'sku' => Category::DEFAULT_CATEGORY_NAME,
+        ]);
+
+        $defaultSupplier = Supplier::firstOrCreate([
+            'name' => Supplier::DEFAULT_SUPPLIER_NAME,
+            'stock_id' => $stock->id,
+        ]);
+
+        $productData['category_id'] = $defaultCategory->id;
+
+        $productData['supplier_id'] = $defaultSupplier->id;
+
+        $productData['images'] = json_encode([]);
+
+        $product = Product::create($productData);
+
+        if ($product) {
+            SuppliersProduct::create([
+                'supplier_id' => $defaultSupplier->id,
+                'product_id' => $product->id,
+                's_cost' => $productData['cost'],
+            ]);
+        }
+
+        return response()->json(['status' => 'true', 'message' => 'Product created successfully!', 'product' => $product]);
+    }
 }

@@ -8,6 +8,7 @@
 @section('content')
     <div id="page-wrapper">
         @include('includes.messages')
+        @include('backend.order.includes.quick-create-product-modal')
         <div class="main-page">
             <div class="tables">
                 <div class="col-md-4 pd-l-0">
@@ -151,7 +152,7 @@
                                 <h4 class="header-wrapper header-order-detail" style="padding-left: 0">Order Detail</h4>
                                 <div class="order-detail-wrapper body-order-detail">
                                     <div class="row" style="padding: 10px 30px">
-                                        <div class="search-products col-md-9">
+                                        <div class="search-products col-md-8">
                                             <select {{--name="product-list"--}} class="select-product-list" id="select-product-item" placeholder="Search product sku or name">
                                                 <option value="">Select product</option>
                                                 @foreach($products as $product)
@@ -160,7 +161,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <button type="button" class="btn btn-success btn-add-product-detail-row col-md-3"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
+                                        <div class="col-md-1" style="height: 34px; display: flex; align-items: center; justify-content: center">
+                                            <button data-toggle="modal" data-target="#quick-create-product-modal-dialog" type="button" class="btn btn-primary btn-quick-add-product"><i style="" class="fa fa-plus"></i></button>
+                                        </div>
+                                        <div class="col-md-1" style="height: 34px; display: flex; align-items: center; justify-content: center">
+                                            <i class="fa fa-refresh reload-product-list" aria-hidden="true"></i>
+                                        </div>
+                                        <button type="button" class="btn btn-success btn-add-product-detail-row col-md-2"><i style="margin-right: 10px" class="fa fa-plus"></i>Add Product Item</button>
                                     </div>
                                     <div class="form-group row pd-0-10" style="overflow-x:auto;">
                                         <table class="table table-bordered">
@@ -191,6 +198,7 @@
         </div>
     </div>
     <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
+    <input type="hidden" value="{{ $stock->id }}" id="_stock_id">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
             border-radius: 4px;
@@ -246,9 +254,18 @@
                 padding: 13px 3px !important;
             }
         }
+
+        .reload-product-list {
+            font-size: large;
+            color: #449d44;
+        }
+        .reload-product-list:hover {
+            opacity: .5;
+        }
     </style>
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
     {{--Todo:: fix can't auto pad 000 to price when load main.js first--}}
+    <script src="{{ asset('public/js/quick-create-product.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script>
         var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';

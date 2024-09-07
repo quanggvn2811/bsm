@@ -8,6 +8,7 @@
 @section('content')
     <div id="page-wrapper">
         @include('includes.messages')
+        <input type="hidden" value="{{ $stock->id }}" name="stock_id">
         <div class="main-page">
             <div class="tables">
                 <div class="row">
@@ -23,6 +24,7 @@
                     </div>
                     <div class="btn-create">
                         <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
+                        <button data-toggle="modal" data-target="#update-order-from-pancake-modal-dialog" type="button" class="btn btn-success btn-update-order-from-pancake"><i style="margin-right: 8px;" class="fa fa-refresh"></i>Order From Pancake</button>
                     </div>
                 </div>
                 @include('backend.order.includes.search_form')
@@ -63,7 +65,7 @@
                                 $redirectUrl = route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]);
                                 session()->put('url_back_to_order_list', url()->full());
                             ?>
-                            <td class="order_number" style="font-weight: bold; font-size: 18px"><a class="order-number-{{$order->id}}" href="{{ $redirectUrl }}">{{ $order->order_number }}</a><i style="color: #337ab7; margin-left: 5px; display: inline" class="fa fa-clone copy-order-number-icon" data-trigger_to="order-number-{{$order->id}}"></i></td>
+                            <td class="order_number" style="font-weight: bold; font-size: 15px"><a class="order-number-{{$order->id}} @if('SYSTEM' === $order->last_updated_by) last_updated_by_system @endif" href="{{ $redirectUrl }}">{{ $order->order_number }}</a><i style="color: #337ab7; margin-left: 5px; display: inline" class="fa fa-clone copy-order-number-icon @if('SYSTEM' === $order->last_updated_by) last_updated_by_system @endif" data-trigger_to="order-number-{{$order->id}}"></i></td>
                             <td class="order_status">
                                 <select name="status_id" id="status_id" class="form-control btn {{str_replace(' ', '_', strtolower(\App\Models\Order::ORDER_STATUS[$order->status_id]))}}">
                                     @foreach(\App\Models\Order::ORDER_STATUS as $statusKey => $status)
@@ -123,6 +125,7 @@
             </div>
         </div>
     </div>
+    @include('backend.order.includes.update_order_from_pancake')
     <style>
         .order-lines td {
             vertical-align: middle !important;
@@ -271,6 +274,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .last_updated_by_system {
+            color: #8f4646 !important;
+        }
     </style>
+   {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>--}}
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/update_order_from_pancake.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection
