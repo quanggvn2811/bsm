@@ -216,6 +216,8 @@ class OrderController extends Controller
 
                 $order['evidence'] = json_encode($evd);
 
+                $order['last_updated_by'] = auth()->user()->email;
+
                 $order = Order::create($order);
 
                 // Update order_number
@@ -335,6 +337,8 @@ class OrderController extends Controller
 
                     $orderData['evidence'] = json_encode($evd);
                 }
+
+                $orderData['last_updated_by'] = auth()->user()->email;
 
                 $order->update($orderData);
 

@@ -166,6 +166,8 @@ class UpdateOrderFromPancake extends Controller
 
                 $order['pancake_shop_order_link'] = $pancakeOrderData->order_link;
 
+                $order['last_updated_by'] = 'SYSTEM';
+
                 $order = Order::create($order);
 
                 // Update order_number
