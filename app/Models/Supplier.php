@@ -10,6 +10,8 @@ class Supplier extends Model
 {
     use SoftDeletes;
 
+    const DEFAULT_SUPPLIER_NAME = 'DEFAULT_SUPPLIER';
+
     /**
      * The attributes that are mass assignable.
      *
