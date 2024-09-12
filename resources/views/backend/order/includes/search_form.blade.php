@@ -64,21 +64,27 @@
                                 --}}{{--<option value="">All Shops</option>--}}{{--
                         </select>--}}
                         <select name="shop_id[]" id="" class="form-control select_status_id" multiple>
-                            <option value="0" @if(isset($_GET['shop_id']) && in_array('0', $_GET['shop_id'])) selected @endif>All Shops</option>
+                            <?php
+                                $isSelectedAllShop = '';
+                                if ((isset($_GET['shop_id']) && in_array('0', $_GET['shop_id'])) || !isset($_GET['shop_id'])) {
+                                    $isSelectedAllShop = 'selected';
+                                }
+                            ?>
+                            <option value="0" {{ $isSelectedAllShop }}>All Shops</option>
                             @foreach($shops as $shop)
                                     <?php
-                                    $defaultSelectedShopPrefix = [
+                                    /*$defaultSelectedShopPrefix = [
                                         'MDS',
                                         'NX365',
-                                    ];
+                                    ];*/
                                     $selectedShop = '';
                                     if (isset($_GET['shop_id'])) {
                                         if (in_array($shop->id, $_GET['shop_id'])) {
                                             $selectedShop = 'selected';
                                         }
-                                    } elseif (in_array($shop->prefix, $defaultSelectedShopPrefix)) {
+                                    }/* elseif (in_array($shop->prefix, $defaultSelectedShopPrefix)) {
                                         $selectedShop = 'selected';
-                                    }
+                                    }*/
                                     ?>
                                 <option {{ $selectedShop }} value="{{ $shop->id }}">{{ $shop->name }}</option>
                             @endforeach
