@@ -55,8 +55,9 @@ class OrderController extends Controller
         if ($shopId !== null && !in_array('0', $shopId)) {
             $orders = $orders->whereIn('shop_id', $shopId);
         } elseif ($shopId === null) {
-            $shopId = Shop::whereIn('prefix', ['MDS', 'NX365'])->pluck('id')->toArray();
-            $orders = $orders->whereIn('shop_id', $shopId);
+            // Do nothing, get all shop
+            /*$shopId = Shop::whereIn('prefix', ['MDS', 'NX365'])->pluck('id')->toArray();
+            $orders = $orders->whereIn('shop_id', $shopId);*/
         }
 
         $priority = $request->get('priority');
