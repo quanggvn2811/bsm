@@ -85,7 +85,8 @@ class UpdateOrderFromPancake extends Controller
                 $query->where('order_date', $pancakeOrderDate);
                 $query->where('pancake_shop_id', $pancakeShopId);
                 $query->where('pancake_shop_order_id', $orderData->system_id);
-            })->orWhereHas('customer', function ($query) use ($pancakeOrderDate, $orderData) {
+            })->orWhereHas('customer', function ($query) use ($pancakeOrderDate, $orderData, $bsmShopId) {
+                $query->where('shop_id', $bsmShopId);
                 $query->where('order_date', $pancakeOrderDate);
                 $query->where('customers.phone', $orderData->customer->phone_numbers[0]);
             })->first();
