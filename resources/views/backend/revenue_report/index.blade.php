@@ -22,6 +22,7 @@
                         </div>
                     </div>
                 </div>
+                @include('backend.revenue_report.includes.search_form')
                 <div class="tab">
                     <button class="tablinks active" onclick="openTabContent(event, 'statistical-content')">Statistical</button>
                     <button class="tablinks" onclick="openTabContent(event, 'charts-content')">Charts</button>
