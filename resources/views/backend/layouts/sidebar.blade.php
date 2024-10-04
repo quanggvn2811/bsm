@@ -69,6 +69,11 @@
                             <i class="fa fa-money"></i> <span>Price Control</span>
                         </a>
                     </li>
+                    <li class="treeview @if(\Illuminate\Support\Facades\Route::is('admin/shopee_connection/*')) active @endif">
+                        <a href="{{ url('admin/shopee_connection') }}">
+                            <i class="fa fa-plug"></i> <span>Shopee Connection</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
