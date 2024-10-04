@@ -1,6 +1,7 @@
 $(document).ready(function (string) {
 
     var orders = JSON.parse($('#_orders').val());
+    console.log(orders)
 
     const STATUS_FAILED = 7;
 
@@ -15,10 +16,15 @@ $(document).ready(function (string) {
         },
         statisticalMonth: function () {
             const searchParams = new URLSearchParams(window.location.search);
-            let month = searchParams.has('month') ? searchParams.get('month') : moment().format('MM/YYYY');
-            month = '01/' + month;
-            let from = moment(month, 'DD/MM/YYYY').startOf('month').format('DD/MM/YYYY');
-            let to = moment(month, 'DD/MM/YYYY').endOf('month').format('DD/MM/YYYY');
+            let from = searchParams.get('bill_date_from');
+            let to = searchParams.get('bill_date_to');
+            if (!from && !to) {
+                let month = searchParams.has('month') ? searchParams.get('month') : moment().format('MM/YYYY');
+                month = '01/' + month;
+                from = moment(month, 'DD/MM/YYYY').startOf('month').format('DD/MM/YYYY');
+                to = moment(month, 'DD/MM/YYYY').endOf('month').format('DD/MM/YYYY');
+            }
+
             let statisticalMonth = [];
             orders.forEach(function (order) {
                 let isset = typeof statisticalMonth[order.order_date] !== 'undefined';
@@ -131,6 +137,7 @@ $(document).ready(function (string) {
             html += '<td>' + sumNumberOfFailed + '</td>';
             html += '<td>' + sumFailed + '</td>';
             html += '<td>' + sumNumberOfTotal + '</td>';
+            // Todo:: check this section:  sumProfit = sumRevenue - sumProfitOfFail
             html += '<td>' + getPriceFormat(sumRevenue) + '</td>';
             html += '<td>' + getPriceFormat(sumProfit) + '</td>';
             html += '<td>' + (100 * (sumProfit / sumRevenue)).toFixed(2) + ' %</td>';
@@ -149,7 +156,7 @@ $(document).ready(function (string) {
                 '</tr>\n' +
                 '</thead>\n' +
                 '</table>';
-            RevenueReport.selector.statistical.find('.data-title').text('Statistical Month');
+            RevenueReport.selector.statistical.find('.data-title').text('Statistical Report');
             RevenueReport.selector.statistical.find('.data-content').empty().append(html);
         }
     }
@@ -158,4 +165,108 @@ $(document).ready(function (string) {
         RevenueReport.selector.statistical,
         RevenueReport.statisticalMonth
     );
+
+    // Config date from/ date to
+    $('input[name="bill_date_from"]').on('apply.daterangepicker', function(ev, picker) {
+        const datePicker = picker.endDate.format('DD/MM/YYYY');
+        $(this).val(datePicker);
+    });
+
+    const searchParams = new URLSearchParams(window.location.search);
+    if (!searchParams.has('bill_date_from')) {
+        $('#bill_date_from').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            startDate: moment().startOf('month').format('DD/MM/YYYY'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    } else {
+        $('#bill_date_from').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    }
+
+    if (!searchParams.has('bill_date_to')) {
+        $('#bill_date_to').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            startDate: moment().endOf('month').format('DD/MM/YYYY'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    } else {
+        $('#bill_date_to').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 2000,
+            maxYear: parseInt(moment().format('YYYY'),10),
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+        })
+            .attr('readonly', 'readonly');
+    }
+    $('input[name="bill_date_to"]').on('apply.daterangepicker', function(ev, picker) {
+        const datePicker = picker.endDate.format('DD/MM/YYYY');
+        $(this).val(datePicker);
+    });
+
+    $('.search-date').on('click', function (e) {
+        let from = $('.bill_date_from').val();
+        let to = $('.bill_date_to').val();
+
+        // Today search
+        if ($(this).hasClass('today')) {
+            from = to = moment().format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('yesterday')) {
+            from = to = moment().subtract(1, 'day').format('DD/MM/YYYY');
+        }
+
+        if ($(this).hasClass('this-month')) {
+            from = moment().startOf('month').format('DD/MM/YYYY');
+            to = moment().endOf('month').format('DD/MM/YYYY');
+        }
+
+        $('.bill_date_from').val(from);
+        $('.bill_date_to').val(to);
+        $('.btn-submit-search').click();
+    });
+
+    // Toggle search orders
+    var TOGGLE_SEARCH_REVENUE_KEY = 'IS_SHOW_SEARCH_REVENUE';
+
+    let toggleSearchRevenueStatus = window.localStorage.getItem(TOGGLE_SEARCH_REVENUE_KEY) ?? 0;
+
+    toggleSearchRevenueStatus == 1 ? $('.search-box-item').show() : $('.search-box-item').hide();
+
+    function updateToggleSearchRevenueKey(key) {
+        window.localStorage.setItem(TOGGLE_SEARCH_REVENUE_KEY, key);
+    }
+
+    $('.search-bill-header').on('click', function (e) {
+        $('.search-box-item').toggle();
+        $('.search-box-item').is(":visible") ? updateToggleSearchRevenueKey(1) : updateToggleSearchRevenueKey(0);
+    });
 });
