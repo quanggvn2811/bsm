@@ -1,3 +1,4 @@
+jQuery.noConflict(true);
 $(document).ready(function() {
     const ProductQuantity = {
         prodId: null,
@@ -66,6 +67,22 @@ $(document).ready(function() {
             $this.css("max-height", 300);
         }
     });
+
+    $('.search-product-header').on('click', function (e) {
+        $('.product-search-box').toggle();
+        $('.product-search-box').is(":visible") ? updateToggleSearchProductsKey(1) : updateToggleSearchProductsKey(0);
+    });
+
+    // Toggle search products
+    var TOGGLE_SEARCH_PRODUCTS_KEY = 'IS_SHOW_SEARCH_PRODUCTS';
+
+    let toggleSearchProductsStatus = window.localStorage.getItem(TOGGLE_SEARCH_PRODUCTS_KEY) ?? 0;
+
+    toggleSearchProductsStatus == 1 ? $('.product-search-box').show() : $('.product-search-box').hide();
+
+    function updateToggleSearchProductsKey(key) {
+        window.localStorage.setItem(TOGGLE_SEARCH_PRODUCTS_KEY, key);
+    }
 
     // Add supplier row
     $('.btn-add-supplier-row').on('click', function (e) {
@@ -141,9 +158,9 @@ $(document).ready(function() {
         });
     }
 
-    $('.search-product-header').on('click', function (e) {
+    /*$('.search-product-header').on('click', function (e) {
         $('.product-search-box').toggle();
-    });
+    });*/
     function updateCheckedDate(productId, checkedDate = moment().format('DD/MM/YYYY')) {
         if (null === productId) {
             return false;
