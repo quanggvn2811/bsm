@@ -38,7 +38,7 @@
                                             <input type="text" required class="form-control customer_phone" id="customer_phone" name="customer_phone">
                                         </div>
                                     </div>
-                                    <div class="form-group user-plus-info row pd-0-10" style="display: none">
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">Address</label>
                                             <input type="text" name="customer_address" class="form-control" id="customer_address">
@@ -48,7 +48,7 @@
                                             <input type="text" name="customer_url" class="form-control" id="customer_url">
                                         </div>
                                     </div>
-                                    <div class="form-group user-plus-info row pd-0-10" style="display: none">
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-6">
                                             <label for="prodDescription">More Info</label>
                                             <input type="text" class="form-control" id="customer_more_info" name="customer_more_info">

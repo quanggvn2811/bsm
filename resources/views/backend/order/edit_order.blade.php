@@ -41,7 +41,7 @@
                                             <input type="number" readonly required value="{{ $order->customer->phone ?? '' }}" class="form-control" id="customer_phone" name="customer_phone">
                                         </div>
                                     </div>
-                                    <div class="form-group user-plus-info row pd-0-10" style="display: none">
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">Address</label>
                                             <input type="text" name="customer_address" value="{{ $order->order_address ?? '' }}" class="form-control" id="customer_address">
@@ -51,7 +51,7 @@
                                             <input type="text" name="customer_url" value="{{ $order->customer->info_url ?? '' }}" class="form-control" id="customer_url">
                                         </div>
                                     </div>
-                                    <div class="form-group user-plus-info row pd-0-10" style="display: none">
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-6">
                                             <label for="prodDescription">More Info</label>
                                             <input type="text" class="form-control" value="{{ $order->customer->more_info ?? '' }}" id="customer_more_info" name="customer_more_info">
