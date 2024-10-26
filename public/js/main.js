@@ -6,6 +6,7 @@ $(document).ready(function() {
             let padEnd = String(parseInt(value)).padEnd(String(parseInt(value)).length + 3, '0');
             // new Intl.NumberFormat().format(parseInt(padEnd))
             $(e.target).val(padEnd);
+            calculationTmpProfit();
         }
     });
 
@@ -26,4 +27,13 @@ $(document).ready(function() {
         console.log(triggerTo)
         $('.' + triggerTo).toggle();
     });
+
+    function calculationTmpProfit() {
+        $('#tmp_profit').val(
+            parseInt(jQuery('.amount-total').val()) + 
+            parseInt(jQuery('#ship_by_customer').val()) - 
+            parseInt(jQuery('#ship_by_shop').val()) - 
+            parseInt(jQuery('.amount-cost').val())
+            );
+    }
 });

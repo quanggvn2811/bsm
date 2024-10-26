@@ -38,7 +38,7 @@
                                             <input type="text" required class="form-control customer_phone" id="customer_phone" name="customer_phone">
                                         </div>
                                     </div>
-                                    <div class="form-group user-plus-info row pd-0-10" style="display: none">
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-6">
                                             <label for="customer_name">Address</label>
                                             <input type="text" name="customer_address" class="form-control" id="customer_address">
@@ -48,7 +48,7 @@
                                             <input type="text" name="customer_url" class="form-control" id="customer_url">
                                         </div>
                                     </div>
-                                    <div class="form-group user-plus-info row pd-0-10" style="display: none">
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-6">
                                             <label for="prodDescription">More Info</label>
                                             <input type="text" class="form-control" id="customer_more_info" name="customer_more_info">
@@ -127,6 +127,14 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <button type="button" class="btn btn-primary btn-edit-amount-cost"><i class="fa fa-edit"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="cost">Temporary Profit</label>
+                                            <div class="row">
+                                                <div class="col-md-12" style="padding: 0;">
+                                                    <input style="color: #fff; background-color: #673AB7;" type="number" readonly  value="0" class="form-control" id="tmp_profit" name="tmp_profit">
                                                 </div>
                                             </div>
                                         </div>
