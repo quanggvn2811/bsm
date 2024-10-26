@@ -151,6 +151,13 @@ $(document).ready(function() {
             $('.amount-cost').val(amountCost);
         }
 
+        $('#tmp_profit').val(
+            parseInt(jQuery('.amount-total').val()) + 
+            parseInt(jQuery('#ship_by_customer').val()) - 
+            parseInt(jQuery('#ship_by_shop').val()) - 
+            parseInt(jQuery('.amount-cost').val())
+            );
+
         // Toggle disable button update
         let numberOfProductInOrder = $('.body-order-detail .plus-product-item-row').length;
         numberOfProductInOrder > 0 ? $('.btn-do-quick-update-order').removeClass('off-mode') : $('.btn-do-quick-update-order').addClass('off-mode')

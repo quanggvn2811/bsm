@@ -133,6 +133,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="cost">Temporary Profit</label>
+                                            <div class="row">
+                                                <div class="col-md-12" style="padding: 0;">
+                                                    <input style="color: #fff; background-color: #673AB7;" type="number" readonly  value="0" class="form-control" id="tmp_profit" name="tmp_profit">
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="order-info-wrapper body-order-info">
