@@ -26,6 +26,7 @@
                     <div class="btn-create">
                         <a href="{{ route('admin.orders.create', $stock->id) }}" class="btn btn-warning btn-add-product">Add Order</a>
                         <button data-toggle="modal" data-target="#update-order-from-pancake-modal-dialog" type="button" class="btn btn-success btn-update-order-from-pancake"><i style="margin-right: 8px;" class="fa fa-refresh"></i>Order From Pancake</button>
+                        <button data-toggle="modal" data-target="#create-or-update-delivery-code" type="button" class="btn btn-danger btn-create-delevery-code"><i style="margin-right: 8px;" class="fa fa-truck"></i>Create Delivery Code</button>
                     </div>
                 </div>
                 @include('backend.order.includes.search_form')
@@ -130,6 +131,8 @@
     <input type="hidden" value="{{ json_encode(\App\Models\Order::ORDER_PRIORITY) }}" id="order_priority_list">
     <input type="hidden" value="{{ json_encode(\App\Models\Order::ORDER_STATUS) }}" id="order_status_list">
     @include('backend.order.includes.update_order_from_pancake')
+    @include('backend.order.includes.create-or-update-delivery-code-modal')
+    @include('backend.order.includes.single-create-or-update-delivery-code')
     <script>
         var productImagePublicFolder = '{{ asset('public/Pro_Images/') }}';
     </script>
@@ -289,4 +292,5 @@
     <script src="{{ asset('public/js/orders.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/update_order_from_pancake.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/quick-update-order.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/create-or-update-delivery-code.js')  . '?v=' . config('app.commit_version') }}"></script>
 @endsection
