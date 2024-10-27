@@ -67,8 +67,15 @@
     </div>
 </div>
 <style>
-	.custom-modal-xl {
-		width: 80%;
+	@media only screen and (max-width: 1200px) {
+		.custom-modal-xl {
+			width: 95%;
+		}
+	}
+	@media only screen and (min-width: 1200px) {
+		.custom-modal-xl {
+			width: 80%;
+		}
 	}
 	.table-delivery-code-management {
 		font-size: 13px;
