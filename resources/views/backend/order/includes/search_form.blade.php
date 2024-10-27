@@ -145,7 +145,7 @@
             <button class="btn btn-sm-action btn-primary pl-3 pr-3 btn-submit-search"  type="submit">Search</button>
             <a class="btn btn-sm-action btn-dark pl-3 pr-3" href="{{ route('admin.orders.index', ['stock' => $stock->id]) }}" style="margin-left: 10px">Reset</a>
         </div>
-        <div class="row col search-box-item justify-content-center">
+        <div class="row col search-box-item search-box-item-date justify-content-center">
             <button class="btn btn-sm-action btn-info pl-3 pr-3 search-date today search-today"  type="button" style="margin-left: 10px">Today</button>
             <button class="btn btn-sm-action btn-info pl-3 pr-3 search-date yesterday search-yesterday"  type="button" style="margin-left: 10px">Yesterday</button>
             <button class="btn btn-sm-action btn-info pl-3 pr-3 search-date this-month search-this-month"  type="button" style="margin-left: 10px">This Month</button>
