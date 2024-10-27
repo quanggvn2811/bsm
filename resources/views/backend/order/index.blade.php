@@ -35,7 +35,7 @@
                     <div class="bsm-pagination" style="float: right">
                         {{ $orders->appends(Request::all())->links() }}
                     </div>
-                    <table class="table" style="font-size: 13px !important">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th style="min-width: 130px;" class="">Date</th>
@@ -62,19 +62,19 @@
                         ?>
                         @foreach($orders as $order)
                         <tr data-order_id="{{ $order->id }}" data-order="{{ json_encode($order) }}" class="active order-lines">
-                            <td data-toggle="modal" data-target="#quick-update-order-modal-dialog" class="order_date quick-update-order" style="color: #673ab7; font-weight: bold;">{{ $order->order_date }}<i class="fa fa-edit" style="margin-left: 5px; color: #673ab7"></i></td>
+                            <td data-toggle="modal" data-target="#quick-update-order-modal-dialog" class="order_date quick-update-order" style="color: #673ab7; font-weight: bold; font-size: 15px">{{ $order->order_date }}<i class="fa fa-edit" style="margin-left: 5px; color: #673ab7"></i></td>
                             <?php
                                 $redirectUrl = route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]);
                                 session()->put('url_back_to_order_list', url()->full());
                             ?>
-                            <td class="order_number" style="font-weight: bold;"><a class="order-number-{{$order->id}} @if('SYSTEM' === $order->last_updated_by) last_updated_by_system @endif" href="{{ $redirectUrl }}">{{ $order->order_number }}</a><i style="color: #337ab7; margin-left: 5px; display: inline" class="fa fa-clone copy-order-number-icon @if('SYSTEM' === $order->last_updated_by) last_updated_by_system @endif" data-trigger_to="order-number-{{$order->id}}"></i></td>
+                            <td class="order_number" style="font-weight: bold; font-size: 15px"><a class="order-number-{{$order->id}} @if('SYSTEM' === $order->last_updated_by) last_updated_by_system @endif" href="{{ $redirectUrl }}">{{ $order->order_number }}</a><i style="color: #337ab7; margin-left: 5px; display: inline" class="fa fa-clone copy-order-number-icon @if('SYSTEM' === $order->last_updated_by) last_updated_by_system @endif" data-trigger_to="order-number-{{$order->id}}"></i></td>
                             <td class="order_status">
                                 <select name="status_id" id="status_id" class="form-control btn {{str_replace(' ', '_', strtolower(\App\Models\Order::ORDER_STATUS[$order->status_id]))}}">
                                     @foreach(\App\Models\Order::ORDER_STATUS as $statusKey => $status)
                                         <option @if($order->status_id == $statusKey) selected @endif value="{{ $statusKey }}">{{ $status }}</option>
                                     @endforeach
                                 </select>
-                                <i class="fa fa-check-circle alert-updated-status-{{ $order->id }}" style="color: #00ad45; display: none" aria-hidden="true"></i>
+                                <i class="fa fa-check-circle alert-updated-status-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="order_priority">
                                 <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">
@@ -82,7 +82,7 @@
                                         <option @if($order->priority == $pKey) selected @endif value="{{ $pKey }}">{{ $priority }}</option>
                                     @endforeach
                                 </select>
-                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="color: #00ad45; display: none" aria-hidden="true"></i>
+                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="order_shipping_unit">
                                 <select name="shipping_unit" id="shipping_unit" class="form-control shipping_unit btn {{ strtolower(\App\Models\ShippingUnit::whereId($order->shipping_unit)->first()->acronym) }}">
@@ -202,7 +202,7 @@
             background-color: #5cb85c !important;
             border-color: #4cae4c !important;
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 110px;
         }
         .tables .order_priority .high {
@@ -210,12 +210,12 @@
             background-color: #c9302c !important;
             border-color: #ac2925 !important;
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 110px;
         }
         .tables .order_priority .low {
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 110px;
             background-color: #999;
             border-color: #999;
@@ -224,7 +224,7 @@
 
         .tables .order_status select {
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 130px;
             border-color: #999;
             color: #fff;
