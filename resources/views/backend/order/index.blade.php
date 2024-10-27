@@ -35,7 +35,7 @@
                     <div class="bsm-pagination" style="float: right">
                         {{ $orders->appends(Request::all())->links() }}
                     </div>
-                    <table class="table" style="font-size: 13px !important">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th style="min-width: 130px;" class="">Date</th>
@@ -74,7 +74,7 @@
                                         <option @if($order->status_id == $statusKey) selected @endif value="{{ $statusKey }}">{{ $status }}</option>
                                     @endforeach
                                 </select>
-                                <i class="fa fa-check-circle alert-updated-status-{{ $order->id }}" style="color: #00ad45; display: none" aria-hidden="true"></i>
+                                <i class="fa fa-check-circle alert-updated-status-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="order_priority">
                                 <select name="priority" id="priority" class="form-control btn {{strtolower(\App\Models\Order::ORDER_PRIORITY[$order->priority])}}">
@@ -82,7 +82,7 @@
                                         <option @if($order->priority == $pKey) selected @endif value="{{ $pKey }}">{{ $priority }}</option>
                                     @endforeach
                                 </select>
-                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="color: #00ad45; display: none" aria-hidden="true"></i>
+                                <i class="fa fa-check-circle alert-updated-priority-{{ $order->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="order_shipping_unit">
                                 <select name="shipping_unit" id="shipping_unit" class="form-control shipping_unit btn {{ strtolower(\App\Models\ShippingUnit::whereId($order->shipping_unit)->first()->acronym) }}">
@@ -163,6 +163,12 @@
             .date-to-wrapper {
                 margin-top: 20px !important;
             }
+            .tables .btn-create-delevery-code {
+                margin-top: 5px
+            }
+            .tables .search-box-item-date {
+                margin-bottom: 10px;
+            }
         }
 
         @media only screen and (max-width: 1200px) {
@@ -197,12 +203,21 @@
             }
         }
 
+        @media only screen and (min-width: 1200px) {
+            .tables {
+                font-size: 13px;
+            }
+            .tables .order-number {
+                font-size: 13px;
+            }
+        }
+
         .tables .order_priority .normal {
             color: #fff;
             background-color: #5cb85c !important;
             border-color: #4cae4c !important;
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 110px;
         }
         .tables .order_priority .high {
@@ -210,12 +225,12 @@
             background-color: #c9302c !important;
             border-color: #ac2925 !important;
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 110px;
         }
         .tables .order_priority .low {
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 110px;
             background-color: #999;
             border-color: #999;
@@ -224,7 +239,7 @@
 
         .tables .order_status select {
             border-radius: 4px;
-            padding: 5px 5px;
+            padding: 5px 15px;
             width: 130px;
             border-color: #999;
             color: #fff;
