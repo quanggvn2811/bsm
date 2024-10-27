@@ -62,7 +62,7 @@
                         ?>
                         @foreach($orders as $order)
                         <tr data-order_id="{{ $order->id }}" data-order="{{ json_encode($order) }}" class="active order-lines">
-                            <td data-toggle="modal" data-target="#quick-update-order-modal-dialog" class="order_date quick-update-order" style="color: #673ab7; font-weight: bold;">{{ $order->order_date }}<i class="fa fa-edit" style="margin-left: 5px; color: #673ab7"></i></td>
+                            <td data-toggle="modal" {{-- data-target="#quick-update-order-modal-dialog" --}} class="order_date quick-update-order" style="color: #673ab7; font-weight: bold;">{{ $order->order_date }}<i class="fa fa-edit" style="margin-left: 5px; color: #673ab7"></i></td>
                             <?php
                                 $redirectUrl = route('admin.orders.show', ['stock' => $stock->id, 'order' => $order->id]);
                                 session()->put('url_back_to_order_list', url()->full());
@@ -106,7 +106,7 @@
                                 <td class="amount-profit">{{ number_format($amountProfit) }}</td>
                                 <td class="profit-percent">{{ $order->total > 0 ? number_format($amountProfit / $order->total, 2) : 0 }}%</td>
                             @endif
-                            <td class="action"><a class="btn btn-primary btn-edit-order" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
+                            <td class="action"><a class="btn btn-sm btn-primary btn-edit-order" href="{{ route('admin.orders.edit', ['stock' => $stock->id, 'order' => $order->id]) }}"><i class="fa fa-edit"></i></a></td>
                         </tr>
                         @endforeach
                         @if($isAdmin)
@@ -209,6 +209,20 @@
             }
             .tables .order-number {
                 font-size: 13px;
+            }
+            .tables .order_priority .btn {
+                padding: 0 !important;
+                width: 100px !important;
+                height: 28px;
+            }
+            .tables .order_status .btn {
+                padding: 0 !important;
+                width: 120px !important;
+                height: 28px;
+            }
+            .tables .order_shipping_unit .btn {
+                height: 28px;
+                padding: 0 !important;
             }
         }
 
