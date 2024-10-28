@@ -455,4 +455,24 @@ class OrderController extends Controller
 
         return redirect()->route('admin.orders.index', ['stock' => $stock->id]);
     }
+
+    public function addressDetect(Request $request, Order $order) 
+    {
+        $address = $request->get('address');
+
+        $pancakeShopId = config('pancake.pancake_shop_id')['MDS'];
+
+        // Call api to auto detect =))
+        $url = 'https://pos.pages.fm/api/v1/geo/detect_address';
+
+        $url .= '?detail=true';
+
+        $url .= '&shop_id=' . $pancakeShopId;
+
+        $url .= '&address=' . $address;
+
+        $response = file_get_contents($url);
+
+        return response()->json(['status' => true, 'message' => 'Update from pancake successfully.', 'detected' => $response]);
+    }
 }

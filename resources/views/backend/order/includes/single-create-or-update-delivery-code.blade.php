@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Update Delivery Code For: <i style="color: #337ab7; font-weight: bold;" class="order-number-title"></i></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button style="margin-top: -20px" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

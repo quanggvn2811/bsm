@@ -25,4 +25,6 @@ Route::group([
     Route::get('stock/{stock}/view/{order}/{associated_session?}', [OrderController::class, 'show'])->name('orders.show');
     Route::delete('stock/{stock}/delete_order/{order}/{associated_session?}', [OrderController::class, 'destroy'])
         ->name('orders.destroy');
+
+    Route::get('{order}/address_detect/{associated_session?}', [OrderController::class, 'addressDetect'])->name('orders.detect_address');        
 });

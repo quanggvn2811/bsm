@@ -32,32 +32,45 @@
                                 <h4 class="header-wrapper header-customer-info">Customer Info</h4>
                                 <div class="customer-info-wrapper body-customer-info">
                                     <div class="form-group row pd-0-10 body-customer-info">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="customer_name">Name</label> <button type="button" style="position: absolute; top: -10px; margin-left: 20px" class="btn btn-sm btn-primary toggle-user-plus-info"><i class="fa fa-user-plus"></i></button>
                                             <input required type="text" value="{{ $order->customer->name ?? '' }}" name="customer_name" class="form-control" id="customer_name">
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="customer_phone">Phone</label>
                                             <input type="number" readonly required value="{{ $order->customer->phone ?? '' }}" class="form-control" id="customer_phone" name="customer_phone">
                                         </div>
-                                    </div>
-                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="customer_name">Address</label>
                                             <input type="text" name="customer_address" value="{{ $order->order_address ?? '' }}" class="form-control" id="customer_address">
                                         </div>
-                                        <div class="form-group col-md-6">
+                                    </div>
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
+                                        <div class="form-group col-md-4">
                                             <label for="customer_name">URL</label>
                                             <input type="text" name="customer_url" value="{{ $order->customer->info_url ?? '' }}" class="form-control" id="customer_url">
                                         </div>
-                                    </div>
-                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="prodDescription">More Info</label>
                                             <input type="text" class="form-control" value="{{ $order->customer->more_info ?? '' }}" id="customer_more_info" name="customer_more_info">
                                         </div>
-                                        <div class="col-md-6">
-
+                                        <div class="form-group col-md-4">
+                                            <label for="prodDescription">Shipping Address</label>
+                                            <input type="text" class="form-control" value="" id="shipping_address" name="shipping_address">
+                                        </div>
+                                    </div>
+                                    <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
+                                        <div class="form-group col-md-4">
+                                            <label for="customer_name">Shipping Province</label>
+                                            <input type="text" name="customer_url" value="" class="form-control" id="shipping_province">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="prodDescription">Shipping District</label>
+                                            <input type="text" class="form-control" value="" id="customer_more_info" name="shipping_district">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="prodDescription">Shipping Commune</label>
+                                            <input type="text" class="form-control" value="" id="shipping_address" name="shipping_commune">
                                         </div>
                                     </div>
                                 </div>
@@ -242,6 +255,7 @@
         </div>
     </div>
     <input type="hidden" value="{{ $stock->id }}" id="_stock_id">
+    <input type="hidden" value="{{ $order->id }}" id="_order_id">
     <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {
