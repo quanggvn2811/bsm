@@ -544,4 +544,22 @@ $(document).ready(function() {
 
     }
 
+    // Auto detect customer address
+    $('#customer_address').on('keyup', function() {
+        let address = $('#customer_address').val();
+        let orderId = $('#_order_id').val();
+        $.ajax({
+            type:'GET',
+            url:'/admin/orders/' + orderId + '/address_detect',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                address: address,
+            },
+            success: function(data) {
+                console.log(data)
+            },
+        });
+    });
+
 });
