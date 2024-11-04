@@ -32,7 +32,7 @@
                         {{ $products->appends(Request::all())->links() }}
                     </div>
                     <div class="form-check form-switch" style="display: inline-block; color: red; position: absolute; top: 1.6em; right: 1.5em; font-size: 18px; font-style: italic">
-                        <input type="checkbox" id="is-today-checked-mode" name="is-today-checked-mode" value="1">
+                        <input checked type="checkbox" id="is-today-checked-mode" name="is-today-checked-mode" value="1">
                         <label for="is-today-checked-mode">Today checked</label>
                     </div>
                     <table class="table">

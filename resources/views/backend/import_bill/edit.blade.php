@@ -103,7 +103,7 @@
                                                 <tr data-product_id="{{ $detail->product_id }}" class="plus-product-item-row">
                                                     <td>{{ $index }}</td>
                                                     <td>{{ $detail->product->sku ?? '' }}</td>
-                                                    <td>{{ $detail->product->name ?? '' }}</td>
+                                                    <td><a target="_blank" href="{{ route('admin.products.index', ['stock' => $stock->id, 'prod_name' => $detail->product->name]) }}">{{ $detail->product->name ?? '' }}</a></td>
                                                     <td><input type="number" class="form-control quantity-plus" value="{{ $detail->quantity ?? 1 }}"></td></td>
                                                     <td class="td-cost-plus"><input type="number" class="form-control cost-plus" value="{{ $detail->price_item }}"></td>
                                                     <td><img class="avatar-plus" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}" alt=""></td>
