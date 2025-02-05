@@ -557,7 +557,94 @@ $(document).ready(function() {
                 address: address,
             },
             success: function(data) {
-                console.log(data)
+                let detected = JSON.parse(data.detected)[0];
+                $('#shipping_address').val(detected?.full_address);
+
+                // Auto select addr
+                let split = detected.full_address.split(',')
+                let selectedProvinceName = split[3].trim().replace(/ /g, '_');
+                console.log(selectedProvinceName, detected)
+                $('#shipping_province option[value=Tỉnh_' + selectedProvinceName + ']').attr('selected','selected');
+                $('#shipping_province option[value=Thành_phố_' + selectedProvinceName + ']').attr('selected','selected');
+            },
+        });
+    });
+
+    function autoProvinceFor(province) {
+        $.ajax({
+            type:'GET',
+            url:'/admin/global_location/province',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+            },
+            success: function(data) {
+                $('#_list_provinces_and_district').val(data?.provinces)
+                let provinces = JSON.parse(data?.provinces);
+                let options = '<option value="">Select Province</option>';
+                provinces.forEach(function (province) {
+                    let val = province?.name.trim().replace(/ /g, '_')
+                    options += '<option value="'+ val + '">' + province?.name + '</option>'
+                });
+
+                province.append(options)
+            },
+        });
+    }
+
+    autoProvinceFor($('#shipping_province'));
+
+    $(document).on('change', '#shipping_province', function() {
+        let selectedProvinceCode = $('#shipping_province').val();
+        const listProvinceAndDistrict = JSON.parse($('#_list_provinces_and_district').val());
+        if (selectedProvinceCode == '') {
+            return;
+        }
+
+        let province = '';
+        listProvinceAndDistrict.forEach(function (tmpProvince) {
+            if (tmpProvince?.code == selectedProvinceCode) {
+                province = tmpProvince;
+                return;
+            }
+        });
+
+        if (province == '') {
+            return;
+        }
+
+        let options = '<option value="">Select District</option>';
+        province.districts.forEach(function (district) {
+            options += '<option value="'+ district?.name + '">' + district?.name + '</option>'
+        });
+
+        $('#shipping_district').empty().append(options);
+
+    });
+
+
+    $(document).on('change', '#shipping_district', function() {
+        let selectedDistrictCode = $('#shipping_district').val();
+        const listProvinceAndDistrict = JSON.parse($('#_list_provinces_and_district').val());
+        if (selectedDistrictCode == '') {
+            return;
+        }
+
+        $.ajax({
+            type:'GET',
+            url:'/admin/global_location/district/' + selectedDistrictCode,
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+            },
+            success: function(data) {
+                let district = JSON.parse(data?.district);
+                let options = '<option value="">Select Ward</option>';
+                district.wards.forEach(function (ward) {
+                    options += '<option value="'+ ward?.name + '">' + ward?.name + '</option>'
+                });
+
+                $('#shipping_commune').empty().append(options);
             },
         });
     });
