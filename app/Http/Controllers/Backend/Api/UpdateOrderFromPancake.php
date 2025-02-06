@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\DB;
 class UpdateOrderFromPancake extends Controller
 {
 
-    const SHOPEE_STATUS_FAILED = ['canceled'];
+    const SHOPEE_STATUS_FAILED = ['canceled', 'CANCELED'];
+
+    const SHOPEE_STATUS_COMPLETED = ['COMPLETED', 'completed'];
     public function getPancakeOrders (Request $request)
     {
         $pancakeShopId = $request->get('pancake_shop_id');
@@ -104,7 +106,28 @@ class UpdateOrderFromPancake extends Controller
                         $customer->save();
                     }
 
-                    // Todo: update order for shopee (status, money to collect)
+                    // Update order for Shopee (status, money to collect)
+                    if ($isShopee) {
+                        if ($orderData->money_to_collect) {
+                            // If something change
+                            $order->total = $orderData->money_to_collect;
+                        }
+
+                        // Update status
+                        // Auto = process, canceled = failed,
+                        $autoStatus = Order::STATUS_PROCESS;
+                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                            $autoStatus = Order::STATUS_FAILED;
+                        }
+
+                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                            $autoStatus = Order::STATUS_COMPLETED;
+                        }
+
+                        $order->status_id = $autoStatus;
+
+                        $order->save();
+                    }
                 } else {
                     // Created by admin, now just skip, no update here
                 }
