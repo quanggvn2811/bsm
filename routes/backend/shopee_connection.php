@@ -8,4 +8,5 @@ Route::group([
     // 'middleware' => 'role:administrator'
 ], function () {
     Route::get('/{associated_session?}', [ShopeeConnectionController::class, 'index'])->name('shopee_connection.index');
+    Route::post('/{stock}/update-product-from-pancake/{associated_session?}', [ShopeeConnectionController::class, 'updateProductFromPancake'])->name('shopee_connection.update_product_from_pancake');
 });
