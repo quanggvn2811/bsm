@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Backend\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Product;
+use App\Models\ProductVariation;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -13,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 class UpdateOrderFromPancake extends Controller
 {
 
-    const SHOPEE_STATUS_FAILED = ['canceled', 'CANCELED'];
+    const SHOPEE_STATUS_FAILED = ['canceled', 'CANCELED', 'returning', 'returned'];
 
     const SHOPEE_STATUS_COMPLETED = ['COMPLETED', 'completed'];
     public function getPancakeOrders (Request $request)
@@ -120,13 +123,47 @@ class UpdateOrderFromPancake extends Controller
                             $autoStatus = Order::STATUS_FAILED;
                         }
 
-                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
                             $autoStatus = Order::STATUS_COMPLETED;
                         }
 
                         $order->status_id = $autoStatus;
 
                         $order->save();
+
+                        // Auto remove old
+                        $oldOderDetail = OrderDetail::whereOrderId($order->id);
+                        foreach ($oldOderDetail->get() as $oldDetail) {
+                            Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
+                        }
+                        $oldOderDetail->delete();
+
+                        // Add new
+                        foreach ($orderData->items as $item) {
+                            $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                            if ($variation && $variation->product_id) {
+                                $product = Product::find($variation->product_id);
+                                $price = $item->variation_info->retail_price - $item->discount_each_product;
+                                $cost = $item->variation_info->last_imported_price;
+                                $quantity = $item->quantity * $variation->product_quantity;
+
+                                if (Order::STATUS_FAILED == $order->status_id) {
+                                    $quantity = 0;
+                                }
+
+                                OrderDetail::create([
+                                    'product_id' => $product->id,
+                                    'quantity' => $quantity,
+                                    'cost_item' => $cost,
+                                    'price_item' => $price,
+                                    'order_id' => $order->id,
+                                ]);
+
+                                Product::find($product->id)->decrement('quantity', $quantity);
+
+                            }
+                        }
+
                     }
                 } else {
                     // Created by admin, now just skip, no update here
@@ -243,6 +280,11 @@ class UpdateOrderFromPancake extends Controller
                 if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_FAILED)) {
                     $status = Order::STATUS_FAILED;
                 }
+
+                if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
+                    $status = Order::STATUS_COMPLETED;
+                }
+
                 $order['status_id'] = $status;
 
                 $order['total'] = $pancakeOrderData->money_to_collect ?? 0;
@@ -294,6 +336,32 @@ class UpdateOrderFromPancake extends Controller
                 $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%04d", substr($order->id, -4));
 
                 $order->update(['order_number' => $orderNumber]);
+
+                foreach ($items as $item) {
+                    $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                    if ($variation && $variation->product_id) {
+                        $product = Product::find($variation->product_id);
+                        $price = $item->variation_info->retail_price - $item->discount_each_product;
+                        $cost = $item->variation_info->last_imported_price;
+                        $quantity = $item->quantity * $variation->product_quantity;
+
+                        if (Order::STATUS_FAILED == $status) {
+                            $quantity = 0;
+                        }
+
+                        OrderDetail::create([
+                            'product_id' => $product->id,
+                            'quantity' => $quantity,
+                            'cost_item' => $cost,
+                            'price_item' => $price,
+                            'order_id' => $order->id,
+                        ]);
+
+                        Product::find($product->id)->decrement('quantity', $quantity);
+
+                    }
+                }
+
             });
         } catch (\Exception $exception) {
             dd($exception);
