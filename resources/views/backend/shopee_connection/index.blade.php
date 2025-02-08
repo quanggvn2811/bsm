@@ -25,9 +25,9 @@
                     {{--<div class="shop-to-update">--}}
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <form method="GET" id="form-search-product-from-pancake" class="col-md-10">
-                            <div class="col-md-6">
-                                <select name="shop_id" id="" class="form-control col-md-6 select_status_id"
-                                        style="width: 45%; height: 36px; margin: 0 20px; border-radius: 4px">
+                            <div class="col-md-7">
+                                <select name="shop_id" id="" class="form-control col-md-4 select_shop_id"
+                                        style="width: 30%; height: 36px; margin: 0 20px; border-radius: 4px">
                                     <?php
                                     $isSelectedAllShop = '';
                                     if ((isset($_GET['shop_id']) && '0' == $_GET['shop_id']) || !isset($_GET['shop_id'])) {
@@ -52,12 +52,18 @@
                                     @endforeach
                                 </select>
                                 <input placeholder="Search Product"
-                                       style="width: 45%; height: 36px; margin: 0 20px; border-radius: 4px" class="form-control"
+                                       style="width: 30%; height: 36px; margin: 0 20px; border-radius: 4px" class="form-control col-md-5"
                                        autofocus="" type="text" id="validationCustom01" name="product_name" value="{{$_GET['product_name'] ?? ''}}"
                                 >
+                                <select name="linked_status" id="" class="form-control select_status_id col-md-2"
+                                        style="width: 20%; height: 36px; margin: 0 20px; border-radius: 4px">
+                                    <option @if(!isset($_GET['linked_status']) || $_GET['linked_status'] && $_GET['linked_status'] == '0') selected @endif value="0">All status</option>
+                                    <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '1') selected @endif value="1">Product linked</option>
+                                    <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '2') selected @endif value="2">No link</option>
+                                </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <button type="submit" class="btn btn-primary btn-search-product-from-pancake"><i class="fa fa-search"
                                                                                                                  aria-hidden="true"></i>
                                     Search

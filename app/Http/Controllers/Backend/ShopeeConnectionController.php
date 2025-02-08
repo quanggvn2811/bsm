@@ -24,9 +24,17 @@ class ShopeeConnectionController extends Controller
         // Request
         $productName = $request->get('product_name');
         $shopId = $request->get('shop_id');
+        $linkedStatus = $request->get('linked_status');
 
         if (!$productName && !$shopId) {
-            $productVariations = ProductVariation::with('product')->paginate(config('app.page_count'));
+            $productVariations = ProductVariation::with('product');
+
+            if ($linkedStatus == 1) {
+                $productVariations = $productVariations->whereNotNull('product_id');
+            } elseif ($linkedStatus == 2) {
+                $productVariations = $productVariations->whereNull('product_id');
+            }
+            $productVariations = $productVariations->paginate(config('app.page_count'));
         }
 
         if ($shopId) {
@@ -36,11 +44,22 @@ class ShopeeConnectionController extends Controller
                 /*$productVariations = $productVariations->orWhere('fields', 'LIKE', '%' . $productName . '%');*/
             }
 
+            if ($linkedStatus == 1) {
+                $productVariations = $productVariations->whereNotNull('product_id');
+            } elseif ($linkedStatus == 2) {
+                $productVariations = $productVariations->whereNull('product_id');
+            }
+
             $productVariations = $productVariations->with('product')->paginate(config('app.page_count'));
         } else if($productName) {
-            $productVariations = ProductVariation::where('variation_name', 'LIKE', '%' . $productName . '%')
+            $productVariations = ProductVariation::where('variation_name', 'LIKE', '%' . $productName . '%');
+            if ($linkedStatus == 1) {
+                $productVariations = $productVariations->whereNotNull('product_id');
+            } elseif ($linkedStatus == 2) {
+                $productVariations = $productVariations->whereNull('product_id');
+            }
                 /*->orWhere('fields', 'LIKE', '%' . json_encode($productName) . '%')*/
-                ->with('product')
+            $productVariations = $productVariations->with('product')
                 ->paginate(config('app.page_count'));
         }
         return view('backend.shopee_connection.index')

@@ -3,7 +3,7 @@ $(document).ready(function() {
         //sortField: 'text'
     });
     $('.btn-update-product-from-pancake').on('click', function () {
-        let shop = $('.select_status_id option:selected');
+        let shop = $('.select_shop_id option:selected');
         if (confirm('Update for: ' + shop.text() + ' ?')) {
             let paramUrl = window.location.href;
             if (paramUrl.indexOf('?') > -1) {
