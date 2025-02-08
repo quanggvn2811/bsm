@@ -152,9 +152,9 @@ $(document).ready(function() {
         }
 
         $('#tmp_profit').val(
-            parseInt(jQuery('.amount-total').val()) + 
-            parseInt(jQuery('#ship_by_customer').val()) - 
-            parseInt(jQuery('#ship_by_shop').val()) - 
+            parseInt(jQuery('.amount-total').val()) +
+            parseInt(jQuery('#ship_by_customer').val()) -
+            parseInt(jQuery('#ship_by_shop').val()) -
             parseInt(jQuery('.amount-cost').val())
             );
 

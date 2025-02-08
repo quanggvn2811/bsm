@@ -6,6 +6,8 @@
 @endsection
 
 @section('content')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    @include('backend.shopee_connection.includes.link-with-bsm-product-modal-dialog')
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables">
@@ -111,23 +113,24 @@
                                 }
                                 $isLinked = !empty($variation->product_id);
                                 ?>
-                            <tr class="active">
-                                <th scope="row">{{$variation->id}}</th>
-                                <td>{{ $variation->variation_name }}</td>
+                            <tr class="active variation variation-{{$variation->id}}" data-variation_id="{{$variation->id}}"
+                                data-product_id="{{$variation->product_id}}"
+                                data-product_quantity="{{$variation->product_quantity}}"
+                            >
+                                <th scope="row"><span data-toggle="tooltip" data-original-title="{{$variation->variation_id}}" class="span-tooltip">{{$variation->id}}</span></th>
+                                <td class="name">{{ $variation->variation_name }}</td>
                                 <td><p style="font-weight: bold">{{ number_format($variation->last_imported_price) }}</p></td>
                                 <td class="avatar" style="padding: 3px"><img class="avatar_variation avatar_product" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}"></td>
-                                <td>{!! trim($field) !!}</td>
+                                <td class="fields">{!! trim($field) !!}</td>
                                 <td>{{ $shopByIds[$variation->shop_id]->name ?? '' }}</td>
-                                <td>Ly flute uống vang phong cách Retro | Ly thủy tinh uống vang | Ly cocktail sinh tố đẹp | Ly Whisky</td>
-                                <td><p style="font-weight: bold; text-align: center">{{ $variation->product_quantity }}</p></td>
+                                <td class="bsm-product-name">{{ $variation->product->name ?? '' }}</td>
+                                <td><p style="font-weight: bold; text-align: center" class="bsm-product-quantity">{{ $variation->product_quantity }}</p></td>
                                 <td>
-                                    @if($isLinked)
-                                        <button data-toggle="tooltip" data-original-title="Link with BSM product" title="Link with BSM product" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
-                                    @else
-                                        <button class="btn btn-sm btn-primary"><i class="fa fa-link"></i></button>
-                                    @endif
-                                    <button class="btn btn-sm btn-warning"><i class="fa fa-sign-out"></i></button>
-                                    <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                    <button data-toggle="tooltip" data-original-title="Link with BSM product"
+                                            class="btn btn-sm btn-primary btn-show-link-modal"><i class="fa fa-link"></i></button>
+                                    <button data-toggle="tooltip" data-original-title="Unlink with BSM product" class="btn btn-sm btn-warning btn-unlink-bsm-product"><i class="fa fa-sign-out"></i></button>
+                                    <button data-toggle="tooltip" data-original-title="Delete this variation product"
+                                            class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -147,6 +150,9 @@
         .bsm-pagination .pagination {
             margin: 0;
             font-size: 14px;
+        }
+        .table tr td, .table tr th {
+            vertical-align: middle !important;
         }
     </style>
 @endsection

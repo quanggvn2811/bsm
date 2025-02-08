@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ProductVariation;
 use App\Models\Shop;
 use App\Models\Stock;
@@ -25,7 +26,7 @@ class ShopeeConnectionController extends Controller
         $shopId = $request->get('shop_id');
 
         if (!$productName && !$shopId) {
-            $productVariations = ProductVariation::paginate(config('app.page_count'));
+            $productVariations = ProductVariation::with('product')->paginate(config('app.page_count'));
         }
 
         if ($shopId) {
@@ -35,10 +36,11 @@ class ShopeeConnectionController extends Controller
                 /*$productVariations = $productVariations->orWhere('fields', 'LIKE', '%' . $productName . '%');*/
             }
 
-            $productVariations = $productVariations->paginate(config('app.page_count'));
+            $productVariations = $productVariations->with('product')->paginate(config('app.page_count'));
         } else if($productName) {
             $productVariations = ProductVariation::where('variation_name', 'LIKE', '%' . $productName . '%')
                 /*->orWhere('fields', 'LIKE', '%' . json_encode($productName) . '%')*/
+                ->with('product')
                 ->paginate(config('app.page_count'));
         }
         return view('backend.shopee_connection.index')
@@ -46,6 +48,7 @@ class ShopeeConnectionController extends Controller
             ->with('stock', $stock)
             ->withProductVariations($productVariations)
             ->withShopByIds($shopByIds)
+            ->withProducts(Product::all())
             ;
     }
 
@@ -104,5 +107,19 @@ class ShopeeConnectionController extends Controller
         }
 
         return response()->json(['status' => true]);
+    }
+
+    public function updateBsmConnection(Request $request, Stock $stock)
+    {
+        $variationId = $request->get('variation_id');
+        $productId = $request->get('product_id');
+        $productQuantity = $request->get('product_quantity');
+
+        ProductVariation::find($variationId)->update([
+            'product_id' => $productId,
+            'product_quantity' => $request->get('product_quantity') ?? 1,
+        ]);
+
+        return response()->json(['status' => true, 'product_name' => Product::find($productId)->name ?? '', 'product_quantity' => $productQuantity ?? 1]);
     }
 }

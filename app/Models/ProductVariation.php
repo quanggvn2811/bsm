@@ -26,4 +26,9 @@ class ProductVariation extends Model
         'product_quantity',
         'shop_id',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
