@@ -456,7 +456,7 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.index', ['stock' => $stock->id]);
     }
 
-    public function addressDetect(Request $request, Order $order) 
+    public function addressDetect(Request $request, Order $order)
     {
         $address = $request->get('address');
 
@@ -469,10 +469,10 @@ class OrderController extends Controller
 
         $url .= '&shop_id=' . $pancakeShopId;
 
-        $url .= '&address=' . $address;
+        $url .= '&address=' . urlencode($address);
 
         $response = file_get_contents($url);
 
-        return response()->json(['status' => true, 'message' => 'Update from pancake successfully.', 'detected' => $response]);
+        return response()->json(['status' => true, 'message' => 'Detect successfully.', 'detected' => $response]);
     }
 }

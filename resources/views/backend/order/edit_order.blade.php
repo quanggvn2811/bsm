@@ -62,15 +62,17 @@
                                     <div class="form-group user-plus-info row pd-0-10" {{-- style="display: none" --}}>
                                         <div class="form-group col-md-4">
                                             <label for="customer_name">Shipping Province</label>
-                                            <input type="text" name="customer_url" value="" class="form-control" id="shipping_province">
+                                            <select name="shipping_province" id="shipping_province" class="form-control">
+                                                
+                                            </select>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="prodDescription">Shipping District</label>
-                                            <input type="text" class="form-control" value="" id="customer_more_info" name="shipping_district">
+                                            <select name="shipping_district" id="shipping_district" class="form-control"></select>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="prodDescription">Shipping Commune</label>
-                                            <input type="text" class="form-control" value="" id="shipping_address" name="shipping_commune">
+                                            <select name="shipping_commune" id="shipping_commune" class="form-control"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -256,6 +258,7 @@
     </div>
     <input type="hidden" value="{{ $stock->id }}" id="_stock_id">
     <input type="hidden" value="{{ $order->id }}" id="_order_id">
+    <input type="hidden" value="" id="_list_provinces_and_district">
     <input type="hidden" value="{{ json_encode($productById) }}" id="product_by_id_string">
     <style>
         .add-edit-product-form input, .add-edit-product-form select {

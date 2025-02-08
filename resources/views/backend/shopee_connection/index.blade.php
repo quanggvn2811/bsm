@@ -6,16 +6,83 @@
 @endsection
 
 @section('content')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    @include('backend.shopee_connection.includes.link-with-bsm-product-modal-dialog')
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables">
-                <h2 class="title1 col-md-2">Shopee Connection</h2>
-                <div class="btn-create">
-                    <button class="btn btn-success btn-add-stock">Add Stock</button>
+                <div class="row">
+                    <div class="col-md-2 pd-l-0">
+                        <div class="short-url-menu">
+                            <div class="first">
+                                <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
+                            </div>
+                            <div class="second">
+                                <a href="{{ url('admin/shopee_connection') }}">Shopee Connection</a>
+                            </div>
+                        </div>
+                    </div>
+                    {{--<div class="shop-to-update">--}}
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <form method="GET" id="form-search-product-from-pancake" class="col-md-10">
+                            <div class="col-md-7">
+                                <select name="shop_id" id="" class="form-control col-md-4 select_shop_id"
+                                        style="width: 30%; height: 36px; margin: 0 20px; border-radius: 4px">
+                                    <?php
+                                    $isSelectedAllShop = '';
+                                    if ((isset($_GET['shop_id']) && '0' == $_GET['shop_id']) || !isset($_GET['shop_id'])) {
+                                        $isSelectedAllShop = 'selected';
+                                    }
+                                    ?>
+                                    <option value="0" {{ $isSelectedAllShop }}>All Shops</option>
+                                    @foreach($shops as $shop)
+                                            <?php
+                                            $selectedShop = '';
+                                            if (isset($_GET['shop_id']) && $shop->id == $_GET['shop_id']) {
+                                                $selectedShop = 'selected';
+                                            }
+
+                                            $isShopee = false;
+                                            if (str_starts_with($shop->prefix, 'SP_')) {
+                                                $isShopee = true;
+                                            }
+                                            ?>
+                                        <option {{ $selectedShop }} value="{{ $shop->id }}"
+                                                @if($isShopee) style="background-color: rgb(238, 77, 45);; color: #FFF" @endif>{{ $shop->name }}</option>
+                                    @endforeach
+                                </select>
+                                <input placeholder="Search Product"
+                                       style="width: 30%; height: 36px; margin: 0 20px; border-radius: 4px" class="form-control col-md-5"
+                                       autofocus="" type="text" id="validationCustom01" name="product_name" value="{{$_GET['product_name'] ?? ''}}"
+                                >
+                                <select name="linked_status" id="" class="form-control select_status_id col-md-2"
+                                        style="width: 20%; height: 36px; margin: 0 20px; border-radius: 4px">
+                                    <option @if(!isset($_GET['linked_status']) || $_GET['linked_status'] && $_GET['linked_status'] == '0') selected @endif value="0">All status</option>
+                                    <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '1') selected @endif value="1">Product linked</option>
+                                    <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '2') selected @endif value="2">No link</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-5">
+                                <button type="submit" class="btn btn-primary btn-search-product-from-pancake"><i class="fa fa-search"
+                                                                                                                 aria-hidden="true"></i>
+                                    Search
+                                </button>
+                                <a class="btn btn-sm-action btn-dark pl-3 pr-3" href="{{ url('admin/shopee_connection') }}">Reset</a>
+                                <button style="background-color: #0b55f3" type="button" class="btn btn-primary btn-update-product-from-pancake"><i class="fa fa-download"
+                                                                                                                 aria-hidden="true"></i>
+                                    Update Product From Pancake
+                                </button>
+                            </div>
+                        </form>
+                    {{--</div>--}}
                 </div>
                 <div class="bs-example widget-shadow" data-example-id="contextual-table">
-                    <h4>Shop List</h4>
-                    <table class="table">
+                    <h4 class="col-md-4" style="margin-bottom: 0">Product Variations ({{ $productVariations->total() }})</h4>
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $productVariations->appends(Request::all())->links() }}
+                    </div>
+                    <table class="table" style="font-size: 14px">
                         <thead>
                         {{--<tr>
                             <th>#</th>
@@ -24,31 +91,74 @@
                         </tr>--}}
                         <tr>
                             <th>#</th>
-                            <th>BSM Shop</th>
-                            <th>Shopee Connection</th>
-                            <th>Action</th>
+                            <th style="width: 20%">Variation Name</th>
+                            <th style="width: 120px;">Last Imported Price</th>
+                            <th>Avatar</th>
+                            <th>Fields</th>
+                            <th>Shop</th>
+                            <th style="width: 20%">Product Name</th>
+                            <th style="width: 120px;">Product Quantity</th>
+                            <th style="width: 150px">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($shops as $shop)
-                        <tr class="active">
-                            <th scope="row">1</th>
-                            <td>{{ $shop->name }}</td>
-                            <td><i class="fa fa-check-circle"></i> Not connected</td>
-                            <td>
-                                <button class="btn btn-primary"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                            </td>
-                        </tr>
+                        @foreach($productVariations as $variation)
+                                <?php
+                                $variationImg = json_decode($variation->images);
+                                $avatarSrc = '#';
+                                if (!empty($variationImg[0])) {
+                                    $avatarSrc = $variationImg[0];
+                                }
+
+                                $fields = json_decode($variation->fields);
+                                $field = '';
+                                if (!empty($fields)) {
+                                    foreach ($fields as $f) {
+                                        $field .= "\n\r" . $f->name . ': ' . '<span style="color: red">' . $f->value . '</span>';
+                                    }
+                                }
+                                $isLinked = !empty($variation->product_id);
+                                ?>
+                            <tr class="active variation variation-{{$variation->id}}" data-variation_id="{{$variation->id}}"
+                                data-product_id="{{$variation->product_id}}"
+                                data-product_quantity="{{$variation->product_quantity}}"
+                            >
+                                <th scope="row"><span data-toggle="tooltip" data-original-title="{{$variation->variation_id}}" class="span-tooltip">{{$variation->id}}</span></th>
+                                <td class="name">{{ $variation->variation_name }}</td>
+                                <td><p style="font-weight: bold">{{ number_format($variation->last_imported_price) }}</p></td>
+                                <td class="avatar" style="padding: 3px"><img class="avatar_variation avatar_product" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}"></td>
+                                <td class="fields">{!! trim($field) !!}</td>
+                                <td>{{ $shopByIds[$variation->shop_id]->name ?? '' }}</td>
+                                <td class="bsm-product-name">{{ $variation->product->name ?? '' }}</td>
+                                <td><p style="font-weight: bold; text-align: center" class="bsm-product-quantity">{{ $variation->product_quantity }}</p></td>
+                                <td>
+                                    <button data-toggle="tooltip" data-original-title="Link with BSM product"
+                                            class="btn btn-sm btn-primary btn-show-link-modal"><i class="fa fa-link"></i></button>
+                                    <button data-toggle="tooltip" data-original-title="Unlink with BSM product" class="btn btn-sm btn-warning btn-unlink-bsm-product"><i class="fa fa-sign-out"></i></button>
+                                    <button data-toggle="tooltip" data-original-title="Delete this variation product"
+                                            class="btn btn-sm btn-danger"><i class="fa fa-trash btn-delete-variation"></i></button>
+                                </td>
+                            </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $productVariations->appends(Request::all())->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="{{ asset('js/stocks.js') }}"></script>
-    <input type="hidden" value="-1" name="stock_id">
-    @include('backend.stock.includes.add_update_stock_dialog')
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <script src="{{ asset('public/js/shopee-connection.js')  . '?v=' . config('app.commit_version') }}"></script>
+    <input type="hidden" value="{{ $stock->id }}" name="stock_id">
+    <style>
+        .bsm-pagination .pagination {
+            margin: 0;
+            font-size: 14px;
+        }
+        .table tr td, .table tr th {
+            vertical-align: middle !important;
+        }
+    </style>
 @endsection
-{{--{{ script('js/stocks.js') }}--}}

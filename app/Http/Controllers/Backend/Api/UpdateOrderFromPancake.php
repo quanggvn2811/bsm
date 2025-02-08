@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Backend\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Product;
+use App\Models\ProductVariation;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,6 +15,10 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateOrderFromPancake extends Controller
 {
+
+    const SHOPEE_STATUS_FAILED = ['canceled', 'CANCELED', 'returning', 'returned'];
+
+    const SHOPEE_STATUS_COMPLETED = ['COMPLETED', 'completed'];
     public function getPancakeOrders (Request $request)
     {
         $pancakeShopId = $request->get('pancake_shop_id');
@@ -64,12 +71,14 @@ class UpdateOrderFromPancake extends Controller
 
         $orderData = array_reverse($orderData);
 
-        $this->insertOrderFromPancake($bsmShopId, $orderData, $pancakeShopId);
+        $isShopee = str_starts_with($bsmPrefix, 'SP_');
+
+        $this->insertOrderFromPancake($bsmShopId, $orderData, $pancakeShopId, $isShopee);
 
         return response()->json(['status' => true, 'message' => 'Update from pancake successfully.']);
     }
 
-    private function insertOrderFromPancake($bsmShopId, $pancakeOrderData, $pancakeShopId)
+    private function insertOrderFromPancake($bsmShopId, $pancakeOrderData, $pancakeShopId, $isShopee = false)
     {
         foreach ($pancakeOrderData as $orderData) {
             $pancakeOrderDate = Carbon::parse($orderData->inserted_at)->addHours(7)->format(config('app.date_format'));
@@ -95,16 +104,75 @@ class UpdateOrderFromPancake extends Controller
                 if ('SYSTEM' === $order->created_by) { // Has create by system
                     // Check and update phone
                     $customer = $order->customer;
-                    if ($customer && $customer->phone !== $orderData->customer->phone_numbers[0]) {
+                    if (!$isShopee && $customer && $customer->phone !== $orderData->customer->phone_numbers[0]) {
                         $customer->phone = $orderData->customer->phone_numbers[0];
                         $customer->save();
+                    }
+
+                    // Update order for Shopee (status, money to collect)
+                    if ($isShopee) {
+                        if ($orderData->money_to_collect) {
+                            // If something change
+                            $order->total = $orderData->money_to_collect;
+                        }
+
+                        // Update status
+                        // Auto = process, canceled = failed,
+                        $autoStatus = Order::STATUS_PROCESS;
+                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                            $autoStatus = Order::STATUS_FAILED;
+                        }
+
+                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
+                            $autoStatus = Order::STATUS_COMPLETED;
+                        }
+
+                        $order->status_id = $autoStatus;
+
+                        $order->save();
+
+                        // Auto remove old
+                        $oldOderDetail = OrderDetail::whereOrderId($order->id);
+                        foreach ($oldOderDetail->get() as $oldDetail) {
+                            Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
+                        }
+                        $oldOderDetail->delete();
+
+                        // Add new
+                        foreach ($orderData->items as $item) {
+                            $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                            if ($variation && $variation->product_id) {
+                                $product = Product::find($variation->product_id);
+                                $price = $item->variation_info->retail_price - $item->discount_each_product;
+                                $cost = $item->variation_info->last_imported_price;
+                                $quantity = $item->quantity * $variation->product_quantity;
+
+                                if (Order::STATUS_FAILED == $order->status_id) {
+                                    $quantity = 0;
+                                }
+
+                                OrderDetail::create([
+                                    'product_id' => $product->id,
+                                    'quantity' => $quantity,
+                                    'cost_item' => $cost,
+                                    'price_item' => $price,
+                                    'order_id' => $order->id,
+                                ]);
+
+                                Product::find($product->id)->decrement('quantity', $quantity);
+
+                            }
+                        }
+
                     }
                 } else {
                     // Created by admin, now just skip, no update here
                 }
             } else { // Create
                 // Do create by system
-                $this->systemCreateOrderFromPancake($pancakeShopId, $orderData, $bsmShopId);
+                $isShopee ? $this->systemCreateShopeeOrderFromPancake($pancakeShopId, $orderData, $bsmShopId)
+                    : $this->systemCreateOrderFromPancake($pancakeShopId, $orderData, $bsmShopId)
+                ;
             }
         }
     }
@@ -175,6 +243,125 @@ class UpdateOrderFromPancake extends Controller
                 $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%04d", substr($order->id, -4));
 
                 $order->update(['order_number' => $orderNumber]);
+            });
+        } catch (\Exception $exception) {
+            dd($exception);
+        }
+    }
+
+    protected function systemCreateShopeeOrderFromPancake($pancakeShopId, $pancakeOrderData, $bsmShopId)
+    {
+        try {
+            DB::transaction(function () use ($pancakeShopId, $pancakeOrderData, $bsmShopId) {
+                $pancakeCustomerPhone = $pancakeOrderData->customer->phone_numbers[0];
+                $pancakeCustomerUsername = $pancakeOrderData->customer->username;
+
+                // Replace ****** = first 7 characters in username
+                $first7Characters = substr($pancakeCustomerUsername, 0, 7);
+                $pancakeCustomerPhone = substr($pancakeCustomerPhone, 0, 1) . $first7Characters . substr($pancakeCustomerPhone, -2);
+                // Customer
+                $customer = Customer::wherePhone($pancakeCustomerPhone)->first();
+                if (!$customer) {
+                    $customer = Customer::create([
+                        'name' => $pancakeCustomerUsername,
+                        'phone' => $pancakeCustomerPhone,
+                        'address' => $pancakeOrderData->customer->shop_customer_addresses[0]->address ?? '',
+                        'info_url' => '',
+                        'more_info' => '',
+                    ]);
+                }
+
+                // Store Order
+                $order['priority'] = Order::PRIORITY_NORMAL;
+
+
+                $status = Order::STATUS_PROCESS;
+
+                if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                    $status = Order::STATUS_FAILED;
+                }
+
+                if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
+                    $status = Order::STATUS_COMPLETED;
+                }
+
+                $order['status_id'] = $status;
+
+                $order['total'] = $pancakeOrderData->money_to_collect ?? 0;
+
+                $order['ship_by_customer'] = 0;
+
+                $order['ship_by_shop'] = 0;
+
+                $items = $pancakeOrderData->items;
+                $cost = 0;
+
+                foreach ($items as $item) {
+                    $cost += $item->variation_info->last_imported_price * $item->quantity;
+                }
+
+                $order['cost'] = $cost;
+
+                $order['notes'] = '';
+
+                $orderDate = Carbon::parse($pancakeOrderData->inserted_at)->addHours(7)->format(config('app.date_format'));
+                $order['order_date'] = $orderDate;
+
+                $order['order_address'] = $pancakeOrderData->customer->shop_customer_addresses[0]->address ?? '';
+
+                $order['customer_id'] = $customer->id;
+
+                $shop = Shop::find($bsmShopId);
+
+                $order['shop_id'] = $shop->id;
+
+                $orderNumber = $shop->prefix . '_' . date('ymdHis');
+
+                $order['order_number'] = $orderNumber;
+
+                // Store pancake data
+                $order['pancake_shop_id'] = $pancakeShopId;
+
+                $order['pancake_shop_order_id'] = $pancakeOrderData->system_id;
+
+                $order['created_by'] = 'SYSTEM';
+
+                $order['pancake_shop_order_link'] = $pancakeOrderData->order_link;
+
+                $order['last_updated_by'] = 'SYSTEM';
+
+                $order = Order::create($order);
+
+                // Update order_number
+                $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%04d", substr($order->id, -4));
+
+                $order->update(['order_number' => $orderNumber]);
+
+                foreach ($items as $item) {
+                    $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                    if ($variation && $variation->product_id) {
+                        $product = Product::find($variation->product_id);
+                        $price = $item->variation_info->retail_price - $item->discount_each_product;
+                        $cost = $item->variation_info->last_imported_price;
+                        $quantity = $item->quantity * $variation->product_quantity;
+
+                        if (Order::STATUS_FAILED == $status) {
+                            $quantity = 0;
+                        }
+
+                        OrderDetail::create([
+                            'product_id' => $product->id,
+                            'quantity' => $quantity,
+                            'cost_item' => $cost,
+                            'price_item' => $price,
+                            'order_id' => $order->id,
+                        ]);
+
+                        Product::find($product->id)->decrement('quantity', $quantity);
+
+                    }
+                }
+
             });
         } catch (\Exception $exception) {
             dd($exception);
