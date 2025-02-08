@@ -70,8 +70,11 @@
                     {{--</div>--}}
                 </div>
                 <div class="bs-example widget-shadow" data-example-id="contextual-table">
-                    <h4>Shop List</h4>
-                    <table class="table">
+                    <h4 class="col-md-4" style="margin-bottom: 0">Product Variations ({{ $productVariations->total() }})</h4>
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $productVariations->appends(Request::all())->links() }}
+                    </div>
+                    <table class="table" style="font-size: 14px">
                         <thead>
                         {{--<tr>
                             <th>#</th>
@@ -80,29 +83,70 @@
                         </tr>--}}
                         <tr>
                             <th>#</th>
-                            <th>BSM Shop</th>
-                            <th>Shopee Connection</th>
-                            <th>Action</th>
+                            <th style="width: 20%">Variation Name</th>
+                            <th style="width: 120px;">Last Imported Price</th>
+                            <th>Avatar</th>
+                            <th>Fields</th>
+                            <th>Shop</th>
+                            <th style="width: 20%">Product Name</th>
+                            <th style="width: 120px;">Product Quantity</th>
+                            <th style="width: 150px">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($shops as $shop)
+                        @foreach($productVariations as $variation)
+                                <?php
+                                $variationImg = json_decode($variation->images);
+                                $avatarSrc = '#';
+                                if (!empty($variationImg[0])) {
+                                    $avatarSrc = $variationImg[0];
+                                }
+
+                                $fields = json_decode($variation->fields);
+                                $field = '';
+                                if (!empty($fields)) {
+                                    foreach ($fields as $f) {
+                                        $field .= "\n\r" . $f->name . ': ' . '<span style="color: red">' . $f->value . '</span>';
+                                    }
+                                }
+                                $isLinked = !empty($variation->product_id);
+                                ?>
                             <tr class="active">
-                                <th scope="row">1</th>
-                                <td>{{ $shop->name }}</td>
-                                <td><i class="fa fa-check-circle"></i> Not connected</td>
+                                <th scope="row">{{$variation->id}}</th>
+                                <td>{{ $variation->variation_name }}</td>
+                                <td><p style="font-weight: bold">{{ number_format($variation->last_imported_price) }}</p></td>
+                                <td class="avatar" style="padding: 3px"><img class="avatar_variation avatar_product" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}"></td>
+                                <td>{!! trim($field) !!}</td>
+                                <td>{{ $shopByIds[$variation->shop_id]->name ?? '' }}</td>
+                                <td>Ly flute uống vang phong cách Retro | Ly thủy tinh uống vang | Ly cocktail sinh tố đẹp | Ly Whisky</td>
+                                <td><p style="font-weight: bold; text-align: center">{{ $variation->product_quantity }}</p></td>
                                 <td>
-                                    <button class="btn btn-primary"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                    @if($isLinked)
+                                        <button data-toggle="tooltip" data-original-title="Link with BSM product" title="Link with BSM product" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
+                                    @else
+                                        <button class="btn btn-sm btn-primary"><i class="fa fa-link"></i></button>
+                                    @endif
+                                    <button class="btn btn-sm btn-warning"><i class="fa fa-sign-out"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="bsm-pagination" style="float: right">
+                        {{ $productVariations->appends(Request::all())->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="{{ asset('public/js/main.js')  . '?v=' . config('app.commit_version') }}"></script>
     <script src="{{ asset('public/js/shopee-connection.js')  . '?v=' . config('app.commit_version') }}"></script>
     <input type="hidden" value="{{ $stock->id }}" name="stock_id">
+    <style>
+        .bsm-pagination .pagination {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
 @endsection

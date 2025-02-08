@@ -24,5 +24,6 @@ class ProductVariation extends Model
         'fields',
         'product_id',
         'product_quantity',
+        'shop_id',
     ];
 }

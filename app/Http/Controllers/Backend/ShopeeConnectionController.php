@@ -13,10 +13,39 @@ class ShopeeConnectionController extends Controller
     public function index (Request $request)
     {
         $shops = Shop::all();
+        $shopByIds = [];
+        foreach ($shops as $shop) {
+            $shopByIds[$shop->id] = $shop;
+        }
+
         $stock = Stock::whereName('MAKE STOCK')->first();
+
+        // Request
+        $productName = $request->get('product_name');
+        $shopId = $request->get('shop_id');
+
+        if (!$productName && !$shopId) {
+            $productVariations = ProductVariation::paginate(config('app.page_count'));
+        }
+
+        if ($shopId) {
+            $productVariations = ProductVariation::whereShopId($shopId);
+            if ($productName) {
+                $productVariations = $productVariations->where('variation_name', 'LIKE', '%' . $productName . '%');
+                /*$productVariations = $productVariations->orWhere('fields', 'LIKE', '%' . $productName . '%');*/
+            }
+
+            $productVariations = $productVariations->paginate(config('app.page_count'));
+        } else if($productName) {
+            $productVariations = ProductVariation::where('variation_name', 'LIKE', '%' . $productName . '%')
+                /*->orWhere('fields', 'LIKE', '%' . json_encode($productName) . '%')*/
+                ->paginate(config('app.page_count'));
+        }
         return view('backend.shopee_connection.index')
             ->with('shops', $shops)
             ->with('stock', $stock)
+            ->withProductVariations($productVariations)
+            ->withShopByIds($shopByIds)
             ;
     }
 
@@ -59,6 +88,7 @@ class ShopeeConnectionController extends Controller
                     'last_imported_price' => $variation->last_imported_price ?? 0,
                     'images' => json_encode($variation->images),
                     'fields' => json_encode($variation->fields),
+                    'shop_id' => $shopId,
                 ];
 
                 $productVariation = ProductVariation::whereVariationId($variation->id)->first();

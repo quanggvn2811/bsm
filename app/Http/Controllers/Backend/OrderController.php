@@ -456,7 +456,7 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.index', ['stock' => $stock->id]);
     }
 
-    public function addressDetect(Request $request, Order $order) 
+    public function addressDetect(Request $request, Order $order)
     {
         $address = $request->get('address');
 
