@@ -136,7 +136,7 @@
                                             class="btn btn-sm btn-primary btn-show-link-modal"><i class="fa fa-link"></i></button>
                                     <button data-toggle="tooltip" data-original-title="Unlink with BSM product" class="btn btn-sm btn-warning btn-unlink-bsm-product"><i class="fa fa-sign-out"></i></button>
                                     <button data-toggle="tooltip" data-original-title="Delete this variation product"
-                                            class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                            class="btn btn-sm btn-danger"><i class="fa fa-trash btn-delete-variation"></i></button>
                                 </td>
                             </tr>
                         @endforeach

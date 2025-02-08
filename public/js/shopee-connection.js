@@ -103,6 +103,34 @@ $(document).ready(function() {
         });
     }
 
+    function deleteProductVariation(variationId) {
+        const stock = $('input[name="stock_id"]').val();
+        let url = '/admin/shopee_connection/' + stock + '/delete-variation';
+
+        $.ajax({
+            type:'POST',
+            url: url,
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                variation_id: variationId
+            },
+            success: function(data) {
+                $('.variation-' + variationId).remove();
+            },
+            error: function() {
+            }
+        });
+    }
+
+    $('.btn-delete-variation').on('click', function () {
+        if (confirm('Delete this variation?')) {
+            const variationField = $(this).closest('tr');
+            let variationId = $(variationField).data('variation_id');
+            deleteProductVariation(variationId);
+        }
+    })
+
     $('.btn-unlink-bsm-product').on('click', function () {
         if (confirm('Confirm unlink this product, are you sure?')) {
             updateProductConnection($(this).closest('tr').data('variation_id'), '', 1)

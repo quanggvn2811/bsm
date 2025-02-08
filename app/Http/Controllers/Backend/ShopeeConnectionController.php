@@ -141,4 +141,12 @@ class ShopeeConnectionController extends Controller
 
         return response()->json(['status' => true, 'product_name' => Product::find($productId)->name ?? '', 'product_quantity' => $productQuantity ?? 1]);
     }
+
+    public function deleteVariation(Request $request, Stock $stock)
+    {
+        $variationId = $request->get('variation_id');
+        ProductVariation::find($variationId)->delete();
+
+        return response()->json(['status' => true]);
+    }
 }
