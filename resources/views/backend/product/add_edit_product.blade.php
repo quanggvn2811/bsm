@@ -54,14 +54,24 @@
                                 }
                             ?>
                             <div class="form-group row">
-                                <div class="import-img col-md-2">
-                                    <label for="exampleInputFile">Images</label>
-                                    <input type="file" name="images[]" multiple id="prodImages"> <p class="help-block">Select product image(s)</p>
+                                <div class="col-md-6">
+                                    <div class="import-img col-md-4">
+                                        <label for="exampleInputFile">Images</label>
+                                        <input type="file" name="images[]" multiple id="prodImages"> <p class="help-block">Select product image(s)</p>
+                                    </div>
+                                    <div class="img-avatar col-md-8">
+                                        @if($isEdit)
+                                            <img class="avatar_product" style="max-width: 200px; max-height: 200px" src="{{ $avatarSrc }}">
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="img-avatar col-md-10">
-                                    @if($isEdit)
-                                        <img class="avatar_product" style="max-width: 200px; max-height: 200px" src="{{ $avatarSrc }}">
-                                    @endif
+                                <div class="form-group col-md-6">
+                                    <label for="prodCategory">Sales Status</label>
+                                    <select required class="form-control" id="prodCategory" name="sales_status">
+                                        @foreach(\App\Models\Product::SALES_PRODUCT_STATUS as $key => $value)
+                                            <option @if($isEdit && $product->sales_status == $key) @endif value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="row" style="margin-left: -15px">

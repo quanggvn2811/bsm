@@ -70,6 +70,16 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-md-2" for="title">Sales Status</label>
+                    <div class="col-md-10">
+                        <select class="form-control" name="sales_product_status">
+                            @foreach($salesStatus as $key => $value)
+                                <option @if(isset($_GET['sales_product_status']) && $_GET['sales_product_status'] == $key) selected @endif value="{{ $key }}"> {{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
 
