@@ -69,7 +69,7 @@
                                     <label for="prodCategory">Sales Status</label>
                                     <select required class="form-control" id="prodCategory" name="sales_status">
                                         @foreach(\App\Models\Product::SALES_PRODUCT_STATUS as $key => $value)
-                                            <option @if($isEdit && $product->sales_status == $key) @endif value="{{ $key }}">{{ $value }}</option>
+                                            <option @if($isEdit && $product->sales_status == $key) selected @endif value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>
                                 </div>
