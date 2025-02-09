@@ -23,7 +23,7 @@ class OrderController extends Controller
 {
     public function index(Request $request, Stock $stock)
     {
-        $from = $request->get('order_date_from', today()->subDays(5)->format('d/m/Y'));
+        $from = $request->get('order_date_from', today()->subDays(15)->format('d/m/Y'));
         $to = $request->get('order_date_to', today()->format('d/m/Y'));
         $from = Carbon::createFromFormat(config('app.date_format'), $from)->format('Y-m-d');
         $to = Carbon::createFromFormat(config('app.date_format'), $to)->format('Y-m-d');

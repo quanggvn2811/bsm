@@ -427,7 +427,7 @@ $(document).ready(function() {
             showDropdowns: true,
             minYear: 2000,
             maxYear: parseInt(moment().format('YYYY'),10),
-            startDate: moment().subtract('5', 'day').format('DD/MM/YYYY'),
+            startDate: moment().subtract('15', 'day').format('DD/MM/YYYY'),
             locale: {
                 format: 'DD/MM/YYYY'
             },
