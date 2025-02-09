@@ -407,11 +407,37 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
+        $statusId = $request->get('status_id');
+
+        // To failed
+        if (Order::STATUS_FAILED == $statusId) {
+            $this->incrementProductWhenOrderFailed($order);
+        } else if (Order::STATUS_FAILED != $statusId && $order->status_id == Order::STATUS_FAILED) {
+            // Change from failed
+            $this->decrementProductWhenOrderNotFailed($order);
+        }
+
         $order->update([
-            'status_id' => $request->get('status_id')
+            'status_id' => $statusId
         ]);
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function incrementProductWhenOrderFailed(Order $order)
+    {
+        $oldOderDetail = OrderDetail::whereOrderId($order->id);
+        foreach ($oldOderDetail->get() as $oldDetail) {
+            Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
+        }
+    }
+
+    public function decrementProductWhenOrderNotFailed(Order $order)
+    {
+        $oldOderDetail = OrderDetail::whereOrderId($order->id);
+        foreach ($oldOderDetail->get() as $oldDetail) {
+            Product::find($oldDetail->product_id)->decrement('quantity', $oldDetail->quantity);
+        }
     }
 
     public function show(Request $request, Stock $stock, Order $order)
