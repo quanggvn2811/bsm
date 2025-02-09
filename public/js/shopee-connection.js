@@ -94,8 +94,12 @@ $(document).ready(function() {
                 product_quantity: productQuantity
             },
             success: function(data) {
-                $('.variation-' + variationId).find('.bsm-product-name').text(data?.product_name);
+                // Todo set url by product id
+                let html = data?.product_name.length ? `<a target="_blank" href="/admin/products/stock/${stock}/edit/${productId}">` + data?.product_name + '</a>' : '';
+                $('.variation-' + variationId).find('.bsm-product-name').empty().append(html);
                 $('.variation-' + variationId).find('.bsm-product-quantity').text(data?.product_quantity);
+                $('.variation-' + variationId).data('product_id', productId)
+                $('.variation-' + variationId).data('product_quantity', productQuantity)
                 connectModal.modal('hide');
             },
             error: function() {

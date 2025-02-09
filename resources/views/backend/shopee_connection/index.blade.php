@@ -129,7 +129,11 @@
                                 <td class="avatar" style="padding: 3px"><img class="avatar_variation avatar_product" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}"></td>
                                 <td class="fields">{!! trim($field) !!}</td>
                                 <td>{{ $shopByIds[$variation->shop_id]->name ?? '' }}</td>
-                                <td class="bsm-product-name">{{ $variation->product->name ?? '' }}</td>
+                                @if($variation->product_id)
+                                    <td class="bsm-product-name"><a target="_blank" href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $variation->product_id]) }}">{{ $variation->product->name ?? '' }}</a></td>
+                                @else
+                                    <td class="bsm-product-name"></td>
+                                @endif
                                 <td><p style="font-weight: bold; text-align: center" class="bsm-product-quantity">{{ $variation->product_quantity }}</p></td>
                                 <td>
                                     <button data-toggle="tooltip" data-original-title="Link with BSM product"
