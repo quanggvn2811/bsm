@@ -71,9 +71,20 @@
                                 </button>
                                 <button class="btn btn-success plusQuantity btn-sm"><i class="fa fa-plus"></i></button>
                             </td>
-                            <td class="supplier hide_with_mobile">{{ $product->first_product_supplier->supplier->name ?? '' }}</td>
-                            <td class="sales_status hide_with_mobile">
-                                <select style="border-radius: 4px; padding: 2px 5px; height: 26.5px; width: 110px; color: #673ab7; border-color: #673ab7" name="sales-status" id="" class="form-control">
+                            <?php
+                                $prodSupplier = $product->first_product_supplier->supplier;
+
+                            ?>
+                            <td class="supplier hide_with_mobile">
+                                <select style="border-radius: 4px; padding: 2px 5px; height: 26.5px; width: 110px; color: #673ab7; border-color: #673ab7" name="supplier_id" id="" class="supplier_id form-control">
+                                    @foreach($suppliers as $supplier)
+                                        <option @if($prodSupplier->id == $supplier->id) selected @endif value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fa fa-check-circle alert-updated-supplier-{{ $product->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                            </td>
+                            <td class="hide_with_mobile">
+                                <select style="border-radius: 4px; padding: 2px 5px; height: 26.5px; width: 110px; color: #673ab7; border-color: #673ab7" name="sales-status" id="" class="sales_status form-control">
                                     @foreach(\App\Models\Product::SALES_PRODUCT_STATUS as $key => $value)
                                         <option @if($key == $product->sales_status) selected @endif value="{{ $key }}"> {{ $value }}</option>
                                     @endforeach

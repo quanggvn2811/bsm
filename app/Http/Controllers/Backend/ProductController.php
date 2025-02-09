@@ -280,6 +280,15 @@ class ProductController extends Controller
         ]);
     }
 
+    public function updateSupplier(Request $request, Product $product)
+    {
+        $product->first_product_supplier()->update(['supplier_id' => $request->get('supplier_id')]);
+
+        return response()->json([
+            'status' => 'Update supplier successfully!',
+        ]);
+    }
+
     public function destroy(Product $product)
     {
         if (!$product->delete()) {
