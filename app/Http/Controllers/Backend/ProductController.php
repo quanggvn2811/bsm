@@ -269,6 +269,17 @@ class ProductController extends Controller
         ]);
     }
 
+    public function updateSalesStatus(Request $request, Product $product)
+    {
+        $product->update([
+            'sales_status' => $request->get('sales_status'),
+        ]);
+
+        return response()->json([
+            'status' => 'Update sales status successfully!',
+        ]);
+    }
+
     public function destroy(Product $product)
     {
         if (!$product->delete()) {

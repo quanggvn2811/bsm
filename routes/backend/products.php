@@ -16,6 +16,8 @@ Route::group([
         ->name('products.updateQuantity');
     Route::post('{product}/update_checked_date/{associated_session?}', [ProductController::class, 'updateCheckedDate'])
         ->name('products.update_checked_date');
+    Route::post('{product}/update_sales_status/{associated_session?}', [ProductController::class, 'updateSalesStatus'])
+        ->name('products.update_sales_status');
     Route::delete('delete/{product}/{associated_session?}', [ProductController::class, 'destroy'])
         ->name('products.destroy');
     Route::get('stock/{stock}/edit/{product}/{associated_session?}', [ProductController::class, 'edit'])->name('products.edit');

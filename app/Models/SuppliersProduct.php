@@ -21,4 +21,8 @@ class SuppliersProduct extends Model
         's_cost',
         's_sku',
     ];
+
+    public function supplier() {
+        return $this->belongsTo(Supplier::class);
+    }
 }
