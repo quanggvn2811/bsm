@@ -22,6 +22,16 @@ class Product extends Model
         self::TYPE_OTHER => 'Other',
     ];
 
+    const SALES_PRODUCT_STATUS_SELLING = 1;
+    const SALES_PRODUCT_STATUS_CLEAR_STOCK = 2;
+    const SALES_PRODUCT_STATUS_CANCELED = 3;
+
+    const SALES_PRODUCT_STATUS = [
+        self::SALES_PRODUCT_STATUS_SELLING => 'Selling',
+        self::SALES_PRODUCT_STATUS_CLEAR_STOCK => 'Clear Stock',
+        self::SALES_PRODUCT_STATUS_CANCELED => 'Canceled',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,6 +53,7 @@ class Product extends Model
         'type',
         'sub_product_id',
         'checked_date',
+        'sales_status',
     ];
 
     public function category()

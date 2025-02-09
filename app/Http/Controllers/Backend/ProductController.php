@@ -52,6 +52,14 @@ class ProductController extends Controller
             $products = $products->where('quantity', $calculation, $quantity);
         }
 
+        $salesStatus = $request->get('sales_product_status');
+
+        if ($salesStatus) {
+            $products = $products->where('sales_status', $salesStatus);
+        } else {
+            $products = $products->where('sales_status', Product::SALES_PRODUCT_STATUS_SELLING);
+        }
+
         $products = $products->with('category')->paginate(config('app.page_count'));
 
         return view('backend.product.index')
@@ -59,6 +67,7 @@ class ProductController extends Controller
             ->withProducts($products)
             ->withCategories($categories)
             ->withSuppliers($suppliers)
+            ->withSalesStatus(Product::SALES_PRODUCT_STATUS)
             ;
     }
 
@@ -94,6 +103,7 @@ class ProductController extends Controller
             //'supplier_id',
             'quantity',
             'type',
+            'sales_status',
         ]);
 
         $data['supplier_id'] = $request->get('prod_suppliers')[0]['id'] ?? 1;
@@ -185,6 +195,7 @@ class ProductController extends Controller
             // 'supplier_id',
             'quantity',
             'type',
+            'sales_status',
         ]);
 
         $data['supplier_id'] = $request->get('prod_suppliers')[0]['id'] ?? 1;
