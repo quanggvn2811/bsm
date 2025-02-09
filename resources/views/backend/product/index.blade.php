@@ -27,7 +27,7 @@
                 </div>
                 @include('backend.product.includes.search_form')
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto; position: relative">
-                    <h4>Products List ({{ $products->total() }})</h4>
+                    <h4 style="margin-bottom: 0">Products List ({{ $products->total() }})</h4>
                     <div class="bsm-pagination" style="float: right">
                         {{ $products->appends(Request::all())->links() }}
                     </div>
@@ -35,14 +35,16 @@
                         <input checked type="checkbox" id="is-today-checked-mode" name="is-today-checked-mode" value="1">
                         <label for="is-today-checked-mode">Today checked</label>
                     </div>
-                    <table class="table">
+                    <table class="table" style="font-size: 15px">
+                        {{--Todo: Bỏ cột description, thêm cột supplier + sales_status => update nhanh bằng ajax, thêm description vào name's tooltip--}}
                         <thead>
                         <tr>
                             <th class="hide_with_mobile">SKU</th>
                             <th style="min-width: 150px">Name</th>
-                            <th class="hide_with_mobile" style="min-width: 150px">Description</th>
                             <th>Avatar</th>
                             <th style="min-width: 170px">Quantity</th>
+                            <th>Supplier</th>
+                            <th>Sales Status</th>
                             <th class="hide_with_mobile">Category</th>
                             <th class="hide_with_mobile">Checked Date</th>
                             <th class="hide_with_mobile" style="min-width: 120px">Action</th>
@@ -60,15 +62,34 @@
                                 ?>
                         <tr data-product_id="{{ $product->id }}" class="active product-lines">
                             <td class="sku hide_with_mobile"> {{ $product->sku }}</td>
-                            <td class="name"><a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}"><span class="span-tool-top" data-original-title="{{ $product->name }}" data-toggle="tooltip">{{ $product->name }}</span></a></td>
-                            <td class="description hide_with_mobile"><span class="span-tooltip" data-toggle="tooltip" data-original-title="{!! $product->description !!}">{!! $product->description !!}</span></td>
+                            <td class="name"><a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}"><span class="span-tooltip" data-original-title="{!! $product->description !!}" data-toggle="tooltip">{{ $product->name }}</span></a></td>
                             <td class="avatar" style="padding: 3px"><img class="avatar_product" style="max-width: 100px; max-height: 100px" src="{{ $avatarSrc }}"></td>
                             <td class="quantity">
-                                <button class="btn btn-danger subQuantity"><i class="fa fa-minus"></i></button>
-                                <button class="btn btn-default quantityValue">
+                                <button class="btn btn-danger subQuantity btn-sm"><i class="fa fa-minus"></i></button>
+                                <button class="btn btn-default quantityValue btn-sm">
                                     {{ $product->quantity }}
                                 </button>
-                                <button class="btn btn-success plusQuantity"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-success plusQuantity btn-sm"><i class="fa fa-plus"></i></button>
+                            </td>
+                            <?php
+                                $prodSupplier = $product->first_product_supplier->supplier;
+
+                            ?>
+                            <td class="supplier hide_with_mobile">
+                                <select style="border-radius: 4px; padding: 2px 5px; height: 26.5px; width: 110px; color: #673ab7; border-color: #673ab7" name="supplier_id" id="" class="supplier_id form-control">
+                                    @foreach($suppliers as $supplier)
+                                        <option @if($prodSupplier->id == $supplier->id) selected @endif value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fa fa-check-circle alert-updated-supplier-{{ $product->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
+                            </td>
+                            <td class="hide_with_mobile">
+                                <select style="border-radius: 4px; padding: 2px 5px; height: 26.5px; width: 110px; color: #673ab7; border-color: #673ab7" name="sales-status" id="" class="sales_status form-control">
+                                    @foreach(\App\Models\Product::SALES_PRODUCT_STATUS as $key => $value)
+                                        <option @if($key == $product->sales_status) selected @endif value="{{ $key }}"> {{ $value }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fa fa-check-circle alert-updated-sales-status-{{ $product->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="category hide_with_mobile">{{ $product->category->name }}</td>
                             <td class="checked-date">
@@ -78,16 +99,16 @@
                                         $bgColor = '#399b12';
                                     }
                                 ?>
-                                <input value="{{ $product->checked_date }}" style="width: 110px; border-radius: 4px; background-color: {{ $bgColor }}; color: #ffffff" class="btn" type="text" name="checked-date-{{ $product->id }}" id="checked-date-{{ $product->id }}">
+                                <input value="{{ $product->checked_date }}" style="width: 110px; border-radius: 4px; background-color: {{ $bgColor }}; color: #ffffff" class="btn btn-sm" type="text" name="checked-date-{{ $product->id }}" id="checked-date-{{ $product->id }}">
                                 <i class="fa fa-check-circle alert-updated-checked-date-{{ $product->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <td class="btn-action hide_with_mobile">
-                                <a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}" class="btn btn-primary btn-edit-product"><i class="fa fa-edit"></i></a>
+                                <a href="{{ route('admin.products.edit', ['stock' => $stock->id, 'product' => $product->id]) }}" class="btn btn-sm btn-primary btn-edit-product"><i class="fa fa-edit"></i></a>
                                 <form style="display: inline-block" action="{{ route('admin.products.destroy', $product->id) }}" method="POST">
                                     @csrf
                                     @method('delete')
                                     <button type="submit" onclick="return confirm('Delete this product, are you sure?')"
-                                            class="btn btn-danger btn-delete-product">
+                                            class="btn btn-danger btn-delete-product btn-sm">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </form>

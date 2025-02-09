@@ -70,4 +70,8 @@ class Product extends Model
     {
         return $this->hasMany(SuppliersProduct::class);
     }
+
+    public function first_product_supplier() {
+        return $this->hasOne(SuppliersProduct::class, 'product_id');
+    }
 }

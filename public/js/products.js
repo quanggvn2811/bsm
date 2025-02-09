@@ -187,6 +187,52 @@ $(document).ready(function() {
             }
         });
     }
+
+    // Update Sales Status
+    $('.sales_status').on('change', function () {
+        let salesStatus = $(this).find('option:selected').val();
+        let productId = $(this).closest('tr').data('product_id');
+        $.ajax({
+            type:'POST',
+            url:'/admin/products/' + productId + '/update_sales_status',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                sales_status: salesStatus,
+            },
+            success: function(data) {
+                $('.alert-updated-sales-status-' + productId).show();
+                setTimeout(function () {
+                    $('.alert-updated-sales-status-' + productId).hide();
+                }, 2000);
+            },
+            error: function() {
+            }
+        });
+    })
+
+    $('.supplier_id').on('change', function () {
+        let supplierId = $(this).find('option:selected').val();
+        let productId = $(this).closest('tr').data('product_id');
+
+        $.ajax({
+            type:'POST',
+            url:'/admin/products/' + productId + '/update_supplier',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                supplier_id: supplierId,
+            },
+            success: function(data) {
+                $('.alert-updated-supplier-' + productId).show();
+                setTimeout(function () {
+                    $('.alert-updated-supplier-' + productId).hide();
+                }, 2000);
+            },
+            error: function() {
+            }
+        });
+    })
 });
 
 
