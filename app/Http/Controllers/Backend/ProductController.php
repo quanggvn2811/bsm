@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\Supplier;
 use App\Models\SuppliersProduct;
@@ -68,6 +69,8 @@ class ProductController extends Controller
             ->withCategories($categories)
             ->withSuppliers($suppliers)
             ->withSalesStatus(Product::SALES_PRODUCT_STATUS)
+            ->withPancakeShopId(config('pancake.pancake_shop_id'))
+            ->withShops(Shop::all())
             ;
     }
 

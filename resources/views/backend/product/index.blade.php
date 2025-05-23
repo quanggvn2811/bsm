@@ -8,6 +8,7 @@
 @section('content')
     <div id="page-wrapper">
         @include('includes.messages')
+        @include('backend.product.includes.upload_product_to_pancake')
         <div class="main-page">
             <div class="tables">
                 <div class="row">
@@ -23,6 +24,10 @@
                     </div>
                     <div class="btn-create col-md-8 col-sm-6">
                         <a href="{{ route('admin.products.create', $stock->id) }}" class="btn btn-success btn-add-product">Add Product</a>
+                        <button data-toggle="modal" data-target="#upload-product-to-pancake-modal-dialog" style="background-color: #d13642; display: inline-block" type="button" class="btn btn-primary btn-upload-product-to-pancake"><i class="fa fa-upload"
+                                                                                                                                                                  aria-hidden="true"></i>
+                            UPLOAD PRODUCT TO PANCAKE
+                        </button>
                     </div>
                 </div>
                 @include('backend.product.includes.search_form')
