@@ -43,6 +43,7 @@
                             <th style="min-width: 150px">Name</th>
                             <th>Avatar</th>
                             <th style="min-width: 170px">Quantity</th>
+                            <th>Cost</th>
                             <th>Supplier</th>
                             <th>Sales Status</th>
                             <th class="hide_with_mobile">Category</th>
@@ -70,6 +71,10 @@
                                     {{ $product->quantity }}
                                 </button>
                                 <button class="btn btn-success plusQuantity btn-sm"><i class="fa fa-plus"></i></button>
+                            </td>
+                            <td class="cost">
+                                <input style="text-align: center; border-radius: 4px; padding: 2px 5px; height: 26.5px; width: 110px; color: #673ab7; border-color: #673ab7" class="form-control quick-update-cost" type="number" name="quick-update-cost" value="{{ $product->cost }}">
+                                <i class="fa fa-check-circle alert-updated-cost-{{ $product->id }}" style="font-size: 20px; color: #00ad45; display: none" aria-hidden="true"></i>
                             </td>
                             <?php
                                 $prodSupplier = $product->first_product_supplier->supplier;
