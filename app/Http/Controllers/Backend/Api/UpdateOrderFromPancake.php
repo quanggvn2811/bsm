@@ -100,13 +100,24 @@ class UpdateOrderFromPancake extends Controller
                 $query->where('customers.phone', $orderData->customer->phone_numbers[0]);
             })->first();
 
+            // Is update
             if ($order) {
                 if ('SYSTEM' === $order->created_by) { // Has create by system
                     // Check and update phone
                     $customer = $order->customer;
-                    if (!$isShopee && $customer && $customer->phone !== $orderData->customer->phone_numbers[0]) {
-                        $customer->phone = $orderData->customer->phone_numbers[0];
-                        $customer->save();
+                    // Zalo order Facebook
+                    if (!$isShopee) {
+                        if ($customer && $customer->phone !== $orderData->customer->phone_numbers[0]) {
+                            $customer->phone = $orderData->customer->phone_numbers[0];
+                            $customer->save();
+                        }
+
+                        // Update order data
+                        $order->total = $orderData->total_price;
+                        $order->ship_by_shop = $orderData->partner_fee;
+                        $order->ship_by_customer = $orderData->shipping_fee;
+                        $order->cost = $this->getPosCakeCostItems($orderData);
+                        $order->save();
                     }
 
                     // Update order for Shopee (status, money to collect)
@@ -115,6 +126,8 @@ class UpdateOrderFromPancake extends Controller
                             // If something change
                             $order->total = $orderData->money_to_collect;
                         }
+
+                        // Todo: update cost
 
                         // Update status
                         // Auto = process, canceled = failed,
@@ -177,6 +190,18 @@ class UpdateOrderFromPancake extends Controller
         }
     }
 
+    protected function getPosCakeCostItems($posCakeOrderData)
+    {
+        $items = $posCakeOrderData->items;
+        $cost = 0;
+
+        foreach ($items as $item) {
+            $cost += $item->variation_info->last_imported_price * $item->quantity;
+        }
+
+        return $cost;
+    }
+
     protected function systemCreateOrderFromPancake($pancakeShopId, $pancakeOrderData, $bsmShopId)
     {
         try {
@@ -201,13 +226,13 @@ class UpdateOrderFromPancake extends Controller
 
                 $order['status_id'] = Order::STATUS_WAITING;
 
-                $order['total'] = 0;
+                $order['total'] = $pancakeOrderData->total_price;
 
-                $order['ship_by_customer'] = 0;
+                $order['ship_by_customer'] = $pancakeOrderData->shipping_fee;
 
-                $order['ship_by_shop'] = 0;
+                $order['ship_by_shop'] = $pancakeOrderData->partner_fee;
 
-                $order['cost'] = 0;
+                $order['cost'] = $this->getPosCakeCostItems($pancakeOrderData);
 
                 $order['notes'] = '';
 

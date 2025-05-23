@@ -71,7 +71,7 @@
                     </li>
                     <li class="treeview @if(\Illuminate\Support\Facades\Route::is('admin/shopee_connection/*')) active @endif">
                         <a href="{{ url('admin/shopee_connection') }}">
-                            <i class="fa fa-plug"></i> <span>Shopee Connection</span>
+                            <i class="fa fa-plug"></i> <span>POS Connection</span>
                         </a>
                     </li>
                 </ul>
