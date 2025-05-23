@@ -233,6 +233,30 @@ $(document).ready(function() {
             }
         });
     })
+
+    // Quick update cost
+    $('.quick-update-cost').on('change', function () {
+        let cost = $(this).val();
+        let productId = $(this).closest('tr').data('product_id');
+
+        $.ajax({
+            type:'POST',
+            url:'/admin/products/' + productId + '/quick_update_cost',
+            dataType: 'json',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                cost: cost,
+            },
+            success: function(data) {
+                $('.alert-updated-cost-' + productId).show();
+                setTimeout(function () {
+                    $('.alert-updated-cost-' + productId).hide();
+                }, 2000);
+            },
+            error: function() {
+            }
+        });
+    })
 });
 
 

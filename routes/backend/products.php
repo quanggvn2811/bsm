@@ -18,6 +18,8 @@ Route::group([
         ->name('products.update_checked_date');
     Route::post('{product}/update_sales_status/{associated_session?}', [ProductController::class, 'updateSalesStatus'])
         ->name('products.update_sales_status');
+    Route::post('{product}/quick_update_cost/{associated_session?}', [ProductController::class, 'quickUpdateCost'])
+        ->name('products.quick_update_cost');
     Route::post('{product}/update_supplier/{associated_session?}', [ProductController::class, 'updateSupplier'])
         ->name('products.update_supplier');
     Route::delete('delete/{product}/{associated_session?}', [ProductController::class, 'destroy'])

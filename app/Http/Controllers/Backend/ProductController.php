@@ -289,6 +289,15 @@ class ProductController extends Controller
         ]);
     }
 
+    public function quickUpdateCost(Request $request, Product $product)
+    {
+        $product->update(['cost' => $request->get('cost')]);
+
+        return response()->json([
+            'status' => 'Update cost successfully!',
+        ]);
+    }
+
     public function destroy(Product $product)
     {
         if (!$product->delete()) {
