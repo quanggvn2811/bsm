@@ -74,12 +74,7 @@
                         <tbody>
                             @foreach($order->order_detail as $index => $detail)
                                     <?php
-                                    $prodImages = json_decode($detail->product->images);
-                                    $avatarSrc = '#';
-                                    if (!empty($prodImages[0])) {
-                                        $avatar = $prodImages[0];
-                                        $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
-                                    }
+                                    $avatarSrc = get_product_avatar_src_by_proImages($detail->product->images);
                                     ?>
                                 <tr data-product_id="" class="product-item-row">
                                     <td>{{ $index + 1 }}</td>

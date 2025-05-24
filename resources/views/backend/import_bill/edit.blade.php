@@ -93,12 +93,7 @@
                                             <tbody>
                                             @foreach($importBill->import_bill_products as $index => $detail)
                                                     <?php
-                                                    $prodImages = json_decode($productById[$detail->product_id]['images']);
-                                                    $avatarSrc = '#';
-                                                    if (!empty($prodImages[0])) {
-                                                        $avatar = $prodImages[0];
-                                                        $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
-                                                    }
+                                                    $avatarSrc = get_product_avatar_src_by_proImages($productById[$detail->product_id]['images']);
                                                     ?>
                                                 <tr data-product_id="{{ $detail->product_id }}" class="plus-product-item-row">
                                                     <td>{{ $index }}</td>

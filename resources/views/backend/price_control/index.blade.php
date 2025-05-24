@@ -45,12 +45,7 @@
                         <tbody>
                             @foreach($products as $product)
                                     <?php
-                                    $prodImages = json_decode($product->images);
-                                    $avatarSrc = '#';
-                                    if (!empty($prodImages[0])) {
-                                        $avatar = $prodImages[0];
-                                        $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
-                                    }
+                                    $avatarSrc = get_product_avatar_src_by_proImages($product->images);
                                     ?>
                                 <tr class="active product-lines" data-product-id="{{ $product->id }}">
                                     <td style="" class="product-id">{{ $product->id }}</td>
@@ -63,7 +58,7 @@
                                             <?php
                                                 $price = \App\Models\PriceControl::whereProductId($product->id)->whereShopId($shop->id)->first()->price ?? 0;
                                                 $profit = $price - $product->cost;
-                                                $profitPercent = $price !== 0 ? round(($profit / $price) * 100 * 100) / 100 : 0;
+                                                $profitPercent = $price != 0 ? round(($profit / $price) * 100 * 100) / 100 : 0;
                                             ?>
                                             <input data-toggle="tooltip" data-original-title="Profit: {{ $profit }} <br> %Profit: {{$profitPercent}}"
                                                    data-html="true"
