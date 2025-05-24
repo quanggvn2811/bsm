@@ -129,6 +129,8 @@ class ProductController extends Controller
                 $img->move(public_path(Product::PUBLIC_PROD_IMAGE_FOLDER), $imgName);
                 $prodImages[] = $imgName;
             }
+        } elseif ($request->get('quick_prod_avatar_src')) {
+            $prodImages[] = $request->get('quick_prod_avatar_src');
         }
 
         $data['images'] = json_encode($prodImages);
