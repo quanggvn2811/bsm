@@ -63,7 +63,7 @@
                                         <div class="form-group col-md-4">
                                             <label for="customer_name">Shipping Province</label>
                                             <select name="shipping_province" id="shipping_province" class="form-control">
-                                                
+
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">
@@ -221,13 +221,7 @@
                                             <tbody>
                                                 @foreach($order->order_detail as $index => $detail)
                                                     <?php
-                                                        $prodImages = json_decode($productById[$detail->product_id]['images']);
-                                                        $avatarSrc = '#';
-                                                        if (!empty($prodImages[0])) {
-                                                            $avatar = $prodImages[0];
-                                                            $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
-                                                        }
-
+                                                        $avatarSrc = get_product_avatar_src_by_proImages($productById[$detail->product_id]['images']);
                                                         $qtyBeforeOrder = $productById[$detail->product_id]['quantity'] + ($detail->quantity ?? 1);
                                                         $qtyClass = $qtyBeforeOrder > 0 ? 'btn btn-success' : 'btn btn-danger';
                                                     ?>

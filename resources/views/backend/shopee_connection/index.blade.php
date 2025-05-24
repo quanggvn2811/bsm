@@ -60,6 +60,7 @@
                                     <option @if(!isset($_GET['linked_status']) || $_GET['linked_status'] && $_GET['linked_status'] == '0') selected @endif value="0">All status</option>
                                     <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '1') selected @endif value="1">Product linked</option>
                                     <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '2') selected @endif value="2">No link</option>
+                                    <option @if(isset($_GET['linked_status']) && $_GET['linked_status'] == '3') selected @endif value="3">No COST</option>
                                 </select>
                             </div>
 
@@ -71,7 +72,7 @@
                                 <a class="btn btn-sm-action btn-dark pl-3 pr-3" href="{{ url('admin/shopee_connection') }}">Reset</a>
                                 <button style="background-color: #0b55f3" type="button" class="btn btn-primary btn-update-product-from-pancake"><i class="fa fa-download"
                                                                                                                  aria-hidden="true"></i>
-                                    Update Product From Pancake
+                                    DOWNLOAD Product From Pancake
                                 </button>
                             </div>
                         </form>
@@ -98,7 +99,7 @@
                             <th>Shop</th>
                             <th style="width: 20%">Product Name</th>
                             <th style="width: 120px;">Product Quantity</th>
-                            <th style="width: 150px">Action</th>
+                            <th style="width: 200px">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -112,9 +113,11 @@
 
                                 $fields = json_decode($variation->fields);
                                 $field = '';
+                                $quickProdField = '';
                                 if (!empty($fields)) {
                                     foreach ($fields as $f) {
                                         $field .= "\n\r" . $f->name . ': ' . '<span style="color: red">' . $f->value . '</span>';
+                                        $quickProdField .= "\n\r" . $f->name . ': ' . $f->value;
                                     }
                                 }
                                 $isLinked = !empty($variation->product_id);
@@ -141,6 +144,19 @@
                                     <button data-toggle="tooltip" data-original-title="Unlink with BSM product" class="btn btn-sm btn-warning btn-unlink-bsm-product"><i class="fa fa-sign-out"></i></button>
                                     <button data-toggle="tooltip" data-original-title="Delete this variation product"
                                             class="btn btn-sm btn-danger"><i class="fa fa-trash btn-delete-variation"></i></button>
+                                    <a target="_blank" href="{{ route('admin.products.create',
+                                                [
+                                                    'stock' => $stock->id,
+                                                    'quick_prod_name' => $quickProdField ? $variation->variation_name . ' | ' . $quickProdField : $variation->variation_name,
+                                                    // 'quick_prod_quantity' => 0,
+                                                    'quick_prod_cost' => $variation->last_imported_price,
+                                                    // 'quick_prod_price' => 2 * $variation->last_imported_price,
+                                                    'quick_prod_avatar_src' => $avatarSrc,
+                                                ]
+                                                )}}" class="btn btn-sm btn-success btn-add-product"
+                                       data-toggle="tooltip" data-original-title="Quick create BSM product"><i style="" class="fa fa-arrow-up"></i></a>
+                                    {{--<button data-toggle="tooltip" data-original-title="Quick create BSM product"
+                                            class="btn btn-sm btn-success"><i style="" class="fa fa-arrow-up"></i></button>--}}
                                 </td>
                             </tr>
                         @endforeach

@@ -33,7 +33,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="prodName">Name</label>
-                                <input required type="text" @if($isEdit) value="{{ $product->name }}" @endif name="name" class="form-control" id="prodName" placeholder="Name">
+                                <input required type="text" @if(request('quick_prod_name') && !$isEdit) value="{{ request('quick_prod_name') }}"  @endif @if($isEdit) value="{{ $product->name }}" @endif name="name" class="form-control" id="prodName" placeholder="Name">
                             </div>
                             {{--<div class="form-group">
                                 <label for="prodSlug">Slug</label>
@@ -45,14 +45,15 @@
                             </div>
                             <?php
                                 if ($isEdit) {
-                                    $prodImages = json_decode($product->images);
-                                    $avatarSrc = '#';
-                                    if (!empty($prodImages[0])) {
-                                        $avatar = $prodImages[0];
-                                        $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
-                                    }
+                                    $avatarSrc = get_product_avatar_src_by_proImages($product->images);
+                                } elseif (request('quick_prod_avatar_src')) {
+                                    $avatarSrc = request('quick_prod_avatar_src');
                                 }
                             ?>
+                            @if(request('quick_prod_avatar_src'))
+                                <input type="hidden" name="quick_prod_avatar_src" value="{{ request('quick_prod_avatar_src') }}">
+                            @endif
+
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="import-img col-md-4">
@@ -60,7 +61,7 @@
                                         <input type="file" name="images[]" multiple id="prodImages"> <p class="help-block">Select product image(s)</p>
                                     </div>
                                     <div class="img-avatar col-md-8">
-                                        @if($isEdit)
+                                        @if($isEdit || request('quick_prod_avatar_src'))
                                             <img class="avatar_product" style="max-width: 200px; max-height: 200px" src="{{ $avatarSrc }}">
                                         @endif
                                     </div>
@@ -106,11 +107,11 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="prodPrice">Price</label>
-                                    <input required @if($isEdit) value="{{ $product->price }}" @endif type="number" name="price" class="form-control is-price-type" id="prodPrice" placeholder="Price">
+                                    <input required @if(request('quick_prod_name') && !$isEdit) value="{{ 2 *  request('quick_prod_cost')}}" @endif @if($isEdit) value="{{ $product->price }}" @endif type="number" name="price" class="form-control is-price-type" id="prodPrice" placeholder="Price">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="prodQuantity">Quantity</label>
-                                    <input @if($isEdit) value="{{ $product->quantity }}" @endif required type="number" class="form-control" name="quantity" id="prodQuantity" placeholder="Quantity">
+                                    <input @if($isEdit) value="{{ $product->quantity }}" @else value="0" @endif required type="number" class="form-control" name="quantity" id="prodQuantity" placeholder="Quantity">
                                 </div>
                             </div>
                             <div class="row" style="margin-left: -15px">
@@ -147,7 +148,15 @@
                                     </div>
                                     <label class="col-md-2" for="">Average Cost</label>
                                     <div class="form-group col-md-3">
-                                        <input type="number" id="avg_cost" @if($isEdit) value="{{ $product->cost }}" @endif readonly name="cost" required class="form-control" placeholder="Average cost">
+                                        <?php
+                                        $avgCost = 0;
+                                        if ($isEdit) {
+                                            $avgCost = $product->cost;
+                                        } elseif (request('quick_prod_cost')) {
+                                            $avgCost = request('quick_prod_cost');
+                                        }
+                                        ?>
+                                        <input type="number" id="avg_cost" value="{{ $avgCost }}" readonly name="cost" required class="form-control" placeholder="Average cost">
                                     </div>
                                     <div class="col-md-1">
                                         <button type="button" class="btn btn-primary btn-edit-average-cost"><i class="fa fa-edit"></i></button>
@@ -233,7 +242,15 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-3">
-                                            <input name="prod_suppliers[0][cost]" @if($isEdit) value="{{ $product->cost }}" @endif type="number" class="form-control prod_suppliers_cost is_active" id="prodCost" placeholder="Cost">
+                                            <?php
+                                                $cost = 0;
+                                                if ($isEdit) {
+                                                    $cost = $product->cost;
+                                                } elseif (request('quick_prod_cost')) {
+                                                    $cost = request('quick_prod_cost');
+                                                }
+                                                ?>
+                                            <input required name="prod_suppliers[0][cost]" value="{{ $cost }}" type="number" class="form-control prod_suppliers_cost is_active" id="prodCost" placeholder="Cost">
                                         </div>
                                         <div class="form-group col-md-3">
                                             <input @if($isEdit) value="{{ $product->supplier_sku }}" @endif name="prod_suppliers[0][sku]" type="text" class="form-control prod_suppliers_sku" id="prodSupplierSku" placeholder="Supplier SKU">

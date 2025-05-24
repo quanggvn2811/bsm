@@ -70,7 +70,9 @@ $(document).ready(function() {
 
         let avatarUrl = JSON.parse(selectedProduct['images'])[0] ?? '#';
 
-        avatarUrl = productImagePublicFolder + '/' + avatarUrl;
+        if (!avatarUrl.includes('https://')) {
+            avatarUrl = productImagePublicFolder + '/' + avatarUrl;
+        }
 
         let index = $('.plus-product-item-row').length + 1;
 

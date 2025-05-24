@@ -59,12 +59,7 @@
                         <tbody>
                         @foreach($products as $product)
                             <?php
-                                $prodImages = json_decode($product->images);
-                                $avatarSrc = '#';
-                                if (!empty($prodImages[0])) {
-                                    $avatar = $prodImages[0];
-                                    $avatarSrc = asset('public/' . \App\Models\Product::PUBLIC_PROD_IMAGE_FOLDER . '/' . $avatar);
-                                }
+                                $avatarSrc = get_product_avatar_src_by_proImages($product->images)
                                 ?>
                         <tr data-product_id="{{ $product->id }}" class="active product-lines">
                             <td class="sku hide_with_mobile"> {{ $product->sku }}</td>
