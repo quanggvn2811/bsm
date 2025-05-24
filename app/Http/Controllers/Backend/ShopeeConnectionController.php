@@ -33,8 +33,10 @@ class ShopeeConnectionController extends Controller
                 $productVariations = $productVariations->whereNotNull('product_id');
             } elseif ($linkedStatus == 2) {
                 $productVariations = $productVariations->whereNull('product_id');
+            } elseif ($linkedStatus == 3) {
+                $productVariations = $productVariations->where('last_imported_price', 0);
             }
-            $productVariations = $productVariations->paginate(config('app.page_count'));
+            $productVariations = $productVariations->orderBy('id', 'DESC')->paginate(config('app.page_count'));
         }
 
         if ($shopId) {
@@ -48,18 +50,23 @@ class ShopeeConnectionController extends Controller
                 $productVariations = $productVariations->whereNotNull('product_id');
             } elseif ($linkedStatus == 2) {
                 $productVariations = $productVariations->whereNull('product_id');
+            } elseif ($linkedStatus == 3) {
+                $productVariations = $productVariations->where('last_imported_price', 0);
             }
 
-            $productVariations = $productVariations->with('product')->paginate(config('app.page_count'));
+            $productVariations = $productVariations->with('product')->orderBy('id', 'DESC')->paginate(config('app.page_count'));
         } else if($productName) {
             $productVariations = ProductVariation::where('variation_name', 'LIKE', '%' . $productName . '%');
             if ($linkedStatus == 1) {
                 $productVariations = $productVariations->whereNotNull('product_id');
             } elseif ($linkedStatus == 2) {
                 $productVariations = $productVariations->whereNull('product_id');
+            } elseif ($linkedStatus == 3) {
+                $productVariations = $productVariations->where('last_imported_price', 0);
             }
                 /*->orWhere('fields', 'LIKE', '%' . json_encode($productName) . '%')*/
             $productVariations = $productVariations->with('product')
+                ->orderBy('id', 'DESC')
                 ->paginate(config('app.page_count'));
         }
         return view('backend.shopee_connection.index')
