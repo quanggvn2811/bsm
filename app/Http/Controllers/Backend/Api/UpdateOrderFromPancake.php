@@ -18,7 +18,8 @@ class UpdateOrderFromPancake extends Controller
 
     const SHOPEE_STATUS_FAILED = ['canceled', 'CANCELED', 'returning', 'returned'];
 
-    const SHOPEE_STATUS_COMPLETED = ['COMPLETED', 'completed'];
+    const SHOPEE_STATUS_COMPLETED = ['COMPLETED', 'completed', 'delivered', 'DELIVERED'];
+    const POS_STATUS_SHIPPED = ['SHIPPED', 'shipped'];
     public function getPancakeOrders (Request $request)
     {
         $pancakeShopId = $request->get('pancake_shop_id');
@@ -100,13 +101,23 @@ class UpdateOrderFromPancake extends Controller
                 $query->where('customers.phone', $orderData->customer->phone_numbers[0]);
             })->first();
 
+            // Is update
             if ($order) {
                 if ('SYSTEM' === $order->created_by) { // Has create by system
                     // Check and update phone
                     $customer = $order->customer;
-                    if (!$isShopee && $customer && $customer->phone !== $orderData->customer->phone_numbers[0]) {
-                        $customer->phone = $orderData->customer->phone_numbers[0];
-                        $customer->save();
+                    // Zalo order Facebook
+                    if (!$isShopee) {
+                        if ($customer && $customer->phone !== $orderData->customer->phone_numbers[0]) {
+                            $customer->phone = $orderData->customer->phone_numbers[0];
+                            $customer->save();
+                        }
+
+                        // Update order data
+                        $order->total = $orderData->total_price;
+                        $order->ship_by_shop = $orderData->partner_fee;
+                        $order->ship_by_customer = $orderData->shipping_fee;
+                        // $order->save();
                     }
 
                     // Update order for Shopee (status, money to collect)
@@ -115,55 +126,64 @@ class UpdateOrderFromPancake extends Controller
                             // If something change
                             $order->total = $orderData->money_to_collect;
                         }
+                    }
 
-                        // Update status
-                        // Auto = process, canceled = failed,
-                        $autoStatus = Order::STATUS_PROCESS;
-                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_FAILED)) {
-                            $autoStatus = Order::STATUS_FAILED;
-                        }
+                    $order->cost = $this->getPosCakeCostItems($orderData);
 
-                        if (in_array($orderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
-                            $autoStatus = Order::STATUS_COMPLETED;
-                        }
+                    // Update status
+                    // Auto = process, canceled = failed,
+                    $autoStatus = $isShopee ? Order::STATUS_PROCESS : Order::STATUS_WAITING;
+                    if (in_array($orderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                        $autoStatus = Order::STATUS_FAILED;
+                    }
 
-                        $order->status_id = $autoStatus;
+                    if (in_array($orderData->status_name, self::POS_STATUS_SHIPPED)) {
+                        $autoStatus = Order::STATUS_SHIPPED;
+                    }
 
-                        $order->save();
+                    if (in_array($orderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
+                        $autoStatus = Order::STATUS_COMPLETED;
+                    }
 
-                        // Auto remove old
-                        $oldOderDetail = OrderDetail::whereOrderId($order->id);
-                        foreach ($oldOderDetail->get() as $oldDetail) {
-                            Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
-                        }
-                        $oldOderDetail->delete();
+                    $order->status_id = $autoStatus;
 
-                        // Add new
-                        foreach ($orderData->items as $item) {
-                            $variation = ProductVariation::whereVariationId($item->variation_id)->first();
-                            if ($variation && $variation->product_id) {
-                                $product = Product::find($variation->product_id);
-                                $price = $item->variation_info->retail_price - $item->discount_each_product;
-                                $cost = $item->variation_info->last_imported_price;
-                                $quantity = $item->quantity * $variation->product_quantity;
+                    $order->save();
 
-                                if (Order::STATUS_FAILED == $order->status_id) {
-                                    $quantity = 0;
-                                }
+                    // Auto remove old
+                    $oldOderDetail = OrderDetail::whereOrderId($order->id);
+                    foreach ($oldOderDetail->get() as $oldDetail) {
+                        Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
+                    }
+                    $oldOderDetail->delete();
 
-                                OrderDetail::create([
-                                    'product_id' => $product->id,
-                                    'quantity' => $quantity,
-                                    'cost_item' => $cost,
-                                    'price_item' => $price,
-                                    'order_id' => $order->id,
-                                ]);
+                    // Add new
+                    foreach ($orderData->items as $item) {
+                        $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                        if ($variation && $variation->product_id) {
+                            $product = Product::find($variation->product_id);
+                            $price = $item->variation_info->retail_price - $item->discount_each_product;
+                            $cost = $item->variation_info->last_imported_price;
+                            $quantity = $item->quantity * $variation->product_quantity;
 
-                                Product::find($product->id)->decrement('quantity', $quantity);
+                            /*if (Order::STATUS_FAILED == $order->status_id) {
+                                $quantity = 0;
+                            }*/
 
+                            OrderDetail::create([
+                                'product_id' => $product->id,
+                                'quantity' => $quantity,
+                                'cost_item' => $cost,
+                                'price_item' => $price,
+                                'order_id' => $order->id,
+                            ]);
+
+                            if (Order::STATUS_FAILED == $order->status_id) {
+                                $quantity = 0;
                             }
-                        }
 
+                            Product::find($product->id)->decrement('quantity', $quantity);
+
+                        }
                     }
                 } else {
                     // Created by admin, now just skip, no update here
@@ -175,6 +195,18 @@ class UpdateOrderFromPancake extends Controller
                 ;
             }
         }
+    }
+
+    protected function getPosCakeCostItems($posCakeOrderData)
+    {
+        $items = $posCakeOrderData->items;
+        $cost = 0;
+
+        foreach ($items as $item) {
+            $cost += $item->variation_info->last_imported_price * $item->quantity;
+        }
+
+        return $cost;
     }
 
     protected function systemCreateOrderFromPancake($pancakeShopId, $pancakeOrderData, $bsmShopId)
@@ -199,15 +231,29 @@ class UpdateOrderFromPancake extends Controller
                 // Store Order
                 $order['priority'] = Order::PRIORITY_NORMAL;
 
-                $order['status_id'] = Order::STATUS_WAITING;
+                $status = Order::STATUS_WAITING;
 
-                $order['total'] = 0;
+                if (in_array($pancakeOrderData->status_name, self::POS_STATUS_SHIPPED)) {
+                    $status = Order::STATUS_SHIPPED;
+                }
 
-                $order['ship_by_customer'] = 0;
+                if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_FAILED)) {
+                    $status = Order::STATUS_FAILED;
+                }
 
-                $order['ship_by_shop'] = 0;
+                if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_COMPLETED)) {
+                    $status = Order::STATUS_COMPLETED;
+                }
 
-                $order['cost'] = 0;
+                $order['status_id'] = $status;
+
+                $order['total'] = $pancakeOrderData->total_price;
+
+                $order['ship_by_customer'] = $pancakeOrderData->shipping_fee;
+
+                $order['ship_by_shop'] = $pancakeOrderData->partner_fee;
+
+                $order['cost'] = $this->getPosCakeCostItems($pancakeOrderData);
 
                 $order['notes'] = '';
 
@@ -243,6 +289,35 @@ class UpdateOrderFromPancake extends Controller
                 $orderNumber = $shop->prefix . '_' . date('ym') . sprintf("%04d", substr($order->id, -4));
 
                 $order->update(['order_number' => $orderNumber]);
+
+                foreach ($pancakeOrderData->items as $item) {
+                    $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                    if ($variation && $variation->product_id) {
+                        $product = Product::find($variation->product_id);
+                        $price = $item->variation_info->retail_price - $item->discount_each_product;
+                        $cost = $item->variation_info->last_imported_price;
+                        $quantity = $item->quantity * $variation->product_quantity;
+
+                        /*if (Order::STATUS_FAILED == $status) {
+                            $quantity = 0;
+                        }*/
+
+                        OrderDetail::create([
+                            'product_id' => $product->id,
+                            'quantity' => $quantity,
+                            'cost_item' => $cost,
+                            'price_item' => $price,
+                            'order_id' => $order->id,
+                        ]);
+
+                        if (Order::STATUS_FAILED == $status) {
+                            $quantity = 0;
+                        }
+
+                        Product::find($product->id)->decrement('quantity', $quantity);
+
+                    }
+                }
             });
         } catch (\Exception $exception) {
             dd($exception);
@@ -276,6 +351,10 @@ class UpdateOrderFromPancake extends Controller
 
 
                 $status = Order::STATUS_PROCESS;
+
+                if (in_array($pancakeOrderData->status_name, self::POS_STATUS_SHIPPED)) {
+                    $status = Order::STATUS_SHIPPED;
+                }
 
                 if (in_array($pancakeOrderData->status_name, self::SHOPEE_STATUS_FAILED)) {
                     $status = Order::STATUS_FAILED;
@@ -345,9 +424,9 @@ class UpdateOrderFromPancake extends Controller
                         $cost = $item->variation_info->last_imported_price;
                         $quantity = $item->quantity * $variation->product_quantity;
 
-                        if (Order::STATUS_FAILED == $status) {
+                        /*if (Order::STATUS_FAILED == $status) {
                             $quantity = 0;
-                        }
+                        }*/
 
                         OrderDetail::create([
                             'product_id' => $product->id,
@@ -356,6 +435,10 @@ class UpdateOrderFromPancake extends Controller
                             'price_item' => $price,
                             'order_id' => $order->id,
                         ]);
+
+                        if (Order::STATUS_FAILED == $status) {
+                            $quantity = 0;
+                        }
 
                         Product::find($product->id)->decrement('quantity', $quantity);
 
