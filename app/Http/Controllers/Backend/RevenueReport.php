@@ -32,7 +32,7 @@ class RevenueReport extends Controller
 
         $shopId = $request->get('shop_id');
         if ($shopId !== null && !in_array('0', $shopId)) {
-            $orders = $orders->whereShopId($shopId);
+            $orders = $orders->whereIn('shop_id', $shopId);
         }
 
         $orders = $orders->with('customer');
