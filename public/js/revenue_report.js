@@ -168,7 +168,27 @@ $(document).ready(function (string) {
             RevenueReport.selector.statistical.find('.data-content').empty().append(html);
         },
         summaryMonth: function () {
+            let [from ,to] = RevenueReport.getSearchFromTo();
+            let summaryData = RevenueReport.prepareOrderField();
+            let html =
+                '<table class="table statisticalMonth-table statisticalMonth">\n' +
+                '<thead>\n' +
+                '<tr>\n' +
+                '<th style="min-width: 92px;" class="order-date">Date</th>\n' +
+                '<th style="" class="number-of-failed">Number Of Failed</th>\n' +
+                '<th style="" class="failed">Failed</th>\n' +
+                '<th style="" class="number-of-revenue">Number Of Revenue</th>\n' +
+                '<th style="" class="revenue">Revenue</th>\n' +
+                '<th style="" class="profit">Profit</th>\n' +
+                '<th style="" class="profit-percent">% Profit</th>\n' +
+                '</tr>\n' +
+                '</thead>\n' +
+                '<tbody>\n';
+                '</tbody>\n';
+                '</table>\n';
 
+            RevenueReport.selector.summary.find('.data-title').text('Summary Report');
+            RevenueReport.selector.summary.find('.data-content').empty().append(html);
         }
     }
 
@@ -176,6 +196,13 @@ $(document).ready(function (string) {
         RevenueReport.selector.statistical,
         RevenueReport.statisticalMonth
     );
+
+    $(document).on('click', '.summary-btn', function () {
+        RevenueReport.showReport(
+            RevenueReport.selector.summary,
+            RevenueReport.summaryMonth
+        );
+    });
 
     // Config date from/ date to
     $('input[name="bill_date_from"]').on('apply.daterangepicker', function(ev, picker) {
