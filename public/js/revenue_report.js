@@ -1,33 +1,23 @@
 $(document).ready(function (string) {
 
     var orders = JSON.parse($('#_orders').val());
-    console.log(orders)
 
     const STATUS_FAILED = 7;
 
     const RevenueReport = {
         selector: {
             statistical: $('#statistical-content'),
+            summary: $('#summary-content'),
             charts: $('#charts-content'),
         },
         showReport: function (selector, callbackAction) {
             // Prepare data
             callbackAction();
         },
-        statisticalMonth: function () {
-            const searchParams = new URLSearchParams(window.location.search);
-            let from = searchParams.get('bill_date_from');
-            let to = searchParams.get('bill_date_to');
-            if (!from && !to) {
-                let month = searchParams.has('month') ? searchParams.get('month') : moment().format('MM/YYYY');
-                month = '01/' + month;
-                from = moment(month, 'DD/MM/YYYY').startOf('month').format('DD/MM/YYYY');
-                to = moment(month, 'DD/MM/YYYY').endOf('month').format('DD/MM/YYYY');
-            }
-
-            let statisticalMonth = [];
+        prepareOrderField: function () {
+            let returnData = [];
             orders.forEach(function (order) {
-                let isset = typeof statisticalMonth[order.order_date] !== 'undefined';
+                let isset = typeof returnData[order.order_date] !== 'undefined';
                 let failed;
                 let numberOfTotal;
                 let total;
@@ -45,13 +35,13 @@ $(document).ready(function (string) {
                 }
 
                 if (isset) {
-                    statisticalMonth[order.order_date].revenue += total;
-                    statisticalMonth[order.order_date].numberOfTotal += numberOfTotal;
-                    statisticalMonth[order.order_date].failed += failed;
-                    statisticalMonth[order.order_date].profit += profit;
-                    statisticalMonth[order.order_date].numberOfFailed += numberOfFailed;
+                    returnData[order.order_date].revenue += total;
+                    returnData[order.order_date].numberOfTotal += numberOfTotal;
+                    returnData[order.order_date].failed += failed;
+                    returnData[order.order_date].profit += profit;
+                    returnData[order.order_date].numberOfFailed += numberOfFailed;
                 } else {
-                    statisticalMonth[order.order_date] = {
+                    returnData[order.order_date] = {
                         revenue: total,
                         numberOfTotal: numberOfTotal,
                         failed: failed,
@@ -63,6 +53,24 @@ $(document).ready(function (string) {
 
             });
 
+            return returnData;
+        },
+        getSearchFromTo: function () {
+            const searchParams = new URLSearchParams(window.location.search);
+            let from = searchParams.get('bill_date_from');
+            let to = searchParams.get('bill_date_to');
+            if (!from && !to) {
+                let month = searchParams.has('month') ? searchParams.get('month') : moment().format('MM/YYYY');
+                month = '01/' + month;
+                from = moment(month, 'DD/MM/YYYY').startOf('month').format('DD/MM/YYYY');
+                to = moment(month, 'DD/MM/YYYY').endOf('month').format('DD/MM/YYYY');
+            }
+
+            return [from, to]
+        },
+        statisticalMonth: function () {
+            let [from ,to] = RevenueReport.getSearchFromTo();
+            let statisticalMonth = RevenueReport.prepareOrderField();
             let html =
                 '<table class="table statisticalMonth-table statisticalMonth">\n' +
                 '<thead>\n' +
@@ -158,6 +166,29 @@ $(document).ready(function (string) {
                 '</table>';
             RevenueReport.selector.statistical.find('.data-title').text('Statistical Report');
             RevenueReport.selector.statistical.find('.data-content').empty().append(html);
+        },
+        summaryMonth: function () {
+            let [from ,to] = RevenueReport.getSearchFromTo();
+            let summaryData = RevenueReport.prepareOrderField();
+            let html =
+                '<table class="table statisticalMonth-table statisticalMonth">\n' +
+                '<thead>\n' +
+                '<tr>\n' +
+                '<th style="min-width: 92px;" class="order-date">Date</th>\n' +
+                '<th style="" class="number-of-failed">Number Of Failed</th>\n' +
+                '<th style="" class="failed">Failed</th>\n' +
+                '<th style="" class="number-of-revenue">Number Of Revenue</th>\n' +
+                '<th style="" class="revenue">Revenue</th>\n' +
+                '<th style="" class="profit">Profit</th>\n' +
+                '<th style="" class="profit-percent">% Profit</th>\n' +
+                '</tr>\n' +
+                '</thead>\n' +
+                '<tbody>\n';
+                '</tbody>\n';
+                '</table>\n';
+
+            RevenueReport.selector.summary.find('.data-title').text('Summary Report');
+            RevenueReport.selector.summary.find('.data-content').empty().append(html);
         }
     }
 
@@ -165,6 +196,13 @@ $(document).ready(function (string) {
         RevenueReport.selector.statistical,
         RevenueReport.statisticalMonth
     );
+
+    $(document).on('click', '.summary-btn', function () {
+        RevenueReport.showReport(
+            RevenueReport.selector.summary,
+            RevenueReport.summaryMonth
+        );
+    });
 
     // Config date from/ date to
     $('input[name="bill_date_from"]').on('apply.daterangepicker', function(ev, picker) {

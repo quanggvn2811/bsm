@@ -114,7 +114,7 @@
                                 <td colspan="100%" style="color: red;">
                                     Sum Total: {{ number_format($sumTotal) }} -
                                     Sum Profit: {{ number_format($sumProfit) }} -
-                                    Sum % Profit: {{ $sumTotal > 0 ? number_format($sumProfit / $sumTotal, 2) : 0 }}%
+                                    Sum % Profit: {{ $sumTotal > 0 ? 100 * number_format($sumProfit / $sumTotal, 2) : 0 }}%
                                 </td>
                             </tr>
                         @endif

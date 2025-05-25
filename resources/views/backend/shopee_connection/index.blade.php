@@ -18,7 +18,7 @@
                                 <a href="{{ route('admin.categories.index', $stock->id) }}">{{ $stock->name }}</a>
                             </div>
                             <div class="second">
-                                <a href="{{ url('admin/shopee_connection') }}">Shopee Connection</a>
+                                <a href="{{ url('admin/shopee_connection') }}">POS Connection</a>
                             </div>
                         </div>
                     </div>

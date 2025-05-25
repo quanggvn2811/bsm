@@ -12,6 +12,7 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isNull;
 
 class UpdateOrderFromPancake extends Controller
 {
@@ -145,46 +146,57 @@ class UpdateOrderFromPancake extends Controller
                         $autoStatus = Order::STATUS_COMPLETED;
                     }
 
+                    $canChangeQuantity = !(Order::STATUS_FAILED == $autoStatus && $order->status_id == Order::STATUS_FAILED);
+                    if ($canChangeQuantity) {
+                        // Auto remove old
+                        $oldOderDetail = OrderDetail::whereOrderId($order->id);
+                        foreach ($oldOderDetail->get() as $oldDetail) {
+                            $product = Product::find($oldDetail->product_id);
+                            if ($product) {
+                                $product->quantity = $product->quantity + $oldDetail->quantity;
+                                $product->save();
+                            }
+                        }
+                        $oldOderDetail->delete();
+
+                        // Add new
+                        foreach ($orderData->items as $item) {
+                            $variation = ProductVariation::whereVariationId($item->variation_id)->first();
+                            if (isnull($variation)) {
+                                continue;
+                            }
+                            $product = Product::find($variation->product_id);
+                            if ($variation && $variation->product_id && $product) {
+                                $price = $item->variation_info->retail_price - $item->discount_each_product;
+                                $cost = $item->variation_info->last_imported_price;
+                                $quantity = $item->quantity * $variation->product_quantity;
+
+                                /*if (Order::STATUS_FAILED == $order->status_id) {
+                                    $quantity = 0;
+                                }*/
+
+                                OrderDetail::create([
+                                    'product_id' => $product->id,
+                                    'quantity' => $quantity,
+                                    'cost_item' => $cost,
+                                    'price_item' => $price,
+                                    'order_id' => $order->id,
+                                ]);
+
+                                if (Order::STATUS_FAILED == $order->status_id) {
+                                    $quantity = 0;
+                                }
+
+                                Product::find($product->id)->decrement('quantity', $quantity);
+
+                            }
+                        }
+                    }
+
                     $order->status_id = $autoStatus;
 
                     $order->save();
 
-                    // Auto remove old
-                    $oldOderDetail = OrderDetail::whereOrderId($order->id);
-                    foreach ($oldOderDetail->get() as $oldDetail) {
-                        Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
-                    }
-                    $oldOderDetail->delete();
-
-                    // Add new
-                    foreach ($orderData->items as $item) {
-                        $variation = ProductVariation::whereVariationId($item->variation_id)->first();
-                        if ($variation && $variation->product_id) {
-                            $product = Product::find($variation->product_id);
-                            $price = $item->variation_info->retail_price - $item->discount_each_product;
-                            $cost = $item->variation_info->last_imported_price;
-                            $quantity = $item->quantity * $variation->product_quantity;
-
-                            /*if (Order::STATUS_FAILED == $order->status_id) {
-                                $quantity = 0;
-                            }*/
-
-                            OrderDetail::create([
-                                'product_id' => $product->id,
-                                'quantity' => $quantity,
-                                'cost_item' => $cost,
-                                'price_item' => $price,
-                                'order_id' => $order->id,
-                            ]);
-
-                            if (Order::STATUS_FAILED == $order->status_id) {
-                                $quantity = 0;
-                            }
-
-                            Product::find($product->id)->decrement('quantity', $quantity);
-
-                        }
-                    }
                 } else {
                     // Created by admin, now just skip, no update here
                 }
