@@ -69,6 +69,11 @@
                             <i class="fa fa-money"></i> <span>Price Control</span>
                         </a>
                     </li>
+                    <li class="treeview">
+                        <a href="{{ route('admin.revenue_report.index', $stock->id) }}">
+                            <i class="fa fa-credit-card"></i> <span>Revenue Report</span>
+                        </a>
+                    </li>
                     <li class="treeview @if(\Illuminate\Support\Facades\Route::is('admin/shopee_connection/*')) active @endif">
                         <a href="{{ url('admin/shopee_connection') }}">
                             <i class="fa fa-plug"></i> <span>POS Connection</span>
