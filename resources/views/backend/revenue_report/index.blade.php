@@ -25,6 +25,7 @@
                 @include('backend.revenue_report.includes.search_form')
                 <div class="tab">
                     <button class="tablinks active" onclick="openTabContent(event, 'statistical-content')">Statistical</button>
+                    <button class="tablinks summary-btn" onclick="openTabContent(event, 'summary-content')">Summary</button>
                     <button class="tablinks" onclick="openTabContent(event, 'charts-content')">Charts</button>
                 </div>
                 <div class="bs-example widget-shadow" data-example-id="contextual-table" style="overflow: auto">
@@ -50,6 +51,10 @@
                         </div>
                     </div>
 
+                    <div id="summary-content" class="tabcontent" style="display: none">
+                        <h3>Summary report</h3>
+                        <p>Summary report here</p>
+                    </div>
                     <div id="charts-content" class="tabcontent" style="display: none">
                         <h3>charts-content</h3>
                         <p>charts-content is the capital of France.</p>
@@ -78,7 +83,12 @@
             padding: 14px 16px;
             transition: 0.3s;
             font-size: 17px;
-            width: 50%;
+            width: 33.33%;
+        }
+
+        .tab button.summary-btn {
+            border-right: 1px solid #0F9E5E;
+            border-left: 1px solid #0F9E5E;
         }
 
         /* Change background color of buttons on hover */
