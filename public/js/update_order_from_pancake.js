@@ -7,7 +7,8 @@ $(document).ready(function() {
         },
         update: function () {
             const stock = $('input[name="stock_id"]').val();
-
+            $('#update-order-from-pancake-loader').show();
+            $('#update-order-from-pancake-error').hide();
             $.ajax({
                 type:'GET',
                 url: '/admin/orders/stock/' + stock + '/pos_cake_update/',
@@ -21,7 +22,9 @@ $(document).ready(function() {
                 success: function(data) {
                     window.location.reload();
                 },
-                error: function() {
+                error: function(e) {
+                    $('#update-order-from-pancake-loader').hide();
+                    $('#update-order-from-pancake-error').show();
                 }
             });
         }

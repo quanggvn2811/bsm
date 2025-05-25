@@ -12,6 +12,7 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isNull;
 
 class UpdateOrderFromPancake extends Controller
 {
@@ -161,8 +162,11 @@ class UpdateOrderFromPancake extends Controller
                         // Add new
                         foreach ($orderData->items as $item) {
                             $variation = ProductVariation::whereVariationId($item->variation_id)->first();
-                            if ($variation && $variation->product_id) {
-                                $product = Product::find($variation->product_id);
+                            if (isnull($variation)) {
+                                continue;
+                            }
+                            $product = Product::find($variation->product_id);
+                            if ($variation && $variation->product_id && $product) {
                                 $price = $item->variation_info->retail_price - $item->discount_each_product;
                                 $cost = $item->variation_info->last_imported_price;
                                 $quantity = $item->quantity * $variation->product_quantity;
