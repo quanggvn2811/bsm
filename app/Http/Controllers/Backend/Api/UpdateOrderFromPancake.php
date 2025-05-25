@@ -152,7 +152,11 @@ class UpdateOrderFromPancake extends Controller
                     // Auto remove old
                     $oldOderDetail = OrderDetail::whereOrderId($order->id);
                     foreach ($oldOderDetail->get() as $oldDetail) {
-                        Product::find($oldDetail->product_id)->increment('quantity', $oldDetail->quantity);
+                        $product = Product::find($oldDetail->product_id);
+                        if ($product) {
+                            $product->quantity = $product->quantity + $oldDetail->quantity;
+                            $product->save();
+                        }
                     }
                     $oldOderDetail->delete();
 

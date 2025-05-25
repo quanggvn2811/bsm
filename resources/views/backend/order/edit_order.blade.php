@@ -221,6 +221,9 @@
                                             <tbody>
                                                 @foreach($order->order_detail as $index => $detail)
                                                     <?php
+                                                        if (empty($productById[$detail->product_id])) {
+                                                            continue;
+                                                        }
                                                         $avatarSrc = get_product_avatar_src_by_proImages($productById[$detail->product_id]['images']);
                                                         $qtyBeforeOrder = $productById[$detail->product_id]['quantity'] + ($detail->quantity ?? 1);
                                                         $qtyClass = $qtyBeforeOrder > 0 ? 'btn btn-success' : 'btn btn-danger';
