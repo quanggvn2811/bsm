@@ -104,7 +104,7 @@ class UpdateOrderFromPancake extends Controller
 
             // Is update
             if ($order) {
-                if ('SYSTEM' === $order->created_by) { // Has create by system
+                if ('SYSTEM' === $order->created_by && 'SYSTEM' === $order->last_updated_by) { // Has create by system
                     // Check and update phone
                     $customer = $order->customer;
                     // Zalo order Facebook
