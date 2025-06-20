@@ -227,6 +227,19 @@ class UpdateOrderFromPancake extends Controller
             DB::transaction(function () use ($pancakeShopId, $pancakeOrderData, $bsmShopId) {
                 $pancakeCustomerPhone = $pancakeOrderData->customer->phone_numbers[0];
                 $pancakeCustomerName = $pancakeOrderData->customer->name;
+
+                if (is_null($pancakeCustomerName)) {
+                    $pancakeCustomerName = $pancakeOrderData->bill_full_name;
+                }
+
+                if (is_null($pancakeCustomerName)) {
+                    $pancakeCustomerName = $pancakeOrderData->shipping_address->full_name;
+                }
+
+                if (is_null($pancakeCustomerName)) {
+                    $pancakeCustomerName = 'Anonymous';
+                }
+
                 // Customer
                 $customer = Customer::wherePhone($pancakeCustomerPhone)->first();
 

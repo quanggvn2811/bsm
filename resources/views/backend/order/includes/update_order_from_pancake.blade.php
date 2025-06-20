@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Update Orders
-                    <img src="https://tuanntblog.com/wp-admin/images/spinner.gif" alt="" id="update-order-from-pancake-loader" style="width: 20px; height: 20px; margin-left: 10px; display: none">
+                    <img src="{{ asset('public/images/spinner.gif')  . '?v=' . config('app.commit_version') }}" alt="" id="update-order-from-pancake-loader" style="width: 20px; height: 20px; margin-left: 10px; display: none">
                     <span id="update-order-from-pancake-error" style="margin-left: 10px; color: red; display: none">Something went wrong, pls contact your administration.</span>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
