@@ -356,6 +356,18 @@ class UpdateOrderFromPancake extends Controller
                 $pancakeCustomerPhone = $pancakeOrderData->customer->phone_numbers[0];
                 $pancakeCustomerUsername = $pancakeOrderData->customer->username;
 
+                if (is_null($pancakeCustomerUsername)) {
+                    $pancakeCustomerUsername = $pancakeOrderData->bill_full_name;
+                }
+
+                if (is_null($pancakeCustomerUsername)) {
+                    $pancakeCustomerUsername = $pancakeOrderData->shipping_address->full_name;
+                }
+
+                if (is_null($pancakeCustomerUsername)) {
+                    $pancakeCustomerUsername = 'Anonymous';
+                }
+
                 // Replace ****** = first 7 characters in username
                 $first7Characters = substr($pancakeCustomerUsername, 0, 7);
                 $pancakeCustomerPhone = substr($pancakeCustomerPhone, 0, 1) . $first7Characters . substr($pancakeCustomerPhone, -2);
